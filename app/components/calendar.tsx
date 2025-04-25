@@ -7,8 +7,8 @@ import transactionsMock from "../../__mock/transactions.json";
 import { TransactionType } from "../enums/transactionType";
 import { Transaction } from "../types/Transaction";
 import CalendarHeader from "./calendarHeader";
-import TransactionLabel from "./transactionLabel";
 import { DayBalance } from "../types/DayBalance";
+import TransactionsContainer from "./transactionsContainer";
 
 interface CalendarProps {
   month: number;
@@ -85,20 +85,7 @@ export default function Calendar({ month }: CalendarProps) {
             <>
               <PaymentFlag dayBalance={x} />
 
-              <div className="flex flex-col ml-4 gap-1">
-                <TransactionLabel
-                  type={TransactionType.income}
-                  value={x.income}
-                />
-                <TransactionLabel
-                  type={TransactionType.expense}
-                  value={x.expense}
-                />
-                <TransactionLabel
-                  type={TransactionType.daily}
-                  value={x.daily}
-                />
-              </div>
+              <TransactionsContainer dayBalance={x} />
             </>
           )}
         </div>
