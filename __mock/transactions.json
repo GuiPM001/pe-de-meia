@@ -49,6 +49,13 @@
     "type": 1
   },
   {
+    "date": "2025-04-24T03:00:00",
+    "description": "test",
+    "value": 70,
+    "recurrent": false,
+    "type": 2
+  },
+  {
     "date": "2025-04-27T03:00:00",
     "description": "test",
     "value": 2500,

@@ -1,6 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Calendar from "./components/calendar";
-import { faSortDown } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
   return (
@@ -11,32 +9,6 @@ export default function Home() {
         <div className="h-8 bg-red-200"></div>
 
         <Calendar month={4} />
-
-        <div className=" flex flex-row gap-14">
-          <span className="flex flex-row gap-1 text-sm/7 lin">
-            <FontAwesomeIcon
-              icon={faSortDown}
-              style={{ color: "#57BB8A", height: "18px" }}
-            />
-            Entrada
-          </span>
-
-          <span className="flex flex-row gap-1 text-sm/7 lin">
-            <FontAwesomeIcon
-              icon={faSortDown}
-              style={{ color: "#E67C73", height: "18px" }}
-            />
-            Saída
-          </span>
-
-          <span className="flex flex-row gap-1 text-sm/7 lin">
-            <FontAwesomeIcon
-              icon={faSortDown}
-              style={{ color: "#FFE599", height: "18px" }}
-            />
-            Diário
-          </span>
-        </div>
       </div>
     </div>
   );

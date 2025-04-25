@@ -7,15 +7,12 @@ import transactionsMock from "../../__mock/transactions.json";
 import { TransactionType } from "../enums/transactionType";
 import { Transaction } from "../types/Transaction";
 import CalendarHeader from "./calendarHeader";
+import TransactionLabel from "./transactionLabel";
+import { DayBalance } from "../types/DayBalance";
 
 interface CalendarProps {
   month: number;
 }
-
-export type DayBalance = {
-  day: number;
-  value: number;
-};
 
 export default function Calendar({ month }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
@@ -28,14 +25,21 @@ export default function Calendar({ month }: CalendarProps) {
     return new Date(year, adjustedMonth, -date.getDate(), 3, 0, 0);
   }, [month]);
 
-  const getTodayTotal = (transactions: Transaction[], date: Date) => {
+  const getTodayTotal = (transactions: Transaction[]) => {
+    return transactions.reduce(
+      (acc, x) =>
+        x.type === TransactionType.income ? acc + x.value : acc - x.value,
+      0
+    );
+  };
+
+  const getTotalByType = (
+    transactions: Transaction[],
+    transactionType: TransactionType
+  ) => {
     return transactions
-      .filter((x) => new Date(x.date).toString() === date.toString())
-      .reduce(
-        (acc, x) =>
-          x.type === TransactionType.income ? acc + x.value : acc - x.value,
-        0
-      );
+      .filter((x) => x.type === transactionType)
+      .reduce((acc, x) => acc + x.value, 0);
   };
 
   useEffect(() => {
@@ -44,12 +48,20 @@ export default function Calendar({ month }: CalendarProps) {
     let initialBalance = monthMock.initialBalance;
 
     for (let i = 0; i < 35; i++) {
-      const todayExpenses = getTodayTotal(transactionsMock, startDate);
+      const transactions = transactionsMock.filter(
+        (x) => new Date(x.date).toString() === startDate.toString()
+      );
+
+      const todayExpenses = getTodayTotal(transactions);
+
       initialBalance += todayExpenses;
 
       dayBalances.push({
         day: startDate.getDate(),
-        value: startDate.getMonth() + 1 === month ? initialBalance : 0,
+        income: getTotalByType(transactions, TransactionType.income),
+        expense: getTotalByType(transactions, TransactionType.expense),
+        daily: getTotalByType(transactions, TransactionType.daily),
+        total: startDate.getMonth() + 1 === month ? initialBalance : null,
       });
 
       startDate.setDate(startDate.getDate() + 1);
@@ -59,22 +71,37 @@ export default function Calendar({ month }: CalendarProps) {
   }, [month, getStartDate]);
 
   return (
-    <div className="grid grid-cols-7 w-full h-full">
+    <div className="grid grid-cols-7 w-full">
       <CalendarHeader />
 
       {dayBalances.map((x) => (
-        <>
-          {x.value === 0 ? (
-            <div
-              className="border-1 border-gray-400 px-1 bg-gray-200"
-              key={`${x.day}-0`}
-            ></div>
+        <div
+          className="border border-gray-200 h-28"
+          key={`${x.day}-${x.total}`}
+        >
+          {x.total === null ? (
+            <div className="bg-gray-100 h-full w-full"></div>
           ) : (
-            <div key={x.day} className="border-1 border-gray-400">
+            <>
               <PaymentFlag dayBalance={x} />
-            </div>
+
+              <div className="flex flex-col ml-4 gap-1">
+                <TransactionLabel
+                  type={TransactionType.income}
+                  value={x.income}
+                />
+                <TransactionLabel
+                  type={TransactionType.expense}
+                  value={x.expense}
+                />
+                <TransactionLabel
+                  type={TransactionType.daily}
+                  value={x.daily}
+                />
+              </div>
+            </>
           )}
-        </>
+        </div>
       ))}
     </div>
   );

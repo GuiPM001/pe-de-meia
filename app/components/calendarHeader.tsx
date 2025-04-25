@@ -1,27 +1,29 @@
 import React from "react";
 
 export default function CalendarHeader() {
+  const className = "border border-t-0 border-gray-200 text-center font-black py-1 self-end";
+  
   return (
     <>
-      <div className="border border-t-0 border-gray-400 text-center font-black py-1 self-end">
+      <div className={className}>
         DOM.
       </div>
-      <div className="border border-t-0 border-gray-400 text-center font-black py-1 self-end">
+      <div className={className}>
         SEG.
       </div>
-      <div className="border border-t-0 border-gray-400 text-center font-black py-1 self-end">
+      <div className={className}>
         TER.
       </div>
-      <div className="border border-t-0 border-gray-400 text-center font-black py-1 self-end">
+      <div className={className}>
         QUA.
       </div>
-      <div className="border border-t-0 border-gray-400 text-center font-black py-1 self-end">
+      <div className={className}>
         QUI.
       </div>
-      <div className="border border-t-0 border-gray-400 text-center font-black py-1 self-end">
+      <div className={className}>
         SEX.
       </div>
-      <div className="border border-t-0 border-gray-400 text-center font-black py-1 self-end">
+      <div className={className}>
         SAB.
       </div>
     </>
