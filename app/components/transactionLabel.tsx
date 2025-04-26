@@ -17,13 +17,13 @@ export default function TransactionLabel({
 
   const renderIcon = () => {
     if (type === TransactionType.income) {
-      return <TbCaretUpFilled color="#00833b" size={ICON_SIZE} />;
+      return <TbCaretUpFilled className="text-green-text" size={ICON_SIZE} />;
     }
     if (type === TransactionType.expense) {
-      return <TbCaretDownFilled color="#B8000F" size={ICON_SIZE} />;
+      return <TbCaretDownFilled className="text-red-text" size={ICON_SIZE} />;
     }
 
-    return <TbCaretDownFilled color="#FFBB00" size={ICON_SIZE} />;
+    return <TbCaretDownFilled className="text-yellow-text" size={ICON_SIZE} />;
   };
 
   return (

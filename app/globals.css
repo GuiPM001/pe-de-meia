@@ -6,9 +6,25 @@
   --foreground: #171717;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
+  --color-green-default: #DDF1E3;
+  --color-green-hover: #B4E9C4;
+  --color-green-text: #00833B;
+  
+  --color-red-default: #FBDED7;
+  --color-red-hover: #FFCBC1;
+  --color-red-text: #B8000F;
+
+  --color-yellow-default: #FEF4D8;
+  --color-yellow-hover: #FFEDBC;
+  --color-yellow-text: #FFBB00;
+
+  --color-primary: #1CA249;
+  --color-primary-hover: #0C863C;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-nunito: "Nunito", sans-serif;

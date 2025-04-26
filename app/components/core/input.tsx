@@ -10,7 +10,7 @@ export default function Input(props: InputProps) {
       <label className="font-medium mb-1">{props.label}</label>
       <input
         type="text"
-        className="w-full bg-transparent rounded-md border border-gray-300 h-[40px] py-2 px-3 outline-none transition focus:border-[#1EA44D] active:border-[#1EA44D]"
+        className="w-full bg-transparent rounded-md border border-gray-300 h-[40px] py-2 px-3 outline-none transition focus:border-primary active:border-primary"
         {...props}
       />
     </div>

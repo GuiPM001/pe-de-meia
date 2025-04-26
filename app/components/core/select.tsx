@@ -11,7 +11,7 @@ export default function Select(props: SelectProps) {
       <label className="font-medium mb-1">{props.label}</label>
       <div className="relative z-20">
         <select
-          className="bg-transparent relative z-20 w-full appearance-none rounded-lg border border-gray-300 h-[40px] py-2 px-3 outline-none transition focus:border-[#1EA44D] active:border-[#1EA44D]"
+          className="bg-transparent relative z-20 w-full appearance-none rounded-lg border border-gray-300 h-[40px] py-2 px-3 outline-none transition focus:border-primary active:border-primary"
           {...props}
         >
           {props.options.map((o) => (

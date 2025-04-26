@@ -10,7 +10,7 @@ export default function Button(props: ButtonProps) {
     if (props.color === "cancel")
       return "text-red-600 bg-red-600 hover:bg-red-600";
 
-    return "text-[#1CA249] bg-[#1CA249] hover:bg-[#0C863C]";
+    return "text-primary bg-primary hover:bg-primary-hover";
   };
 
   const getVariant = () => {
