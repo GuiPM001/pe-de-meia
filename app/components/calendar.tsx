@@ -6,32 +6,33 @@ import monthMock from "../../__mock/months.json";
 import transactionsMock from "../../__mock/transactions.json";
 import { TransactionType } from "../enums/transactionType";
 import { Transaction } from "../types/Transaction";
-import CalendarHeader from "./calendarHeader";
 import { DayBalance } from "../types/DayBalance";
+import CalendarHeader from "./calendarHeader";
 import TransactionsContainer from "./transactionsContainer";
 
 interface CalendarProps {
   month: number;
+  year: number;
 }
 
-export default function Calendar({ month }: CalendarProps) {
+export default function Calendar({ month, year }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
 
-  const getStartDate = useCallback(() => {
-    const adjustedMonth = month - 1;
-    const year = new Date().getFullYear();
-    const date = new Date(year, adjustedMonth, 1);
+  useEffect(() => {
+    const dayBalances: DayBalance[] = [];
+    const currentDate = getStartDate();
 
-    return new Date(year, adjustedMonth, -date.getDate(), 3, 0, 0);
+    addDaysBefore(currentDate, dayBalances);
+    addMonthlyDays(currentDate, dayBalances);
+    completeGrid(currentDate, dayBalances);
+
+    setDayBalances(dayBalances);
   }, [month]);
 
-  const getTodayTotal = (transactions: Transaction[]) => {
-    return transactions.reduce(
-      (acc, x) =>
-        x.type === TransactionType.income ? acc + x.value : acc - x.value,
-      0
-    );
-  };
+  const getStartDate = useCallback(() => {
+    const date = new Date(year, month, 1, 3, 0, 0);
+    return new Date(year, month, 1 - date.getDay(), 3, 0, 0);
+  }, [month, year]);
 
   const getTotalByType = (
     transactions: Transaction[],
@@ -42,33 +43,60 @@ export default function Calendar({ month }: CalendarProps) {
       .reduce((acc, x) => acc + x.value, 0);
   };
 
-  useEffect(() => {
-    const dayBalances: DayBalance[] = [];
-    const startDate = getStartDate();
-    let initialBalance = monthMock.initialBalance;
+  const addDay = (
+    date: Date,
+    balances: DayBalance[],
+    values?: Partial<DayBalance>
+  ) => {;
+    balances.push({
+      day: date.getDate(),
+      income: 0,
+      expense: 0,
+      daily: 0,
+      total: null,
+      ...values,
+    });
+  };
 
-    for (let i = 0; i < 35; i++) {
+  const addDaysBefore = (currentDate: Date, dayBalances: DayBalance[]) => {
+    while (currentDate.getMonth() !== month) {
+      addDay(currentDate, dayBalances);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  };
+
+  const addMonthlyDays = (currentDate: Date, dayBalances: DayBalance[]) => {
+    let balance = monthMock[month].initialBalance;
+
+    while (currentDate.getMonth() === month) {
       const transactions = transactionsMock.filter(
-        (x) => new Date(x.date).toString() === startDate.toString()
+        (x) => new Date(x.date).toDateString() === currentDate.toDateString()
       );
 
-      const todayExpenses = getTodayTotal(transactions);
+      const todayIncome = getTotalByType(transactions, TransactionType.income);
+      const todayExpense = getTotalByType(transactions, TransactionType.expense);
+      const todayDaily = getTotalByType(transactions, TransactionType.daily);
+      const todayTotal = todayIncome - todayExpense - todayDaily;
 
-      initialBalance += todayExpenses;
+      balance += todayTotal;
 
-      dayBalances.push({
-        day: startDate.getDate(),
-        income: getTotalByType(transactions, TransactionType.income),
-        expense: getTotalByType(transactions, TransactionType.expense),
-        daily: getTotalByType(transactions, TransactionType.daily),
-        total: startDate.getMonth() + 1 === month ? initialBalance : null,
+      addDay(currentDate, dayBalances, {
+        income: todayIncome,
+        expense: todayExpense,
+        daily: todayDaily,
+        total: balance,
       });
 
-      startDate.setDate(startDate.getDate() + 1);
+      currentDate.setDate(currentDate.getDate() + 1);
     }
+  };
 
-    setDayBalances(dayBalances);
-  }, [month, getStartDate]);
+  const completeGrid = (currentDate: Date, dayBalances: DayBalance[]) => {
+    while (dayBalances.length % 7 !== 0) {
+      addDay(currentDate, dayBalances);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+  };
 
   return (
     <div className="grid grid-cols-7 w-full">

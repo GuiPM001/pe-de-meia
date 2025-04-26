@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function CalendarHeader() {
-  const className = "border border-t-0 border-gray-200 text-center font-black py-1 self-end";
+  const className = "border border-t-0 border-gray-200 text-center font-black py-1 self-end mt-8";
   
   return (
     <>
