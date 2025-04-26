@@ -13,7 +13,7 @@ export default function CurrencyInput(props: CurrencyInputProps) {
           R$
         </span>
         <input
-          type="text"
+          type="number"
           className="h-[40px] py-2 px-3 w-full bg-transparent rounded-tr-md rounded-br-md border border-gray-300 outline-none transition focus:border-[#1EA44D] active:border-[#1EA44D"
           {...props}
         />

@@ -2,7 +2,7 @@ import React, { SelectHTMLAttributes } from "react";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
-  options: { label: string; value: number | string }[];
+  options: { label: string; value: number }[];
 }
 
 export default function Select(props: SelectProps) {

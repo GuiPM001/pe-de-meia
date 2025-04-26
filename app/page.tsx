@@ -4,8 +4,13 @@ import { useState } from "react";
 import Calendar from "./components/calendar";
 import Sidebar from "./components/sidebar";
 import { getMonthNameByMonth } from "./utils/date";
-import { TbCirclePlusFilled, TbInfoCircleFilled, TbSettingsFilled } from "react-icons/tb";
-import { IconButton } from "@chakra-ui/react";
+import {
+  TbCirclePlusFilled,
+  TbInfoCircleFilled,
+  TbSettingsFilled,
+} from "react-icons/tb";
+import TransactionModal from "./components/transactionModal";
+import IconButton from "./components/core/iconButton";
 
 export default function Home() {
   const [monthSelected, setMonthSelected] = useState<number>(
@@ -14,6 +19,8 @@ export default function Home() {
   const [yearSelected, setYearSelected] = useState<number>(
     new Date().getFullYear()
   );
+
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   return (
     <div className="w-screen h-screen font-nunito flex flex-row py-6 px-6 overflow-x-hidden">
@@ -29,19 +36,26 @@ export default function Home() {
           <span className="capitalize font-black text-3xl">
             {getMonthNameByMonth(yearSelected, monthSelected)}
           </span>
-          <IconButton aria-label="Add transaction">
-            <TbCirclePlusFilled size="22px" />
+          <IconButton
+            onClick={() => setModalOpen(true)}
+            label="Adicionar transação"
+          >
+            <TbCirclePlusFilled size="24px" />
           </IconButton>
-          <IconButton aria-label="Configure profile">
-            <TbSettingsFilled size="22px"  />
+          <IconButton label="Configurar perfil">
+            <TbSettingsFilled size="24px" />
           </IconButton>
-          <IconButton aria-label="Info">
-            <TbInfoCircleFilled  size="22px"  />
+          <IconButton label="Informações">
+            <TbInfoCircleFilled size="24px" />
           </IconButton>
         </div>
 
         <Calendar month={monthSelected} year={yearSelected} />
       </div>
+
+      {modalOpen && (
+        <TransactionModal onClose={() => setModalOpen(false)} />
+      )}
     </div>
   );
 }

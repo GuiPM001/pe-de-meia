@@ -11,11 +11,22 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-nunito: "Nunito", sans-serif; 
+  --font-nunito: "Nunito", sans-serif;
 }
 
 body {
   background: var(--background);
   color: black;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
 }
