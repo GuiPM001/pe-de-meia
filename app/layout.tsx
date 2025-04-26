@@ -1,3 +1,4 @@
+import { ProfileProvider } from "./context/ProfileContext";
 import "./globals.css";
 export default function RootLayout({
   children,
@@ -6,7 +7,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt">
-      <body>{children}</body>
+      <body>
+        <ProfileProvider>{children}</ProfileProvider>
+      </body>
     </html>
   );
 }

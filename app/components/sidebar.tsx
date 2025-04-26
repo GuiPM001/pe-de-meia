@@ -6,6 +6,7 @@ import { IconButton } from "@chakra-ui/react";
 import monthsMock from "../../__mock/months.json";
 import { getColors } from "../utils/getColors";
 import { getMonthNameByDate } from "../utils/date";
+import { useProfile } from "../context/ProfileContext";
 
 interface SidebarProps {
   monthSelected: number;
@@ -20,6 +21,8 @@ export default function Sidebar({
   yearSelected,
   setYearSelected,
 }: SidebarProps) {
+  const { profile } = useProfile();
+
   return (
     <div className="w-80 h-full flex flex-col items-center">
       <div className="flex flex-row items-center gap-2 mb-10">
@@ -47,11 +50,13 @@ export default function Sidebar({
             onClick={() => setMonthSelected(index)}
             className={`capitalize w-24 py-1 px-2 mb-2 rounded-md flex justify-center cursor-pointer
               ${monthSelected === index ? "font-bold" : "font-semibold"}
-              ${getColors(x.finalBalance, monthSelected === index)}`}
+              ${getColors(
+                x.finalBalance,
+                profile.savingTarget,
+                monthSelected === index
+              )}`}
           >
-            <span>
-              {getMonthNameByDate(x.month)}
-            </span>
+            <span>{getMonthNameByDate(x.month)}</span>
           </button>
         ))}
       </div>
