@@ -9,8 +9,9 @@ import {
   TbInfoCircleFilled,
   TbSettingsFilled,
 } from "react-icons/tb";
-import TransactionModal from "./components/transactionModal";
+import TransactionModal from "./components/modals/transactionModal";
 import IconButton from "./components/core/iconButton";
+import ProfileModal from "./components/modals/profileModal";
 
 export default function Home() {
   const [monthSelected, setMonthSelected] = useState<number>(
@@ -21,6 +22,7 @@ export default function Home() {
   );
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
 
   return (
     <div className="w-screen h-screen font-nunito flex flex-row py-6 px-6 overflow-x-hidden">
@@ -42,7 +44,10 @@ export default function Home() {
           >
             <TbCirclePlusFilled size="24px" />
           </IconButton>
-          <IconButton label="Configurar perfil">
+          <IconButton
+            onClick={() => setProfileModalOpen(true)}
+            label="Configurar perfil"
+          >
             <TbSettingsFilled size="24px" />
           </IconButton>
           <IconButton label="Informações">
@@ -53,8 +58,10 @@ export default function Home() {
         <Calendar month={monthSelected} year={yearSelected} />
       </div>
 
-      {modalOpen && (
-        <TransactionModal onClose={() => setModalOpen(false)} />
+      {modalOpen && <TransactionModal onClose={() => setModalOpen(false)} />}
+
+      {profileModalOpen && (
+        <ProfileModal onClose={() => setProfileModalOpen(false)} />
       )}
     </div>
   );
