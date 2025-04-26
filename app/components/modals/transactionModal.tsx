@@ -40,7 +40,7 @@ export default function TransactionModal({ onClose }: TransactionModalProps) {
 
   return (
     <ModalContainer>
-      <ModalTitle title="Adicionar transação" />
+      <ModalTitle title="Adicionar transação" onClose={onClose} />
 
       <div className="flex flex-row gap-6 mb-6">
         <Input

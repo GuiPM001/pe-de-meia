@@ -36,7 +36,7 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
 
   return (
     <ModalContainer>
-      <ModalTitle title="Perfil" />
+      <ModalTitle title="Perfil" onClose={onClose} />
 
       <div className="flex flex-col gap-6">
         <Input

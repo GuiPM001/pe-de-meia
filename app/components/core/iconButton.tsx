@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes } from "react";
 
 interface IconButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  label: string;
+  label?: string;
 }
 
 export default function IconButton(props: IconButtonProps) {
@@ -14,9 +14,11 @@ export default function IconButton(props: IconButtonProps) {
         {props.children}
       </button>
 
-      <span className="hidden group-hover:block absolute top-0 left-8 text-sm bg-gray-200 rounded-md py-1 px-2 text-gray-800 z-20">
-        {props.label}
-      </span>
+      {props?.label && (
+        <span className="hidden group-hover:block absolute top-0 left-8 text-sm bg-gray-200 rounded-md py-1 px-2 text-gray-800 z-20">
+          {props.label}
+        </span>
+      )}
     </div>
   );
 }

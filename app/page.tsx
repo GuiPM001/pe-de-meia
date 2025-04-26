@@ -12,6 +12,7 @@ import {
 import TransactionModal from "./components/modals/transactionModal";
 import IconButton from "./components/core/iconButton";
 import ProfileModal from "./components/modals/profileModal";
+import InfoModal from "./components/modals/infoModal";
 
 export default function Home() {
   const [monthSelected, setMonthSelected] = useState<number>(
@@ -23,6 +24,7 @@ export default function Home() {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [profileModalOpen, setProfileModalOpen] = useState<boolean>(false);
+  const [infoModalOpen, setInfoModalOpen] = useState<boolean>(false);
 
   return (
     <div className="w-screen h-screen font-nunito flex flex-row py-6 px-6 overflow-x-hidden">
@@ -50,7 +52,7 @@ export default function Home() {
           >
             <TbSettingsFilled size="24px" />
           </IconButton>
-          <IconButton label="Informações">
+          <IconButton label="Informações" onClick={() => setInfoModalOpen(true)}>
             <TbInfoCircleFilled size="24px" />
           </IconButton>
         </div>
@@ -60,6 +62,8 @@ export default function Home() {
 
       {modalOpen && <TransactionModal onClose={() => setModalOpen(false)} />}
 
+      {infoModalOpen && <InfoModal onClose={() => setInfoModalOpen(false)} />}
+      
       {profileModalOpen && (
         <ProfileModal onClose={() => setProfileModalOpen(false)} />
       )}
