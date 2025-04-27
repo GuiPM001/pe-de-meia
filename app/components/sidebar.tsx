@@ -2,11 +2,11 @@
 
 import React from "react";
 import { TbChevronLeft, TbChevronRight } from "react-icons/tb";
-import { IconButton } from "@chakra-ui/react";
 import monthsMock from "../../__mock/months.json";
 import { getColors } from "../utils/getColors";
 import { getMonthNameByDate } from "../utils/date";
 import { useProfile } from "../context/ProfileContext";
+import IconButton from "./core/iconButton";
 
 interface SidebarProps {
   monthSelected: number;
@@ -26,21 +26,15 @@ export default function Sidebar({
   return (
     <div className="w-80 h-full flex flex-col items-center">
       <div className="flex flex-row items-center gap-2 mb-10">
-        <IconButton
-          aria-label="Previous year"
-          fontSize="24px"
-          onClick={() => setYearSelected(yearSelected - 1)}
-          icon={<TbChevronLeft />}
-        />
+        <IconButton onClick={() => setYearSelected(yearSelected - 1)}>
+          <TbChevronLeft size="24px" />
+        </IconButton>
 
         <span className="text-5xl font-black">{yearSelected}</span>
 
-        <IconButton
-          aria-label="Next year"
-          fontSize="24px"
-          onClick={() => setYearSelected(yearSelected + 1)}
-          icon={<TbChevronRight />}
-        />
+        <IconButton onClick={() => setYearSelected(yearSelected + 1)}>
+          <TbChevronRight size="24px" />
+        </IconButton>
       </div>
 
       <div>
