@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectMongo } from "../db/mongodb";
 import { User } from "../models/user";
+import bcrypt from "bcryptjs";
 
 export async function POST(request: NextRequest) {
     try {
@@ -10,18 +11,21 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Preencha todos os campos para concluir o cadastro.' }, { status: 400 })
         }
 
+        
         await connectMongo();
-
+        
         const existeUser = await User.findOne({ email });
-
+        
         if (existeUser) {
             return NextResponse.json({ error: 'Email já cadastrado' }, { status: 400 });
         }
+        
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         await User.create({
             name,
             email,
-            password,
+            password: hashedPassword,
             savingTarget
         });
 
