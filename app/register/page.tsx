@@ -6,12 +6,14 @@ import Image from "next/image";
 import Input from "../components/core/input";
 import PasswordInput from "../components/core/passwordInput";
 import Button from "../components/core/button";
+import CurrencyInput from "../components/core/currencyInput";
 
 export default function Register() {
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    savingTarget: 0,
   });
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +61,12 @@ export default function Register() {
               placeholder="********"
               name="password"
               value={form.password}
+              onChange={handleForm}
+            />
+            <CurrencyInput
+              label="Meta de economia mensal"
+              name="savingTarget"
+              value={form.savingTarget}
               onChange={handleForm}
             />
 
