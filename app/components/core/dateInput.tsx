@@ -1,6 +1,7 @@
 "use client";
 
 import React, { InputHTMLAttributes } from "react";
+import { INPUT_CLASSNAME } from "./constants";
 
 interface DateInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -9,10 +10,11 @@ interface DateInputProps extends InputHTMLAttributes<HTMLInputElement> {
 export default function DateInput(props: DateInputProps) {
   return (
     <div className="w-full">
-      <label className="font-medium mb-1">{props.label}</label>
+      <label className="font-medium mb-1" htmlFor={props.label}>{props.label}</label>
       <input
+        id={props.label}
         type="date"
-        className="w-full bg-transparent rounded-md border border-gray-300 h-[40px] py-2 px-3 outline-none transition focus:border-primary active:border-primary"
+        className={INPUT_CLASSNAME}
         {...props}
       />
     </div>

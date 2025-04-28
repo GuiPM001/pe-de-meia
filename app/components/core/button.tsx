@@ -10,7 +10,7 @@ export default function Button(props: ButtonProps) {
     if (props.color === "cancel")
       return "text-red-600 bg-red-600 hover:bg-red-600";
 
-    return "text-primary bg-primary hover:bg-primary-hover";
+    return "text-primary bg-primary hover:bg-primary-dark";
   };
 
   const getVariant = () => {
@@ -22,7 +22,7 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       {...props}
-      className={`w-1/2 rounded-md p-2 text-center font-semibold transition hover:text-white cursor-pointer ${getColors()} ${getVariant()} disabled:bg-gray-300 disabled:cursor-default`}
+      className={`w-full rounded-md p-2 text-center font-semibold transition hover:text-white cursor-pointer ${getColors()} ${getVariant()} disabled:bg-gray-300 disabled:cursor-default`}
     >
       {props.children}
     </button>

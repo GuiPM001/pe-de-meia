@@ -7,7 +7,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt">
-      <body>
+      <body className="font-nunito">
         <ProfileProvider>{children}</ProfileProvider>
       </body>
     </html>

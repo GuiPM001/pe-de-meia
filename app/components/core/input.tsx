@@ -1,4 +1,5 @@
 import React, { InputHTMLAttributes } from "react";
+import { INPUT_CLASSNAME } from "./constants";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -7,10 +8,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export default function Input(props: InputProps) {
   return (
     <div className="w-full">
-      <label className="font-medium mb-1">{props.label}</label>
+      <label className="font-medium mb-1" htmlFor={props.label}>{props.label}</label>
       <input
         type="text"
-        className="w-full bg-transparent rounded-md border border-gray-300 h-[40px] py-2 px-3 outline-none transition focus:border-primary active:border-primary"
+        id={props.label}
+        className={INPUT_CLASSNAME}
         {...props}
       />
     </div>
