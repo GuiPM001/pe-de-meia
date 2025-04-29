@@ -16,10 +16,7 @@ interface ProfileModalProps {
 export default function ProfileModal({ onClose }: ProfileModalProps) {
   const { profile, setProfile } = useProfile();
 
-  const [form, setForm] = useState<Profile>({
-    name: profile.name,
-    savingTarget: profile.savingTarget,
-  });
+  const [form, setForm] = useState<Profile>(profile);
 
   const handleForm = (value: string | number, name: string) => {
     setForm({
@@ -29,7 +26,6 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
   };
 
   const onSave = () => {
-    console.log(form);
     setProfile(form);
     onClose();
   };
@@ -44,6 +40,9 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
           value={form.name}
           onChange={(e) => handleForm(e.target.value, "name")}
         />
+
+        <Input label="E-mail" value={form.email} disabled />
+
         <CurrencyInput
           label="Meta de economia mensal"
           value={form.savingTarget}

@@ -3,7 +3,6 @@ import Input from "../core/input";
 import CurrencyInput from "../core/currencyInput";
 import { TransactionType } from "../../enums/transactionType";
 import Select from "../core/select";
-import DateInput from "../core/dateInput";
 import Checkbox from "../core/checkbox";
 import { Transaction } from "../../types/Transaction";
 import ModalContainer from "./modalContainer";
@@ -48,9 +47,10 @@ export default function TransactionModal({ onClose }: TransactionModalProps) {
           value={form.description}
           onChange={(e) => handleForm(e.target.value, "description")}
         />
-        <DateInput
+        <Input
           label="Data"
           value={form.date}
+          type="date"
           onChange={(e) => handleForm(e.target.value, "date")}
         />
       </div>
