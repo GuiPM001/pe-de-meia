@@ -1,5 +1,6 @@
 import React, { SelectHTMLAttributes } from "react";
 import { INPUT_CLASSNAME } from "./constants";
+import Label from "./label";
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string;
@@ -9,7 +10,10 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 export default function Select(props: SelectProps) {
   return (
     <div className="w-full">
-      <label className="font-medium mb-1">{props.label}</label>
+      <Label htmlFor={props.label}>
+        {props.label}
+      </Label>
+
       <div className="relative z-20">
         <select
           className={`z-20 appearance-none ${INPUT_CLASSNAME}`}

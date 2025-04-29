@@ -1,13 +1,13 @@
 "use client";
 
-import React, { InputHTMLAttributes, useState } from "react";
+import React, { useState } from "react";
 import { TbEye } from "react-icons/tb";
 import { TbEyeClosed } from "react-icons/tb";
 import { INPUT_CLASSNAME } from "./constants";
+import { InputProps } from "./input";
+import Label from "./label";
 
-export default function PasswordInput(
-  props: InputHTMLAttributes<HTMLInputElement>
-) {
+export default function PasswordInput(props: InputProps) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   function togglePassword() {
@@ -16,13 +16,18 @@ export default function PasswordInput(
 
   return (
     <div className="w-full">
-      <label className="font-medium mb-1" htmlFor="password">Senha</label>
+      <Label error={props.error} htmlFor={props.label}>
+        {props.label}
+      </Label>
 
       <div className="relative">
         <input
           id="password"
           type={showPassword ? "text" : "password"}
-          className={INPUT_CLASSNAME}
+          className={`
+                    ${INPUT_CLASSNAME} 
+                    ${props.error ? "border-red-600" : ""}
+                  `}
           {...props}
         />
 

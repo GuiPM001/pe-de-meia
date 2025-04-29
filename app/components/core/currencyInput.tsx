@@ -1,18 +1,20 @@
-import React, { InputHTMLAttributes } from "react";
+import React from "react";
 import { INPUT_CLASSNAME } from "./constants";
+import { InputProps } from "./input";
+import Label from "./label";
 
-interface CurrencyInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-}
-
-export default function CurrencyInput(props: CurrencyInputProps) {
+export default function CurrencyInput(props: InputProps) {
   return (
     <div className="w-full">
-      <label className="font-medium mb-1" htmlFor={props.label}>{props.label}</label>
+      <Label error={props.error} htmlFor={props.label}>
+        {props.label}
+      </Label>
+      
       <div className="flex items-center">
         <span className="h-[40px] py-2 px-3 rounded-tl-md rounded-bl-md border border-r-0 border-gray-300 bg-gray-200 text-gray-500 uppercase">
           R$
         </span>
+        
         <input
           type="number"
           id={props.label}

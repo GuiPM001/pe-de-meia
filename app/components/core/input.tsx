@@ -1,18 +1,25 @@
 import React, { InputHTMLAttributes } from "react";
 import { INPUT_CLASSNAME } from "./constants";
+import Label from "./label";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
+  error?: boolean;
 }
 
 export default function Input(props: InputProps) {
   return (
-    <div className="w-full">
-      <label className="font-medium mb-1" htmlFor={props.label}>{props.label}</label>
+    <div className="w-full relative">
+      <Label error={props.error} htmlFor={props.label}>
+        {props.label}
+      </Label>
+
       <input
-        type="text"
         id={props.label}
-        className={INPUT_CLASSNAME}
+        className={`
+          ${INPUT_CLASSNAME} 
+          ${props.error ? "border-red-600" : ""}
+        `}
         {...props}
       />
     </div>
