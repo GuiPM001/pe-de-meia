@@ -22,7 +22,7 @@ export default function PasswordInput(props: InputProps) {
 
       <div className="relative">
         <input
-          id="password"
+          id={props.label}
           type={showPassword ? "text" : "password"}
           className={`
                     ${INPUT_CLASSNAME} 

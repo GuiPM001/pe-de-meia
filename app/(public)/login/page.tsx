@@ -3,25 +3,24 @@
 import React, { useState } from "react";
 import logo from "@/app/assets/logo.png";
 import Image from "next/image";
-import Input from "../components/core/input";
-import PasswordInput from "../components/core/passwordInput";
-import Button from "../components/core/button";
-import CurrencyInput from "../components/core/currencyInput";
-import { RegisterRequest } from "../types/RegisterRequest";
+import Input from "@/app/components/core/input";
+import PasswordInput from "@/app/components/core/passwordInput";
+import Button from "@/app/components/core/button";
 import { useRouter } from "next/navigation";
-import { ErrorResponse } from "../types/ErrorResponse";
-import { userService } from "../services/user.service";
+import { LoginRequest } from "@/app/types/LoginRequest";
+import { ErrorResponse } from "@/app/types/ErrorResponse";
+import { userService } from "@/app/services/user.service";
+import { useProfile } from "@/app/context/ProfileContext";
 
-export default function Register() {
+export default function Login() {
   const router = useRouter();
+  const { setProfile } = useProfile();
 
   const [loading, setLoading] = useState<boolean>();
   const [error, setError] = useState<ErrorResponse | null>(null);
-  const [form, setForm] = useState<RegisterRequest>({
-    name: "",
+  const [form, setForm] = useState<LoginRequest>({
     email: "",
     password: "",
-    savingTarget: 0,
   });
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,13 +30,18 @@ export default function Register() {
     });
   };
 
-  const submitRegister = async () => {
+  const submitLogin = async () => {
     try {
       setLoading(true);
 
-      await userService.register(form);
+      const response = await userService.login(form);
 
-      router.replace("/login");
+      document.cookie = `authToken=${
+        response.token
+      }; path=/; max-age=${3600}; Secure; SameSite=Strict`;
+
+      setProfile(response.user);
+      router.replace("/");
     } catch (e: unknown) {
       setError(e as ErrorResponse);
     } finally {
@@ -57,21 +61,16 @@ export default function Register() {
       <div className="flex w-1/2 items-center justify-center p-8">
         <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md">
           <h2 className="text-2xl font-bold text-primary-dark text-center mb-8">
-            Criar uma conta
+            Bem-vindo de volta
           </h2>
 
           <div className="space-y-6">
             <Input
-              label="Nome"
-              placeholder="Seu nome"
-              name="name"
-              value={form.name}
-              onChange={handleForm}
-            />
-            <Input
               label="E-mail"
               placeholder="seu@email.com"
               name="email"
+              type="email"
+              error={!!error}
               value={form.email}
               onChange={handleForm}
             />
@@ -79,27 +78,32 @@ export default function Register() {
               label="Senha"
               placeholder="********"
               name="password"
+              error={!!error}
               value={form.password}
-              onChange={handleForm}
-            />
-            <CurrencyInput
-              label="Meta de economia mensal"
-              name="savingTarget"
-              value={form.savingTarget}
               onChange={handleForm}
             />
 
             <Button
               type="submit"
-              onClick={submitRegister}
-              disabled={loading || !form.name || !form.email || !form.password}
+              onClick={submitLogin}
+              disabled={loading || !form.email || !form.password}
             >
-              {loading ? "Carregando..." : "Cadastrar"}
+              {loading ? "Carregando..." : "Entrar"}
             </Button>
           </div>
           {error && (
             <span className="text-red-600 text-sm">{error.message}</span>
           )}
+
+          <p className="text-center text-gray-500 text-sm mt-2">
+            Não tem uma conta?{" "}
+            <a
+              href="register"
+              className="text-primary hover:underline font-semibold"
+            >
+              Cadastre-se
+            </a>
+          </p>
         </div>
       </div>
     </div>

@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import Calendar from "./components/calendar";
-import Sidebar from "./components/sidebar";
-import { getMonthNameByMonth } from "./utils/date";
+import Calendar from "../../components/calendar";
+import Sidebar from "../../components/sidebar";
+import { getMonthNameByMonth } from "../../utils/date";
 import {
   TbCirclePlusFilled,
   TbInfoCircleFilled,
   TbSettingsFilled,
 } from "react-icons/tb";
-import TransactionModal from "./components/modals/transactionModal";
-import IconButton from "./components/core/iconButton";
-import ProfileModal from "./components/modals/profileModal";
-import InfoModal from "./components/modals/infoModal";
+import TransactionModal from "../../components/modals/transactionModal";
+import IconButton from "../../components/core/iconButton";
+import ProfileModal from "../../components/modals/profileModal";
+import InfoModal from "../../components/modals/infoModal";
 
 export default function Home() {
   const [monthSelected, setMonthSelected] = useState<number>(
@@ -27,7 +27,7 @@ export default function Home() {
   const [infoModalOpen, setInfoModalOpen] = useState<boolean>(false);
 
   return (
-    <div className="w-screen h-screen font-nunito flex flex-row py-6 px-6 overflow-x-hidden">
+    <div className="w-screen h-screen flex flex-row py-6 px-6 overflow-x-hidden">
       <Sidebar
         monthSelected={monthSelected}
         setMonthSelected={setMonthSelected}
@@ -52,7 +52,10 @@ export default function Home() {
           >
             <TbSettingsFilled size="24px" />
           </IconButton>
-          <IconButton label="Informações" onClick={() => setInfoModalOpen(true)}>
+          <IconButton
+            label="Informações"
+            onClick={() => setInfoModalOpen(true)}
+          >
             <TbInfoCircleFilled size="24px" />
           </IconButton>
         </div>
@@ -63,7 +66,7 @@ export default function Home() {
       {modalOpen && <TransactionModal onClose={() => setModalOpen(false)} />}
 
       {infoModalOpen && <InfoModal onClose={() => setInfoModalOpen(false)} />}
-      
+
       {profileModalOpen && (
         <ProfileModal onClose={() => setProfileModalOpen(false)} />
       )}
