@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
         const { name, email, password, savingTarget } = await request.json();
 
         if (!name || !email || !password) {
-            return NextResponse.json({ error: 'Preencha todos os campos para concluir o cadastro.' }, { status: 400 })
+            return NextResponse.json({ message: 'Preencha todos os campos para concluir o cadastro.' }, { status: 400 })
         }
 
         
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
         const existeUser = await User.findOne({ email });
         
         if (existeUser) {
-            return NextResponse.json({ error: 'Email já cadastrado' }, { status: 400 });
+            return NextResponse.json({ message: 'Email já cadastrado' }, { status: 400 });
         }
         
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -34,6 +34,6 @@ export async function POST(request: NextRequest) {
     }
     catch (error) {
         console.error(error);
-        return NextResponse.json({ error: 'Erro interno' }, { status: 500 });
+        return NextResponse.json({ message: 'Erro interno' }, { status: 500 });
     }
 }

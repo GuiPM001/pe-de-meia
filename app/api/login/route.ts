@@ -27,13 +27,13 @@ export async function POST(req: Request) {
     }
 
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id, email: user.email, name: user.name, savingTarget: user.savingTarget },
       //process.env.JWT_SECRET!,
       'seuSegredoSuperSecretoAqui123',
       { expiresIn: '1h' }
     );
 
-    return NextResponse.json({ token }, { status: 200 });
+    return NextResponse.json({ token, user }, { status: 200 });
 
   } catch (error) {
     console.error('Erro no login:', error);
