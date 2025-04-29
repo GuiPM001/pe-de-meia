@@ -1,7 +1,14 @@
 "use client";
 
-import React, { createContext, useState, ReactNode, useContext } from "react";
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useEffect,
+} from "react";
 import { Profile } from "../types/Profile";
+import { jwtDecode } from "jwt-decode";
 
 interface ProfileContextProps {
   profile: Profile;
@@ -17,11 +24,25 @@ const initialState: Profile = {
 
 const ProfileContext = createContext<ProfileContextProps>({
   profile: initialState,
-  setProfile: () => {}
+  setProfile: () => {},
 });
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile>(initialState);
+
+  useEffect(() => {
+    const cookies = document.cookie.split("; ");
+    const tokenCookie = cookies.find((cookie) =>
+      cookie.startsWith("authToken=")
+    );
+
+    const token = tokenCookie ? tokenCookie.split("=")[1] : null;
+
+    if (!token) return;
+
+    const decoded: Profile = jwtDecode(token!);
+    setProfile(decoded);
+  }, []);
 
   return (
     <ProfileContext.Provider value={{ profile, setProfile }}>

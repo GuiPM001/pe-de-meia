@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     }
 
     const token = jwt.sign(
-      { id: user._id, email: user.email, name: user.name, savingTarget: user.savingTarget },
+      { _id: user._id, email: user.email, name: user.name, savingTarget: user.savingTarget },
       //process.env.JWT_SECRET!,
       'seuSegredoSuperSecretoAqui123',
       { expiresIn: '1h' }
