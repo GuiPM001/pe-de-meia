@@ -34,6 +34,7 @@ export default function PasswordInput(props: InputProps) {
         <button
           className="absolute right-3 top-0 bottom-0 "
           onClick={togglePassword}
+          type="button"
         >
           {showPassword ? <TbEye /> : <TbEyeClosed />}
         </button>
