@@ -7,9 +7,17 @@ import Input from "../components/core/input";
 import PasswordInput from "../components/core/passwordInput";
 import Button from "../components/core/button";
 import CurrencyInput from "../components/core/currencyInput";
+import { RegisterRequest } from "../types/RegisterRequest";
+import { useRouter } from "next/navigation";
+import { ErrorResponse } from "../types/ErrorResponse";
+import { userService } from "../services/user.service";
 
 export default function Register() {
-  const [form, setForm] = useState({
+  const router = useRouter();
+
+  const [loading, setLoading] = useState<boolean>();
+  const [error, setError] = useState<ErrorResponse | null>(null);
+  const [form, setForm] = useState<RegisterRequest>({
     name: "",
     email: "",
     password: "",
@@ -23,8 +31,18 @@ export default function Register() {
     });
   };
 
-  const submitRegister = () => {
-    console.log(form);
+  const submitRegister = async () => {
+    try {
+      setLoading(true);
+
+      await userService.register(form);
+
+      router.replace("/login");
+    } catch (e: unknown) {
+      setError(e as ErrorResponse);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,6 +76,7 @@ export default function Register() {
               onChange={handleForm}
             />
             <PasswordInput
+              label="Senha"
               placeholder="********"
               name="password"
               value={form.password}
@@ -70,10 +89,17 @@ export default function Register() {
               onChange={handleForm}
             />
 
-            <Button type="submit" onClick={submitRegister}>
-              Cadastrar
+            <Button
+              type="submit"
+              onClick={submitRegister}
+              disabled={loading || !form.name || !form.email || !form.password}
+            >
+              {loading ? "Carregando..." : "Cadastrar"}
             </Button>
           </div>
+          {error && (
+            <span className="text-red-600 text-sm">{error.message}</span>
+          )}
         </div>
       </div>
     </div>

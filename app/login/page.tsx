@@ -6,9 +6,19 @@ import Image from "next/image";
 import Input from "../components/core/input";
 import PasswordInput from "../components/core/passwordInput";
 import Button from "../components/core/button";
+import { useRouter } from "next/navigation";
+import { LoginRequest } from "../types/LoginRequest";
+import { ErrorResponse } from "../types/ErrorResponse";
+import { userService } from "../services/user.service";
+import { useProfile } from "../context/ProfileContext";
 
 export default function Login() {
-  const [form, setForm] = useState({
+  const router = useRouter();
+  const { setProfile } = useProfile();
+
+  const [loading, setLoading] = useState<boolean>();
+  const [error, setError] = useState<ErrorResponse | null>(null);
+  const [form, setForm] = useState<LoginRequest>({
     email: "",
     password: "",
   });
@@ -20,8 +30,23 @@ export default function Login() {
     });
   };
 
-  const submitLogin = () => {
-    console.log(form);
+  const submitLogin = async () => {
+    try {
+      setLoading(true);
+
+      const response = await userService.login(form);
+
+      document.cookie = `authToken=${
+        response.token
+      }; path=/; max-age=${3600}; Secure; SameSite=Strict`;
+
+      setProfile(response.user);
+      router.replace("/");
+    } catch (e: unknown) {
+      setError(e as ErrorResponse);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,24 +69,38 @@ export default function Login() {
               label="E-mail"
               placeholder="seu@email.com"
               name="email"
+              type="email"
+              error={!!error}
               value={form.email}
               onChange={handleForm}
             />
             <PasswordInput
+              label="Senha"
               placeholder="********"
               name="password"
+              error={!!error}
               value={form.password}
               onChange={handleForm}
             />
 
-            <Button type="submit" onClick={submitLogin}>
-              Entrar
+            <Button
+              type="submit"
+              onClick={submitLogin}
+              disabled={loading || !form.email || !form.password}
+            >
+              {loading ? "Carregando..." : "Entrar"}
             </Button>
           </div>
+          {error && (
+            <span className="text-red-600 text-sm">{error.message}</span>
+          )}
 
           <p className="text-center text-gray-500 text-sm mt-2">
             Não tem uma conta?{" "}
-            <a href="register" className="text-primary hover:underline font-semibold">
+            <a
+              href="register"
+              className="text-primary hover:underline font-semibold"
+            >
               Cadastre-se
             </a>
           </p>

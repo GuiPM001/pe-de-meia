@@ -2,20 +2,26 @@
 
 import React, { createContext, useState, ReactNode, useContext } from "react";
 import { Profile } from "../types/Profile";
-import profileMock from "../../__mock/profile.json";
 
 interface ProfileContextProps {
   profile: Profile;
   setProfile: (profile: Profile) => void;
 }
 
+const initialState: Profile = {
+  _id: "",
+  name: "",
+  savingTarget: 0,
+  email: "",
+};
+
 const ProfileContext = createContext<ProfileContextProps>({
-  profile: { name: "", savingTarget: 0 },
-  setProfile: () => {},
+  profile: initialState,
+  setProfile: () => {}
 });
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
-  const [profile, setProfile] = useState<Profile>(profileMock);
+  const [profile, setProfile] = useState<Profile>(initialState);
 
   return (
     <ProfileContext.Provider value={{ profile, setProfile }}>
