@@ -31,16 +31,23 @@ export default function Register() {
     });
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitRegister();
+    }
+  };
+
   const submitRegister = async () => {
     try {
-      setLoading(true);
+      if (!form.name || !form.email || !form.password) return;
 
+      setLoading(true);
       await userService.register(form);
 
       router.replace("/login");
     } catch (e: unknown) {
       setError(e as ErrorResponse);
-    } finally {
       setLoading(false);
     }
   };
@@ -60,7 +67,7 @@ export default function Register() {
             Criar uma conta
           </h2>
 
-          <div className="space-y-6">
+          <form onKeyDown={handleKeyDown} className="space-y-6">
             <Input
               label="Nome"
               placeholder="Seu nome"
@@ -96,7 +103,7 @@ export default function Register() {
             >
               {loading ? "Carregando..." : "Cadastrar"}
             </Button>
-          </div>
+          </form>
           {error && (
             <span className="text-red-600 text-sm">{error.message}</span>
           )}

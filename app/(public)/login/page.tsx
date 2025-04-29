@@ -30,8 +30,17 @@ export default function Login() {
     });
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitLogin();
+    }
+  };
+
   const submitLogin = async () => {
     try {
+      if (!form.email || !form.password) return;
+
       setLoading(true);
 
       const response = await userService.login(form);
@@ -44,7 +53,6 @@ export default function Login() {
       router.replace("/");
     } catch (e: unknown) {
       setError(e as ErrorResponse);
-    } finally {
       setLoading(false);
     }
   };
@@ -64,7 +72,7 @@ export default function Login() {
             Bem-vindo de volta
           </h2>
 
-          <div className="space-y-6">
+          <form onKeyDown={handleKeyDown} className="space-y-6">
             <Input
               label="E-mail"
               placeholder="seu@email.com"
@@ -90,7 +98,7 @@ export default function Login() {
             >
               {loading ? "Carregando..." : "Entrar"}
             </Button>
-          </div>
+          </form>
           {error && (
             <span className="text-red-600 text-sm">{error.message}</span>
           )}
