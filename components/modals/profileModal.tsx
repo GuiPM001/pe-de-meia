@@ -8,6 +8,8 @@ import ModalContainer from "./modalContainer";
 import ModalTitle from "./modalTitle";
 import Input from "../core/input";
 import CurrencyInput from "../core/currencyInput";
+import { ErrorResponse } from "@/core/types/ErrorResponse";
+import { userService } from "@/core/services/user.service";
 
 interface ProfileModalProps {
   onClose: () => void;
@@ -17,6 +19,8 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
   const { profile, setProfile } = useProfile();
 
   const [form, setForm] = useState<Profile>(profile);
+  const [loading, setLoading] = useState<boolean>();
+  const [error, setError] = useState<ErrorResponse | null>(null);
 
   const handleForm = (value: string | number, name: string) => {
     setForm({
@@ -25,9 +29,19 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
     });
   };
 
-  const onSave = () => {
-    setProfile(form);
-    onClose();
+  const onSave = async () => {
+    try {
+      setLoading(true);
+
+      await userService.update(form);
+      setProfile(form);
+
+      setLoading(false);
+      onClose();
+    } catch (e: unknown) {
+      setError(e as ErrorResponse);
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,9 +66,11 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
         <ModalActions
           onClose={onClose}
           onSave={onSave}
+          loading={loading}
           saveDisabled={!form.name || !form.savingTarget}
         />
       </div>
+      {error && <span className="text-red-600 text-sm">{error.message}</span>}
     </ModalContainer>
   );
 }

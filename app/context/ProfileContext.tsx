@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { Profile } from "@/core/types/Profile";
 import { jwtDecode } from "jwt-decode";
+import { userService } from "@/core/services/user.service";
 
 interface ProfileContextProps {
   profile: Profile;
@@ -30,7 +31,12 @@ const ProfileContext = createContext<ProfileContextProps>({
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile>(initialState);
 
-  useEffect(() => {
+  const setProfileData = async (id: string) => {
+    const user = await userService.get(id);
+    setProfile(user);
+  };
+
+  const getAuthTokenData = (): Profile | null => {
     const cookies = document.cookie.split("; ");
     const tokenCookie = cookies.find((cookie) =>
       cookie.startsWith("authToken=")
@@ -38,11 +44,19 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
 
     const token = tokenCookie ? tokenCookie.split("=")[1] : null;
 
-    if (!token) return;
+    if (!token) return null;
 
-    const decoded: Profile = jwtDecode(token!);
-    setProfile(decoded);
-  }, []);
+    return jwtDecode(token!);
+  };
+
+  useEffect(() => {
+    if (profile._id) return;
+
+    const tokenData = getAuthTokenData();
+    if (!tokenData) return;
+
+    setProfileData(tokenData._id);
+  }, [profile._id]);
 
   return (
     <ProfileContext.Provider value={{ profile, setProfile }}>
