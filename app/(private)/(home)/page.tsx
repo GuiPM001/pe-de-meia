@@ -10,7 +10,7 @@ import {
   TbSettingsFilled,
 } from "react-icons/tb";
 import TransactionModal from "@/components/modals/transactionModal";
-import IconButton from "@/components/core/iconButton";
+import IconButton from "@/components/ui/iconButton";
 import ProfileModal from "@/components/modals/profileModal";
 import InfoModal from "@/components/modals/infoModal";
 

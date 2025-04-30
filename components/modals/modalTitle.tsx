@@ -1,5 +1,5 @@
 import React from "react";
-import IconButton from "../core/iconButton";
+import IconButton from "../ui/iconButton";
 import { TbX } from "react-icons/tb";
 
 interface ModalTitleProps {

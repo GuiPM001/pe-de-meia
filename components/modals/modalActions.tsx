@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../core/button";
+import Button from "../ui/button";
 
 interface ModalActionsProps {
   onClose: () => void;

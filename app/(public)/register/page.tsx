@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import logo from "@/app/assets/logo.png";
 import Image from "next/image";
-import Input from "@/components/core/input";
-import PasswordInput from "@/components/core/passwordInput";
-import Button from "@/components/core/button";
-import CurrencyInput from "@/components/core/currencyInput";
+import Input from "@/components/ui/input";
+import PasswordInput from "@/components/ui/passwordInput";
+import Button from "@/components/ui/button";
+import CurrencyInput from "@/components/ui/currencyInput";
 import { RegisterRequest } from "@/core/types/RegisterRequest";
 import { useRouter } from "next/navigation";
 import { ErrorResponse } from "@/core/types/ErrorResponse";

@@ -6,8 +6,8 @@ import React, { useState } from "react";
 import ModalActions from "./modalActions";
 import ModalContainer from "./modalContainer";
 import ModalTitle from "./modalTitle";
-import Input from "../core/input";
-import CurrencyInput from "../core/currencyInput";
+import Input from "../ui/input";
+import CurrencyInput from "../ui/currencyInput";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { userService } from "@/core/services/user.service";
 

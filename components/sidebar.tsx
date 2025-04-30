@@ -6,7 +6,7 @@ import monthsMock from "../__mock/months.json";
 import { getColors } from "@/core/utils/getColors";
 import { getMonthNameByDate } from "@/core/utils/date";
 import { useProfile } from "@/app/context/ProfileContext";
-import IconButton from "./core/iconButton";
+import IconButton from "./ui/iconButton";
 
 interface SidebarProps {
   monthSelected: number;

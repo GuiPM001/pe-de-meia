@@ -3,9 +3,9 @@
 import React, { useState } from "react";
 import logo from "@/app/assets/logo.png";
 import Image from "next/image";
-import Input from "@/components/core/input";
-import PasswordInput from "@/components/core/passwordInput";
-import Button from "@/components/core/button";
+import Input from "@/components/ui/input";
+import PasswordInput from "@/components/ui/passwordInput";
+import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { LoginRequest } from "@/core/types/LoginRequest";
 import { ErrorResponse } from "@/core/types/ErrorResponse";

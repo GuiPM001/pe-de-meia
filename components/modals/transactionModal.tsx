@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Input from "../core/input";
-import CurrencyInput from "../core/currencyInput";
+import Input from "../ui/input";
+import CurrencyInput from "../ui/currencyInput";
 import { TransactionType } from "@/core/enums/transactionType";
-import Select from "../core/select";
-import Checkbox from "../core/checkbox";
+import Select from "../ui/select";
+import Checkbox from "../ui/checkbox";
 import { Transaction } from "@/core/types/Transaction";
 import ModalContainer from "./modalContainer";
 import ModalActions from "./modalActions";
