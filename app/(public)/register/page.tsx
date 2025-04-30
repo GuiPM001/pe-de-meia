@@ -10,7 +10,7 @@ import CurrencyInput from "@/components/ui/currencyInput";
 import { RegisterRequest } from "@/core/types/RegisterRequest";
 import { useRouter } from "next/navigation";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
-import { userService } from "@/core/services/user.service";
+import { api } from "@/core/services/api";
 
 export default function Register() {
   const router = useRouter();
@@ -40,10 +40,9 @@ export default function Register() {
 
   const submitRegister = async () => {
     try {
-      if (!form.name || !form.email || !form.password) return;
-
       setLoading(true);
-      await userService.register(form);
+      
+      await api.post("/user/register", form);
 
       router.replace("/login");
     } catch (e: unknown) {

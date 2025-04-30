@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { Profile } from "@/core/types/Profile";
 import { jwtDecode } from "jwt-decode";
-import { userService } from "@/core/services/user.service";
+import { api } from "@/core/services/api";
 
 interface ProfileContextProps {
   profile: Profile;
@@ -32,7 +32,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile>(initialState);
 
   const setProfileData = async (id: string) => {
-    const user = await userService.get(id);
+    const user: Profile = await api.get(`/user?id=${id}`);
     setProfile(user);
   };
 

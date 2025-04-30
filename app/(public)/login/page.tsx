@@ -9,8 +9,9 @@ import Button from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { LoginRequest } from "@/core/types/LoginRequest";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
-import { userService } from "@/core/services/user.service";
 import { useProfile } from "@/app/context/ProfileContext";
+import { api } from "@/core/services/api";
+import { LoginResponse } from "@/core/types/LoginResponse";
 
 export default function Login() {
   const router = useRouter();
@@ -39,11 +40,9 @@ export default function Login() {
 
   const submitLogin = async () => {
     try {
-      if (!form.email || !form.password) return;
-
       setLoading(true);
 
-      const response = await userService.login(form);
+      const response: LoginResponse = await api.post("/user/login", form);
 
       document.cookie = `authToken=${
         response.token
@@ -92,7 +91,7 @@ export default function Login() {
             />
 
             <Button
-              type="submit"
+              type="button"
               onClick={submitLogin}
               disabled={loading || !form.email || !form.password}
             >

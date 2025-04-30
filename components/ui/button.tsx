@@ -22,7 +22,7 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       {...props}
-      className={`w-full rounded-md p-2 text-center font-semibold transition hover:text-white cursor-pointer ${getColors()} ${getVariant()} disabled:bg-gray-300 disabled:cursor-default`}
+      className={`w-full rounded-md p-2 text-center font-semibold transition hover:text-white cursor-pointer ${getColors()} ${getVariant()} disabled:bg-gray-200 disabled:cursor-default disabled:text-gray-400`}
     >
       {props.children}
     </button>

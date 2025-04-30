@@ -9,7 +9,7 @@ import ModalTitle from "./modalTitle";
 import Input from "../ui/input";
 import CurrencyInput from "../ui/currencyInput";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
-import { userService } from "@/core/services/user.service";
+import { api } from "@/core/services/api";
 
 interface ProfileModalProps {
   onClose: () => void;
@@ -33,7 +33,7 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
     try {
       setLoading(true);
 
-      await userService.update(form);
+      await api.put("/user/update", form);
       setProfile(form);
 
       setLoading(false);
