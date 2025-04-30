@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { DayBalance } from "../types/DayBalance";
-import { getColors } from "../utils/getColors";
-import { useProfile } from "../context/ProfileContext";
+import { DayBalance } from "@/core/types/DayBalance";
+import { getColors } from "@/core/utils/getColors";
+import { useProfile } from "@/app/context/ProfileContext";
 
 interface PaymentFlagProps {
   dayBalance: DayBalance;

@@ -1,7 +1,7 @@
-import { connectMongo } from '../db/mongodb';
+import { connectMongo } from '@/core/db/mongodb';
 import { NextRequest, NextResponse } from 'next/server';
-import { Months } from '../models/months';
-import { User } from '../models/user';
+import { Months } from '@/core/models/months';
+import { User } from '@/core/models/user';
 import mongoose from 'mongoose';
 
 export async function POST(request: NextRequest) {

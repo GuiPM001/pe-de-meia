@@ -1,7 +1,7 @@
 import React from "react";
-import { DayBalance } from "../types/DayBalance";
+import { DayBalance } from "@/core/types/DayBalance";
 import TransactionLabel from "./transactionLabel";
-import { TransactionType } from "../enums/transactionType";
+import { TransactionType } from "@/core/enums/transactionType";
 
 interface TransactionsContainerProps {
   dayBalance: DayBalance;

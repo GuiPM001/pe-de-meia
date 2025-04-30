@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Input from "../core/input";
 import CurrencyInput from "../core/currencyInput";
-import { TransactionType } from "../../enums/transactionType";
+import { TransactionType } from "@/core/enums/transactionType";
 import Select from "../core/select";
 import Checkbox from "../core/checkbox";
-import { Transaction } from "../../types/Transaction";
+import { Transaction } from "@/core/types/Transaction";
 import ModalContainer from "./modalContainer";
 import ModalActions from "./modalActions";
 import ModalTitle from "./modalTitle";

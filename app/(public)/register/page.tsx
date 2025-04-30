@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import logo from "@/app/assets/logo.png";
 import Image from "next/image";
-import Input from "@/app/components/core/input";
-import PasswordInput from "@/app/components/core/passwordInput";
-import Button from "@/app/components/core/button";
-import CurrencyInput from "@/app/components/core/currencyInput";
-import { RegisterRequest } from "@/app/types/RegisterRequest";
+import Input from "@/components/core/input";
+import PasswordInput from "@/components/core/passwordInput";
+import Button from "@/components/core/button";
+import CurrencyInput from "@/components/core/currencyInput";
+import { RegisterRequest } from "@/core/types/RegisterRequest";
 import { useRouter } from "next/navigation";
-import { ErrorResponse } from "@/app/types/ErrorResponse";
-import { userService } from "@/app/services/user.service";
+import { ErrorResponse } from "@/core/types/ErrorResponse";
+import { userService } from "@/core/services/user.service";
 
 export default function Register() {
   const router = useRouter();

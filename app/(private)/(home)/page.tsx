@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import Calendar from "../../components/calendar";
-import Sidebar from "../../components/sidebar";
-import { getMonthNameByMonth } from "../../utils/date";
+import Calendar from "@/components/calendar";
+import Sidebar from "@/components/sidebar";
+import { getMonthNameByMonth } from "@/core/utils/date";
 import {
   TbCirclePlusFilled,
   TbInfoCircleFilled,
   TbSettingsFilled,
 } from "react-icons/tb";
-import TransactionModal from "../../components/modals/transactionModal";
-import IconButton from "../../components/core/iconButton";
-import ProfileModal from "../../components/modals/profileModal";
-import InfoModal from "../../components/modals/infoModal";
+import TransactionModal from "@/components/modals/transactionModal";
+import IconButton from "@/components/core/iconButton";
+import ProfileModal from "@/components/modals/profileModal";
+import InfoModal from "@/components/modals/infoModal";
 
 export default function Home() {
   const [monthSelected, setMonthSelected] = useState<number>(

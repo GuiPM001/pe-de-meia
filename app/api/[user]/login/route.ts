@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { connectMongo } from '../db/mongodb';
-import { User } from '../models/user';
+import { connectMongo } from '@/core/db/mongodb';
+import { User } from '@/core/models/user';
 
 export async function POST(req: Request) {
   try {

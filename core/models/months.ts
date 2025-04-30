@@ -1,6 +1,6 @@
-import mongoose, { model, models } from 'mongoose';
+import { model, models, Schema } from 'mongoose';
 
-const MonthSchema = new mongoose.Schema({
+const MonthSchema = new Schema({
   monthBalance: { type: Number, required: true },
   idUser: { type: String, required: true },
   idMonth: { type: Date, required: true },

@@ -2,10 +2,10 @@
 
 import React from "react";
 import { TbChevronLeft, TbChevronRight } from "react-icons/tb";
-import monthsMock from "../../__mock/months.json";
-import { getColors } from "../utils/getColors";
-import { getMonthNameByDate } from "../utils/date";
-import { useProfile } from "../context/ProfileContext";
+import monthsMock from "../__mock/months.json";
+import { getColors } from "@/core/utils/getColors";
+import { getMonthNameByDate } from "@/core/utils/date";
+import { useProfile } from "@/app/context/ProfileContext";
 import IconButton from "./core/iconButton";
 
 interface SidebarProps {

@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import logo from "@/app/assets/logo.png";
 import Image from "next/image";
-import Input from "@/app/components/core/input";
-import PasswordInput from "@/app/components/core/passwordInput";
-import Button from "@/app/components/core/button";
+import Input from "@/components/core/input";
+import PasswordInput from "@/components/core/passwordInput";
+import Button from "@/components/core/button";
 import { useRouter } from "next/navigation";
-import { LoginRequest } from "@/app/types/LoginRequest";
-import { ErrorResponse } from "@/app/types/ErrorResponse";
-import { userService } from "@/app/services/user.service";
+import { LoginRequest } from "@/core/types/LoginRequest";
+import { ErrorResponse } from "@/core/types/ErrorResponse";
+import { userService } from "@/core/services/user.service";
 import { useProfile } from "@/app/context/ProfileContext";
 
 export default function Login() {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useProfile } from "@/app/context/ProfileContext";
-import { Profile } from "@/app/types/Profile";
+import { Profile } from "@/core/types/Profile";
 import React, { useState } from "react";
 import ModalActions from "./modalActions";
 import ModalContainer from "./modalContainer";

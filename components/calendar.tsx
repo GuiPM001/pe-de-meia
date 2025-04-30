@@ -2,11 +2,11 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import PaymentFlag from "./paymentFlag";
-import monthMock from "../../__mock/months.json";
-import transactionsMock from "../../__mock/transactions.json";
-import { TransactionType } from "../enums/transactionType";
-import { Transaction } from "../types/Transaction";
-import { DayBalance } from "../types/DayBalance";
+import monthMock from "../__mock/months.json";
+import transactionsMock from "../__mock/transactions.json";
+import { TransactionType } from "@/core/enums/transactionType";
+import { Transaction } from "@/core/types/Transaction";
+import { DayBalance } from "@/core/types/DayBalance";
 import CalendarHeader from "./calendarHeader";
 import TransactionsContainer from "./transactionsContainer";
 

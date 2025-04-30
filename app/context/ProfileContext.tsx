@@ -7,7 +7,7 @@ import React, {
   useContext,
   useEffect,
 } from "react";
-import { Profile } from "../types/Profile";
+import { Profile } from "@/core/types/Profile";
 import { jwtDecode } from "jwt-decode";
 
 interface ProfileContextProps {

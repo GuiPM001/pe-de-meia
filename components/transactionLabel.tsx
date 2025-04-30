@@ -1,5 +1,5 @@
 import React from "react";
-import { TransactionType } from "../enums/transactionType";
+import { TransactionType } from "@/core/enums/transactionType";
 import { TbCaretDownFilled, TbCaretUpFilled } from "react-icons/tb";
 
 interface TransactionLabelProps {
