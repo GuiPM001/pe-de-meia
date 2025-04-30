@@ -3,10 +3,16 @@ import { connectMongo } from "@/core/db/mongodb";
 import { Months } from "@/core/models/months";
 import { User } from "@/core/models/user";
 
-const getMonthsByIdUser = async (idUser: string) => {
+const getMonthsByIdUser = async (idUser: string, year: number) => {
   await connectMongo();
 
-  return await Months.find({ idUser });
+  const startOfYear = new Date(year, 0, 1);
+  const endOfYear = new Date(year + 1, 0, 1);
+
+  return await Months.find({
+    idUser,
+    id: { $gte: startOfYear, $lt: endOfYear },
+  });
 };
 
 const saveMonth = async (month: Month) => {
@@ -20,12 +26,12 @@ const saveMonth = async (month: Month) => {
   if (!user)
     throw new Error("É necessário um usuário cadastrado cadastrar um mês");
 
-  const monthRegistered = await Months.findOne({ id: month.id });
+  const monthRegistered = await Months.findOne({ id: month.id, idUser: month.id });
 
   if (monthRegistered)
     throw new Error("Mês ja cadastrado para usuario.");
 
-  await Months.create(month);
+  return await Months.create(month);
 };
 
 const saveMonthsNewUser = async (idUser: string) => {

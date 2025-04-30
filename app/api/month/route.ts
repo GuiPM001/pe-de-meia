@@ -5,12 +5,9 @@ export async function POST(request: NextRequest) {
   try {
     const monthRequest = await request.json();
 
-    await monthService.saveMonth(monthRequest);
+    const month = await monthService.saveMonth(monthRequest);
 
-    return NextResponse.json(
-      { message: "Mês cadastrado com sucesso" },
-      { status: 201 }
-    );
+    return NextResponse.json(month, { status: 201 });
   } catch (error: unknown) {
     const errorMessage = (error as Error).message;
     return NextResponse.json({ error: errorMessage }, { status: 500 });
