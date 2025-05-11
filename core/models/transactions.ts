@@ -1,0 +1,33 @@
+import { model, models, Schema } from "mongoose";
+import { TransactionType } from "../enums/transactionType";
+
+const UserSchema = new Schema({
+    date: {
+        type: String,
+        required: [true, 'Data é obrigatório']
+    },
+    description: {
+        type: String
+    },
+    value: {
+        type: Number,
+        required: [true, 'Valor da transação é obrigatorio']
+    },
+    recurrent: {
+        type: Boolean,
+        required: [true, 'Recorrencia é obrigatorio']
+    },
+    type: {
+        type: [TransactionType.income]
+    },
+    idUser: {
+        type: String,
+        required: [true, 'idUser é obrigatorio']
+    },
+    idMonth: {
+        type: String,
+        required: [true, 'idMonth é obrigatorio']
+    }
+})
+
+export const Transactions = models.Transactions || model('Transactions', UserSchema);

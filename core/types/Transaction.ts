@@ -6,4 +6,6 @@ export type Transaction = {
   value: number;
   recurrent: boolean;
   type: TransactionType;
+  idUser: string;
+  idMonth: string;
 };
