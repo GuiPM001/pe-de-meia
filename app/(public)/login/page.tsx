@@ -98,6 +98,7 @@ export default function Login() {
               {loading ? "Carregando..." : "Entrar"}
             </Button>
           </form>
+
           {error && (
             <span className="text-red-600 text-sm">{error.message}</span>
           )}

@@ -11,6 +11,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(user, { status: 200 });
   } catch (error: unknown) {
     const errorMessage = (error as Error).message;
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }

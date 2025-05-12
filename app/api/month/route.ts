@@ -10,6 +10,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(month, { status: 201 });
   } catch (error: unknown) {
     const errorMessage = (error as Error).message;
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
