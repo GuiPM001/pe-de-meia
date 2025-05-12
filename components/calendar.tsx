@@ -18,6 +18,8 @@ interface CalendarProps {
 export default function Calendar({ month, year }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
 
+  const today = new Date().getDate();
+
   useEffect(() => {
     const dayBalances: DayBalance[] = [];
     const currentDate = getStartDate();
@@ -36,18 +38,22 @@ export default function Calendar({ month, year }: CalendarProps) {
 
   const getTotalByType = (
     transactions: Transaction[],
-    transactionType: TransactionType
+    type: TransactionType,
+    recurrent?: boolean
   ) => {
-    return transactions
-      .filter((x) => x.type === transactionType)
-      .reduce((acc, x) => acc + x.value, 0);
+    let filtered = transactions.filter((x) => x.type === type);
+
+    if (recurrent !== undefined)
+      filtered = filtered.filter((x) => x.recurrent == recurrent);
+
+    return filtered.reduce((acc, x) => acc + x.value, 0);
   };
 
   const addDay = (
     date: Date,
     balances: DayBalance[],
     values?: Partial<DayBalance>
-  ) => {;
+  ) => {
     balances.push({
       day: date.getDate(),
       income: 0,
@@ -74,8 +80,16 @@ export default function Calendar({ month, year }: CalendarProps) {
       );
 
       const todayIncome = getTotalByType(transactions, TransactionType.income);
-      const todayExpense = getTotalByType(transactions, TransactionType.expense);
-      const todayDaily = getTotalByType(transactions, TransactionType.daily);
+      const todayExpense = getTotalByType(
+        transactions,
+        TransactionType.expense,
+        true
+      );
+      const todayDaily = getTotalByType(
+        transactions,
+        TransactionType.expense,
+        false
+      );
       const todayTotal = todayIncome - todayExpense - todayDaily;
 
       balance += todayTotal;
@@ -110,11 +124,15 @@ export default function Calendar({ month, year }: CalendarProps) {
           {x.total === null ? (
             <div className="bg-gray-100 h-full w-full"></div>
           ) : (
-            <>
-              <PaymentFlag dayBalance={x} />
+            <div
+              className={`h-full ${
+                x.day === today ? "border-3 border-primary-dark rounded-md" : ""
+              }`}
+            >
+              <PaymentFlag dayBalance={x} today={x.day === today} />
 
               <TransactionsContainer dayBalance={x} />
-            </>
+            </div>
           )}
         </div>
       ))}

@@ -7,9 +7,10 @@ import { useProfile } from "@/app/context/ProfileContext";
 
 interface PaymentFlagProps {
   dayBalance: DayBalance;
+  today: boolean;
 }
 
-export default function PaymentFlag({ dayBalance }: PaymentFlagProps) {
+export default function PaymentFlag({ dayBalance, today }: PaymentFlagProps) {
   const { profile } = useProfile();
 
   const [currencyValue, setCurrencyValue] = useState<string>();
@@ -25,8 +26,19 @@ export default function PaymentFlag({ dayBalance }: PaymentFlagProps) {
 
   return (
     <div className={`flex flex-row justify-around p-2`}>
-      <span className="px-1 font-bold">{dayBalance.day}</span>
-      <span className={`mr-4 ${getColors(dayBalance.total!, profile.savingTarget)} px-2 rounded-md font-bold`}>
+      <span
+        className={`px-1 font-bold ${
+          today ? "bg-primary-dark rounded-md text-white" : ""
+        }`}
+      >
+        {dayBalance.day}
+      </span>
+      <span
+        className={`mr-4 ${getColors(
+          dayBalance.total!,
+          profile.savingTarget
+        )} px-2 rounded-md font-bold`}
+      >
         {currencyValue}
       </span>
     </div>
