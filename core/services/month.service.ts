@@ -27,7 +27,7 @@ const saveMonth = async (month: Month) => {
   if (!user)
     throw new Error("É necessário um usuário cadastrado cadastrar um mês");
 
-  const monthRegistered = await Months.findOne({ id: month.id, idUser: month.id });
+  const monthRegistered = await Months.findOne({ id: month.id, idUser: month.idUser });
 
   if (monthRegistered)
     throw new Error("Mês ja cadastrado para usuario.");
@@ -77,7 +77,7 @@ const updateMonthBalance = async (idMonth: string, idUser: string, monthBalance:
   }
 
   await Months.findOneAndUpdate(
-    { idMonth, idUser },
+    { id: idMonth, idUser },
     { $set: { balance: month.balance } },
     { new: true }
   ).exec();

@@ -60,12 +60,17 @@ const registerTransaction = async (request: Transaction) => {
     const dataAtual = new Date();
     const anoAtual = dataAtual.getFullYear();
 
-    var monthsUser = monthService.getMonthsByIdUser(idUser,anoAtual);
+    var monthsUser = await monthService.getMonthsByIdUser(idUser, anoAtual);
 
-    // monthsUser.forEach(element => {
-        
-    // });
-    await monthService.updateMonthBalance(idMonth, idUser, value, type );
+    await monthsUser.forEach(element => {
+        var dataMes = new Date(element.id).getMonth()
+
+        if (dataMes >= dataAtual.getMonth()) {
+
+            monthService.updateMonthBalance(idMonth, idUser, value, type);
+        }
+
+    });
 };
 
 export const transactionService = { registerTransaction };
