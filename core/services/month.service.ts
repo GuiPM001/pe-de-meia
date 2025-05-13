@@ -58,7 +58,7 @@ const saveMonthsNewUser = async (idUser: string) => {
   const actualMonth = now.getMonth();
 
   for (let i = 0; i < 6; i++) {
-    const id = new Date(actualYear, actualMonth + i, 1).toISOString();
+    const id = new Date(actualYear, actualMonth + i, 1).toIsoDateString();
 
     await Months.create({ idUser, id, balance: 0 });
   }

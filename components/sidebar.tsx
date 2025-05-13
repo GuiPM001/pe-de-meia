@@ -32,7 +32,7 @@ export default function Sidebar({
 
   const generateEmptyMonth = useCallback(
     (indexMonth: number) => ({
-      id: new Date(yearSelected, indexMonth, 1).toISOString(),
+      id: new Date(yearSelected, indexMonth, 1).toIsoDateString(),
       balance: null,
       idUser: profile._id,
     }),

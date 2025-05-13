@@ -3,6 +3,7 @@ import { Transactions } from "../models/transactions";
 import { Transaction } from "../types/Transaction";
 import { monthService } from "./month.service";
 import { User } from "../models/user";
+import "@/core/utils/date.extensions";
 
 const registerTransaction = async (transaction: Transaction) => {
   const { date, value, description, type, idUser, idMonth } = transaction;
@@ -18,36 +19,40 @@ const registerTransaction = async (transaction: Transaction) => {
   if (!user)
     throw new Error("É necessário um usuário cadastrado cadastrar um mês");
 
+  const months = await monthService.getFutureMonthsByIdUser(idUser, idMonth);
+
   switch (transaction.recurrent) {
     case true:
       const transactionsToInsert = [];
       const originalDate = new Date(transaction.date);
       const month = originalDate.getUTCMonth();
 
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < months.length; i++) {
         const futureDate = new Date(originalDate);
         futureDate.setMonth(month + i);
         futureDate.setDate(1);
 
         transactionsToInsert.push({
           ...transaction,
-          idMonth: futureDate.toISOString(),
+          idMonth: futureDate.toIsoDateString(),
           recurrent: true,
         });
       }
 
       await Transactions.insertMany(transactionsToInsert);
+
+      await months.forEach(async (month) => {
+        await monthService.updateMonthBalance(month, idUser, transaction);
+      });
+
       break;
 
     case false:
       await Transactions.create(transaction);
+      await months.forEach(async (month) => {
+        await monthService.updateMonthBalance(month, idUser, transaction);
+      });
   }
-
-  const months = await monthService.getFutureMonthsByIdUser(idUser, idMonth);
-
-  await months.forEach(async (month) => {
-    await monthService.updateMonthBalance(month, idUser, transaction);
-  });
 };
 
 const getTransactionsByMonthId = async (

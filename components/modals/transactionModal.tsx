@@ -26,7 +26,7 @@ export default function TransactionModal({
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [form, setForm] = useState<Transaction>({
-    date: new Date().toISOString().split("T")[0],
+    date: new Date().toIsoDateString(),
     description: "",
     recurrent: false,
     type: TransactionType.expense,
