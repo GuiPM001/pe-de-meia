@@ -4,12 +4,13 @@ import { Months } from "@/core/models/months";
 import { User } from "@/core/models/user";
 import { TransactionType } from "../enums/transactionType";
 import { Transaction } from "../types/Transaction";
+import "@/core/utils/date.extensions";
 
 const getMonthsByIdUser = async (idUser: string, year: number) => {
   await connectMongo();
 
-  const startOfYear = new Date(year, 0, 1);
-  const endOfYear = new Date(year + 1, 0, 1);
+  const startOfYear = new Date(year, 0, 1).toIsoDateString();
+  const endOfYear = new Date(year + 1, 0, 1).toIsoDateString();
 
   return await Months.find({
     idUser,

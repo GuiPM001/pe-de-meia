@@ -7,6 +7,7 @@ import IconButton from "./ui/iconButton";
 import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
 import MonthButton from "./monthButton";
+import "@/core/utils/date.extensions";
 
 interface SidebarProps {
   monthSelected: number;
@@ -49,9 +50,10 @@ export default function Sidebar({
         return;
       }
 
-      const firstMonth = new Date(months[0].id).getMonth();
-      const lastMonth = new Date(months.at(-1)!.id).getMonth();
+      const firstMonth = new Date(months[0].id).getUTCMonth();
+      const lastMonth = new Date(months.at(-1)!.id).getUTCMonth();
 
+      console.log(months[0].id)
       for (let i = 0; i < 12; i++) {
         if (i > lastMonth + 1) break;
 

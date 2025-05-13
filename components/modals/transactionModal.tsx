@@ -11,6 +11,7 @@ import ModalTitle from "./modalTitle";
 import { useProfile } from "@/app/context/ProfileContext";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
+import "@/core/utils/date.extensions";
 
 interface TransactionModalProps {
   onClose: () => void;

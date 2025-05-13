@@ -2,13 +2,14 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import PaymentFlag from "./paymentFlag";
-import transactionsMock from "../__mock/transactions.json";
 import { TransactionType } from "@/core/enums/transactionType";
 import { Transaction } from "@/core/types/Transaction";
 import { DayBalance } from "@/core/types/DayBalance";
 import CalendarHeader from "./calendarHeader";
 import TransactionsContainer from "./transactionsContainer";
 import { Month } from "@/core/types/Month";
+import { api } from "@/core/services/api";
+import { useProfile } from "@/app/context/ProfileContext";
 
 interface CalendarProps {
   month: Month;
@@ -18,19 +19,41 @@ interface CalendarProps {
 
 export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const { profile } = useProfile();
 
   const today = new Date();
 
   useEffect(() => {
+    setLoading(true);
     const dayBalances: DayBalance[] = [];
     const currentDate = getStartDate();
 
+    getTransactions();
     addDaysBefore(currentDate, dayBalances);
     addMonthlyDays(currentDate, dayBalances);
     completeGrid(currentDate, dayBalances);
 
     setDayBalances(dayBalances);
+
+    setLoading(false);
   }, [indexMonth]);
+
+  const getTransactions = async () => {
+    const transactions: Transaction[] = await api.get(
+      `/transaction/get-by-id-month`,
+      {
+        params: {
+          idMonth: month.id,
+          idUser: profile._id,
+        },
+      }
+    );
+
+    setTransactions(transactions);
+  };
 
   const getStartDate = useCallback(() => {
     const date = new Date(year, indexMonth, 1, 3, 0, 0);
@@ -76,10 +99,6 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     let balance = month.balance ?? 0;
 
     while (currentDate.getMonth() === indexMonth) {
-      const transactions = transactionsMock.filter(
-        (x) => new Date(x.date).toDateString() === currentDate.toDateString()
-      );
-
       const todayIncome = getTotalByType(transactions, TransactionType.income);
       const todayExpense = getTotalByType(
         transactions,
@@ -112,6 +131,10 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
       currentDate.setDate(currentDate.getDate() + 1);
     }
   };
+
+  if (loading) {
+    return (<div>CARREGANDO...</div>)
+  }
 
   return (
     <div className="grid grid-cols-7 w-full">

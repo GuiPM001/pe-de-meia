@@ -14,6 +14,7 @@ import IconButton from "@/components/ui/iconButton";
 import ProfileModal from "@/components/modals/profileModal";
 import InfoModal from "@/components/modals/infoModal";
 import { Month } from "@/core/types/Month";
+import "@/core/utils/date.extensions";
 
 export default function Home() {
   const [indexMonthSelected, setIndexMonthSelected] = useState<number>(
