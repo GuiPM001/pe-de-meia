@@ -28,7 +28,7 @@ export default function PaymentFlag({ dayBalance, today }: PaymentFlagProps) {
     <div className={`flex flex-row justify-around p-2`}>
       <span
         className={`px-1 font-bold ${
-          today ? "bg-primary-dark rounded-md text-white" : ""
+          today ? "bg-gray-600 rounded-md text-white" : ""
         }`}
       >
         {dayBalance.day}

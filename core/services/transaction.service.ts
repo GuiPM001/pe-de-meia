@@ -1,76 +1,25 @@
 import { connectMongo } from "@/core/db/mongodb";
 import { Transactions } from "../models/transactions";
 import { Transaction } from "../types/Transaction";
-import { User } from "../models/user";
-import { Months } from "../models/months";
 import { monthService } from "./month.service";
-import { Month } from "../types/Month";
-import { TransactionType } from "../enums/transactionType";
 
-const registerTransaction = async (request: Transaction) => {
-    const { date, value, description, recurrent, type, idUser, idMonth } = request;
+const registerTransaction = async (transaction: Transaction) => {
+  const { date, value, description, type, idUser, idMonth } = transaction;
 
-    if (!value || !date || !recurrent || !type || !idUser || !idMonth)
-        throw new Error("É necessario preencher todos os campos para cadastrar uma transação.");
+  if (!value || !date || !description || !type || !idUser || !idMonth)
+    throw new Error(
+      "É necessario preencher todos os campos para cadastrar uma transação."
+    );
 
-    await connectMongo();
+  await connectMongo();
 
+  await Transactions.create(transaction);
+  
+  const months = await monthService.getFutureMonthsByIdUser(idUser, idMonth);
 
-    const user = await User.findById({ _id: idUser });
-
-    if (!user)
-        throw new Error("É necessário um usuário cadastrado cadastrar um mês");
-
-    const month = await Months.findById({ id: idMonth });
-
-    if (!month) {
-
-        var balanceMonth = 0;
-        switch (request.type) {
-            case TransactionType.income:
-                balanceMonth += value
-                break;
-            case TransactionType.expense:
-                balanceMonth -= value
-                break;
-            default:
-                balanceMonth
-                break;
-        }
-
-        var newMonth: Month = {
-            id: idMonth,
-            balance: balanceMonth,
-            idUser
-        }
-
-        monthService.saveMonth(newMonth)
-    }
-
-    await Transactions.create({
-        date,
-        value,
-        description,
-        recurrent,
-        type,
-        idUser,
-        idMonth
-    });
-
-    const dataAtual = new Date();
-    const anoAtual = dataAtual.getFullYear();
-
-    var monthsUser = await monthService.getMonthsByIdUser(idUser, anoAtual);
-
-    await monthsUser.forEach(element => {
-        var dataMes = new Date(element.id).getMonth()
-
-        if (dataMes >= dataAtual.getMonth()) {
-
-            monthService.updateMonthBalance(idMonth, idUser, value, type);
-        }
-
-    });
+  await months.forEach(async (month) => {
+    await monthService.updateMonthBalance(month, idUser, transaction);
+  });
 };
 
 export const transactionService = { registerTransaction };

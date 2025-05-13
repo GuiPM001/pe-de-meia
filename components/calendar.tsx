@@ -2,23 +2,24 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 import PaymentFlag from "./paymentFlag";
-import monthMock from "../__mock/months.json";
 import transactionsMock from "../__mock/transactions.json";
 import { TransactionType } from "@/core/enums/transactionType";
 import { Transaction } from "@/core/types/Transaction";
 import { DayBalance } from "@/core/types/DayBalance";
 import CalendarHeader from "./calendarHeader";
 import TransactionsContainer from "./transactionsContainer";
+import { Month } from "@/core/types/Month";
 
 interface CalendarProps {
-  month: number;
+  month: Month;
+  indexMonth: number;
   year: number;
 }
 
-export default function Calendar({ month, year }: CalendarProps) {
+export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
 
-  const today = new Date().getDate();
+  const today = new Date();
 
   useEffect(() => {
     const dayBalances: DayBalance[] = [];
@@ -29,12 +30,12 @@ export default function Calendar({ month, year }: CalendarProps) {
     completeGrid(currentDate, dayBalances);
 
     setDayBalances(dayBalances);
-  }, [month]);
+  }, [indexMonth]);
 
   const getStartDate = useCallback(() => {
-    const date = new Date(year, month, 1, 3, 0, 0);
-    return new Date(year, month, 1 - date.getDay(), 3, 0, 0);
-  }, [month, year]);
+    const date = new Date(year, indexMonth, 1, 3, 0, 0);
+    return new Date(year, indexMonth, 1 - date.getDay(), 3, 0, 0);
+  }, [indexMonth, year]);
 
   const getTotalByType = (
     transactions: Transaction[],
@@ -65,16 +66,16 @@ export default function Calendar({ month, year }: CalendarProps) {
   };
 
   const addDaysBefore = (currentDate: Date, dayBalances: DayBalance[]) => {
-    while (currentDate.getMonth() !== month) {
+    while (currentDate.getMonth() !== indexMonth) {
       addDay(currentDate, dayBalances);
       currentDate.setDate(currentDate.getDate() + 1);
     }
   };
 
   const addMonthlyDays = (currentDate: Date, dayBalances: DayBalance[]) => {
-    let balance = monthMock[month].initialBalance;
+    let balance = month.balance ?? 0;
 
-    while (currentDate.getMonth() === month) {
+    while (currentDate.getMonth() === indexMonth) {
       const transactions = transactionsMock.filter(
         (x) => new Date(x.date).toDateString() === currentDate.toDateString()
       );
@@ -126,10 +127,17 @@ export default function Calendar({ month, year }: CalendarProps) {
           ) : (
             <div
               className={`h-full ${
-                x.day === today ? "border-3 border-primary-dark rounded-md" : ""
+                x.day === today.getDate() && today.getMonth() === indexMonth
+                  ? "border-3 border-gray-600 rounded-md"
+                  : ""
               }`}
             >
-              <PaymentFlag dayBalance={x} today={x.day === today} />
+              <PaymentFlag
+                dayBalance={x}
+                today={
+                  x.day === today.getDate() && today.getMonth() === indexMonth
+                }
+              />
 
               <TransactionsContainer dayBalance={x} />
             </div>

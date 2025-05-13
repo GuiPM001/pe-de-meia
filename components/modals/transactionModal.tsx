@@ -8,18 +8,31 @@ import { Transaction } from "@/core/types/Transaction";
 import ModalContainer from "./modalContainer";
 import ModalActions from "./modalActions";
 import ModalTitle from "./modalTitle";
+import { useProfile } from "@/app/context/ProfileContext";
+import { ErrorResponse } from "@/core/types/ErrorResponse";
+import { api } from "@/core/services/api";
 
 interface TransactionModalProps {
   onClose: () => void;
+  idMonth: string;
 }
 
-export default function TransactionModal({ onClose }: TransactionModalProps) {
+export default function TransactionModal({
+  onClose,
+  idMonth,
+}: TransactionModalProps) {
+  const { profile } = useProfile();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<ErrorResponse | null>(null);
   const [form, setForm] = useState<Transaction>({
     date: new Date().toISOString().split("T")[0],
     description: "",
     recurrent: false,
-    type: TransactionType.daily,
+    type: TransactionType.expense,
     value: 0,
+    idUser: "",
+    idMonth,
   });
 
   const handleForm = (
@@ -32,9 +45,18 @@ export default function TransactionModal({ onClose }: TransactionModalProps) {
     });
   };
 
-  const onSave = () => {
-    console.log(form);
-    onClose();
+  const onSave = async () => {
+    try {
+      setLoading(true);
+
+      await api.post("/transaction/register", { ...form, idUser: profile._id });
+
+      setLoading(false);
+      onClose();
+    } catch (e: unknown) {
+      setError(e as ErrorResponse);
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,7 +81,7 @@ export default function TransactionModal({ onClose }: TransactionModalProps) {
         <CurrencyInput
           label="Valor"
           value={form.value}
-          onChange={(e) => handleForm(e.target.value, "value")}
+          onChange={(e) => handleForm(parseFloat(e.target.value), "value")}
         />
         <Select
           label="Tipo"
@@ -68,7 +90,6 @@ export default function TransactionModal({ onClose }: TransactionModalProps) {
           options={[
             { label: "Entrada", value: TransactionType.income },
             { label: "Saída", value: TransactionType.expense },
-            { label: "Gasto diário", value: TransactionType.daily },
           ]}
         />
       </div>
@@ -84,8 +105,11 @@ export default function TransactionModal({ onClose }: TransactionModalProps) {
       <ModalActions
         onClose={onClose}
         onSave={onSave}
+        loading={loading}
         saveDisabled={!form.description || !form.date || !form.value}
       />
+
+      {error && <span className="text-red-600 text-sm">{error.message}</span>}
     </ModalContainer>
   );
 }

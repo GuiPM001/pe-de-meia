@@ -1,5 +1,4 @@
 import { model, models, Schema } from "mongoose";
-import { TransactionType } from "../enums/transactionType";
 
 const UserSchema = new Schema({
     date: {
@@ -18,7 +17,7 @@ const UserSchema = new Schema({
         required: [true, 'Recorrencia é obrigatorio']
     },
     type: {
-        type: [TransactionType.income]
+        type: Number
     },
     idUser: {
         type: String,

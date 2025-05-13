@@ -3,6 +3,7 @@ import { connectMongo } from "@/core/db/mongodb";
 import { Months } from "@/core/models/months";
 import { User } from "@/core/models/user";
 import { TransactionType } from "../enums/transactionType";
+import { Transaction } from "../types/Transaction";
 
 const getMonthsByIdUser = async (idUser: string, year: number) => {
   await connectMongo();
@@ -13,6 +14,18 @@ const getMonthsByIdUser = async (idUser: string, year: number) => {
   return await Months.find({
     idUser,
     id: { $gte: startOfYear, $lt: endOfYear },
+  });
+};
+
+const getFutureMonthsByIdUser = async (
+  idUser: string,
+  idMonth: string
+): Promise<Month[]> => {
+  await connectMongo();
+
+  return await Months.find({
+    idUser,
+    id: { $gte: new Date(idMonth) },
   });
 };
 
@@ -27,10 +40,12 @@ const saveMonth = async (month: Month) => {
   if (!user)
     throw new Error("É necessário um usuário cadastrado cadastrar um mês");
 
-  const monthRegistered = await Months.findOne({ id: month.id, idUser: month.idUser });
+  const monthRegistered = await Months.findOne({
+    id: month.id,
+    idUser: month.idUser,
+  });
 
-  if (monthRegistered)
-    throw new Error("Mês ja cadastrado para usuario.");
+  if (monthRegistered) throw new Error("Mês ja cadastrado para usuario.");
 
   return await Months.create(month);
 };
@@ -49,38 +64,29 @@ const saveMonthsNewUser = async (idUser: string) => {
   }
 };
 
-const getMonthByIdUser = async (idMonth: string, idUser: string) => {
-
+const updateMonthBalance = async (
+  month: Month,
+  idUser: string,
+  transaction: Transaction
+) => {
   await connectMongo();
 
-  return await Months.findOne({
-    idUser,
-    id: idMonth
-  });
-}
+  const totalBalance =
+    transaction.type == TransactionType.income
+      ? month.balance! + transaction.value
+      : month.balance! - transaction.value;
 
-const updateMonthBalance = async (idMonth: string, idUser: string, monthBalance: number, recurrent: TransactionType) => {
-  await connectMongo();
-
-  var month = await getMonthByIdUser(idUser, idMonth);
-
-  if (!month)
-    throw new Error("Mês não existente para ser atualizado.");
-
-  switch (recurrent) {
-    case TransactionType.income:
-      month.balance += monthBalance
-      break;
-    case TransactionType.expense:
-      month.balance -= monthBalance
-      break;
-  }
-
-  await Months.findOneAndUpdate(
-    { id: idMonth, idUser },
-    { $set: { balance: month.balance } },
+  await Months.updateOne(
+    { id: month.id, idUser },
+    { $set: { balance: totalBalance } },
     { new: true }
-  ).exec();
-}
+  );
+};
 
-export const monthService = { saveMonth, saveMonthsNewUser, getMonthsByIdUser, updateMonthBalance };
+export const monthService = {
+  saveMonth,
+  saveMonthsNewUser,
+  getMonthsByIdUser,
+  getFutureMonthsByIdUser,
+  updateMonthBalance,
+};

@@ -13,6 +13,7 @@ interface SidebarProps {
   setMonthSelected: (month: number) => void;
   yearSelected: number;
   setYearSelected: (year: number) => void;
+  setMonth: (month: Month) => void;
 }
 
 export default function Sidebar({
@@ -20,6 +21,7 @@ export default function Sidebar({
   setMonthSelected,
   yearSelected,
   setYearSelected,
+  setMonth
 }: SidebarProps) {
   const { profile } = useProfile();
 
@@ -93,8 +95,8 @@ export default function Sidebar({
     const lastBalance = monthsResponse.at(-1)?.balance ?? 0;
 
     const response: Month = await api.post("/month", {
-      idUser: profile._id,
       id: month,
+      idUser: profile._id,
       balance: lastBalance,
     });
 
@@ -131,6 +133,7 @@ export default function Sidebar({
             selected={monthSelected === index}
             savingTarget={profile.savingTarget}
             setMonthSelected={setMonthSelected}
+            setMonth={setMonth}
             addMonth={createMonth}
             monthLoading={monthLoading}
           />
