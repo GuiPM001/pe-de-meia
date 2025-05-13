@@ -13,7 +13,6 @@ const registerTransaction = async (transaction: Transaction) => {
     );
 
   await connectMongo();
-
   const user = await User.findById({ _id: idUser });
 
   if (!user)
@@ -21,17 +20,18 @@ const registerTransaction = async (transaction: Transaction) => {
 
   switch (transaction.recurrent) {
     case true:
+      const transactionsToInsert = [];
       const originalDate = new Date(transaction.date);
       const month = originalDate.getUTCMonth();
-
-      const transactionsToInsert = [];
 
       for (let i = 0; i < 12; i++) {
         const futureDate = new Date(originalDate);
         futureDate.setMonth(month + i);
+        futureDate.setDate(1);
+
         transactionsToInsert.push({
           ...transaction,
-          date: futureDate.toISOString(),
+          idMonth: futureDate.toISOString(),
           recurrent: true,
         });
       }
@@ -41,7 +41,6 @@ const registerTransaction = async (transaction: Transaction) => {
 
     case false:
       await Transactions.create(transaction);
-      break;
   }
 
   const months = await monthService.getFutureMonthsByIdUser(idUser, idMonth);
@@ -51,4 +50,20 @@ const registerTransaction = async (transaction: Transaction) => {
   });
 };
 
-export const transactionService = { registerTransaction };
+const getTransactionsByMonthId = async (
+  idMonth: string,
+  idUser: string
+): Promise<Transaction[]> => {
+  console.log(idMonth);
+  if (!idMonth)
+    throw new Error(
+      "É necessario informar um més para retornar as transações."
+    );
+
+  return await Transactions.find({ idMonth, idUser });
+};
+
+export const transactionService = {
+  registerTransaction,
+  getTransactionsByMonthId,
+};
