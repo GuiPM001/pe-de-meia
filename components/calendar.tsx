@@ -10,6 +10,7 @@ import TransactionsContainer from "./transactionsContainer";
 import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
 import { useProfile } from "@/app/context/ProfileContext";
+import "@/core/utils/date.extensions";
 
 interface CalendarProps {
   month: Month;
@@ -19,7 +20,6 @@ interface CalendarProps {
 
 export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { profile } = useProfile();
@@ -27,22 +27,30 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const today = new Date();
 
   useEffect(() => {
-    setLoading(true);
-    const dayBalances: DayBalance[] = [];
-    const currentDate = getStartDate();
+    const fetchData = async () => {
+      setLoading(true);
+      const dayBalances: DayBalance[] = [];
+      const currentDate = getStartDate();
 
-    getTransactions();
-    addDaysBefore(currentDate, dayBalances);
-    addMonthlyDays(currentDate, dayBalances);
-    completeGrid(currentDate, dayBalances);
+      const [transactions, lastBalance] = await Promise.all([
+        getTransactions(),
+        getLastBalance(),
+      ]);
 
-    setDayBalances(dayBalances);
+      addDaysBefore(currentDate, dayBalances);
+      addMonthlyDays(currentDate, dayBalances, transactions, lastBalance);
+      completeGrid(currentDate, dayBalances);
 
-    setLoading(false);
-  }, [indexMonth]);
+      setDayBalances(dayBalances);
+
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [indexMonth, profile]);
 
   const getTransactions = async () => {
-    const transactions: Transaction[] = await api.get(
+    const response: Transaction[] = await api.get(
       `/transaction/get-by-id-month`,
       {
         params: {
@@ -52,7 +60,20 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
       }
     );
 
-    setTransactions(transactions);
+    return response;
+  };
+
+  const getLastBalance = async () => {
+    const [y, m, d] = month.id.split("-").map(Number);
+
+    const response: Month = await api.get(`/month/get-by-id`, {
+      params: {
+        idMonth: new Date(y, m - 2, d).toISODateString(),
+        idUser: profile._id,
+      },
+    });
+
+    return response?.balance ?? 0;
   };
 
   const getStartDate = useCallback(() => {
@@ -89,24 +110,36 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   };
 
   const addDaysBefore = (currentDate: Date, dayBalances: DayBalance[]) => {
-    while (currentDate.getMonth() !== indexMonth) {
+    while (currentDate.getUTCMonth() !== indexMonth) {
       addDay(currentDate, dayBalances);
       currentDate.setDate(currentDate.getDate() + 1);
     }
   };
 
-  const addMonthlyDays = (currentDate: Date, dayBalances: DayBalance[]) => {
-    let balance = month.balance ?? 0;
+  const addMonthlyDays = (
+    currentDate: Date,
+    dayBalances: DayBalance[],
+    transactions: Transaction[],
+    lastBalance: number
+  ) => {
+    let balance = lastBalance;
 
-    while (currentDate.getMonth() === indexMonth) {
-      const todayIncome = getTotalByType(transactions, TransactionType.income);
+    while (currentDate.getUTCMonth() === indexMonth) {
+      const transactionsActual = transactions.filter(
+        (x) => x.date === currentDate.toISODateString()
+      );
+
+      const todayIncome = getTotalByType(
+        transactionsActual,
+        TransactionType.income
+      );
       const todayExpense = getTotalByType(
-        transactions,
+        transactionsActual,
         TransactionType.expense,
         true
       );
       const todayDaily = getTotalByType(
-        transactions,
+        transactionsActual,
         TransactionType.expense,
         false
       );
@@ -133,7 +166,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   };
 
   if (loading) {
-    return (<div>CARREGANDO...</div>)
+    return <div>CARREGANDO...</div>;
   }
 
   return (
@@ -150,7 +183,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
           ) : (
             <div
               className={`h-full ${
-                x.day === today.getDate() && today.getMonth() === indexMonth
+                x.day === today.getDate() && today.getUTCMonth() === indexMonth
                   ? "border-3 border-gray-600 rounded-md"
                   : ""
               }`}
@@ -158,7 +191,8 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
               <PaymentFlag
                 dayBalance={x}
                 today={
-                  x.day === today.getDate() && today.getMonth() === indexMonth
+                  x.day === today.getDate() &&
+                  today.getUTCMonth() === indexMonth
                 }
               />
 

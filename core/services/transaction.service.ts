@@ -34,7 +34,7 @@ const registerTransaction = async (transaction: Transaction) => {
 
         transactionsToInsert.push({
           ...transaction,
-          idMonth: futureDate.toIsoDateString(),
+          idMonth: futureDate.toISODateString(),
           recurrent: true,
         });
       }
@@ -59,7 +59,6 @@ const getTransactionsByMonthId = async (
   idMonth: string,
   idUser: string
 ): Promise<Transaction[]> => {
-  console.log(idMonth);
   if (!idMonth)
     throw new Error(
       "É necessario informar um més para retornar as transações."

@@ -18,14 +18,14 @@ import "@/core/utils/date.extensions";
 
 export default function Home() {
   const [indexMonthSelected, setIndexMonthSelected] = useState<number>(
-    new Date().getMonth()
+    new Date().getUTCMonth()
   );
   const [yearSelected, setYearSelected] = useState<number>(
     new Date().getFullYear()
   );
   const [monthSelected, setMonthSelected] = useState<Month>({
     balance: 0,
-    id: new Date(yearSelected, indexMonthSelected, 1).toIsoDateString(),
+    id: new Date(yearSelected, indexMonthSelected, 1).toISODateString(),
     idUser: "",
   });
 

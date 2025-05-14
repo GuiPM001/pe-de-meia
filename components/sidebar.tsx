@@ -33,7 +33,7 @@ export default function Sidebar({
 
   const generateEmptyMonth = useCallback(
     (indexMonth: number) => ({
-      id: new Date(yearSelected, indexMonth, 1).toIsoDateString(),
+      id: new Date(yearSelected, indexMonth, 1).toISODateString(),
       balance: null,
       idUser: profile._id,
     }),
@@ -52,8 +52,7 @@ export default function Sidebar({
 
       const firstMonth = new Date(months[0].id).getUTCMonth();
       const lastMonth = new Date(months.at(-1)!.id).getUTCMonth();
-
-      console.log(months[0].id)
+      
       for (let i = 0; i < 12; i++) {
         if (i > lastMonth + 1) break;
 

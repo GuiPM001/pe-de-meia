@@ -9,8 +9,8 @@ import "@/core/utils/date.extensions";
 const getMonthsByIdUser = async (idUser: string, year: number) => {
   await connectMongo();
 
-  const startOfYear = new Date(year, 0, 1).toIsoDateString();
-  const endOfYear = new Date(year + 1, 0, 1).toIsoDateString();
+  const startOfYear = new Date(year, 0, 1).toISODateString();
+  const endOfYear = new Date(year + 1, 0, 1).toISODateString();
 
   return await Months.find({
     idUser,
@@ -26,7 +26,7 @@ const getFutureMonthsByIdUser = async (
 
   return await Months.find({
     idUser,
-    id: { $gte: new Date(idMonth) },
+    id: { $gte: idMonth },
   });
 };
 
@@ -56,10 +56,10 @@ const saveMonthsNewUser = async (idUser: string) => {
 
   const now = new Date();
   const actualYear = now.getFullYear();
-  const actualMonth = now.getMonth();
+  const actualMonth = now.getUTCMonth();
 
   for (let i = 0; i < 6; i++) {
-    const id = new Date(actualYear, actualMonth + i, 1).toIsoDateString();
+    const id = new Date(actualYear, actualMonth + i, 1).toISODateString();
 
     await Months.create({ idUser, id, balance: 0 });
   }
@@ -84,10 +84,20 @@ const updateMonthBalance = async (
   );
 };
 
+const getMonthById = async (idUser: string, idMonth: string) => {
+  await connectMongo();
+
+  return await Months.findOne({
+    id: idMonth,
+    idUser,
+  });
+};
+
 export const monthService = {
   saveMonth,
   saveMonthsNewUser,
   getMonthsByIdUser,
   getFutureMonthsByIdUser,
   updateMonthBalance,
+  getMonthById,
 };

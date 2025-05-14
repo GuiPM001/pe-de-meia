@@ -2,10 +2,10 @@ export {};
 
 declare global {
   interface Date {
-    toIsoDateString(): string;
+    toISODateString(): string;
   }
 }
 
-Date.prototype.toIsoDateString = function (): string {
+Date.prototype.toISODateString = function (): string {
   return this.toISOString().split("T")[0];
 };
