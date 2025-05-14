@@ -63,11 +63,24 @@ const getTransactionsByMonthId = async (
     throw new Error(
       "É necessario informar um més para retornar as transações."
     );
+  await connectMongo();
 
   return await Transactions.find({ idMonth, idUser });
+};
+
+const deleteTransaction = async (idTransaction: string) => {
+  if (!idTransaction)
+    throw new Error(
+      "É necessario informar o id da transação para excluir a transação."
+    );
+
+  await connectMongo();
+  
+  await Transactions.findByIdAndDelete({ _id: idTransaction });
 };
 
 export const transactionService = {
   registerTransaction,
   getTransactionsByMonthId,
+  deleteTransaction,
 };
