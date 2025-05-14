@@ -12,6 +12,7 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
 import "@/core/utils/date.extensions";
+import { useTransaction } from "@/app/context/TransactionContext";
 
 interface TransactionModalProps {
   onClose: () => void;
@@ -23,6 +24,7 @@ export default function TransactionModal({
   idMonth,
 }: TransactionModalProps) {
   const { profile } = useProfile();
+  const { transactions, setTransactions } = useTransaction();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | null>(null);
@@ -50,7 +52,14 @@ export default function TransactionModal({
     try {
       setLoading(true);
 
-      await api.post("/transaction/register", { ...form, idUser: profile._id });
+      const newTransaction = {
+        ...form,
+        idUser: profile._id,
+        type: parseInt(form.type.toString()),
+      };
+
+      await api.post("/transaction/register", newTransaction);
+      setTransactions([...transactions, newTransaction]);
 
       setLoading(false);
       onClose();

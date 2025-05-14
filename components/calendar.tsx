@@ -10,6 +10,7 @@ import TransactionsContainer from "./transactionsContainer";
 import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
 import { useProfile } from "@/app/context/ProfileContext";
+import { useTransaction } from "@/app/context/TransactionContext";
 import "@/core/utils/date.extensions";
 
 interface CalendarProps {
@@ -21,33 +22,35 @@ interface CalendarProps {
 export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [lastBalance, setLastBalance] = useState<number>(0);
 
   const { profile } = useProfile();
+  const { transactions, setTransactions } = useTransaction();
 
   const today = new Date();
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const dayBalances: DayBalance[] = [];
-      const currentDate = getStartDate();
 
-      const [transactions, lastBalance] = await Promise.all([
-        getTransactions(),
-        getLastBalance(),
-      ]);
-
-      addDaysBefore(currentDate, dayBalances);
-      addMonthlyDays(currentDate, dayBalances, transactions, lastBalance);
-      completeGrid(currentDate, dayBalances);
-
-      setDayBalances(dayBalances);
+      await Promise.all([getTransactions(), getLastBalance()]);
 
       setLoading(false);
     };
 
     fetchData();
   }, [indexMonth, profile]);
+
+  useEffect(() => {
+    const dayBalances: DayBalance[] = [];
+    const currentDate = getStartDate();
+
+    addDaysBefore(currentDate, dayBalances);
+    addMonthlyDays(currentDate, dayBalances, transactions, lastBalance);
+    completeGrid(currentDate, dayBalances);
+
+    setDayBalances(dayBalances);
+  }, [transactions]);
 
   const getTransactions = async () => {
     const response: Transaction[] = await api.get(
@@ -60,6 +63,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
       }
     );
 
+    setTransactions(response);
     return response;
   };
 
@@ -73,6 +77,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
       },
     });
 
+    setLastBalance(response?.balance ?? 0);
     return response?.balance ?? 0;
   };
 
@@ -89,7 +94,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     let filtered = transactions.filter((x) => x.type === type);
 
     if (recurrent !== undefined)
-      filtered = filtered.filter((x) => x.recurrent == recurrent);
+      filtered = filtered.filter((x) => x.recurrent === recurrent);
 
     return filtered.reduce((acc, x) => acc + x.value, 0);
   };
@@ -143,6 +148,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
         TransactionType.expense,
         false
       );
+
       const todayTotal = todayIncome - todayExpense - todayDaily;
 
       balance += todayTotal;

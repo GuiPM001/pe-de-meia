@@ -6,9 +6,9 @@ import { User } from "../models/user";
 import "@/core/utils/date.extensions";
 
 const registerTransaction = async (transaction: Transaction) => {
-  const { date, value, description, type, idUser, idMonth } = transaction;
+  const { date, value, description, idUser, idMonth } = transaction;
 
-  if (!value || !date || !description || !type || !idUser || !idMonth)
+  if (!value || !date || !description || !idUser || !idMonth)
     throw new Error(
       "É necessario preencher todos os campos para cadastrar uma transação."
     );
