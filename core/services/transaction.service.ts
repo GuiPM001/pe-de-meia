@@ -25,11 +25,11 @@ const registerTransaction = async (transaction: Transaction) => {
     case true:
       const transactionsToInsert = [];
       const originalDate = new Date(transaction.date);
-      const month = originalDate.getUTCMonth();
+      const monthOriginal = originalDate.getUTCMonth();
 
       for (let i = 0; i < months.length; i++) {
         const futureDate = new Date(originalDate);
-        futureDate.setMonth(month + i);
+        futureDate.setMonth(monthOriginal + i);
         futureDate.setDate(1);
 
         transactionsToInsert.push({
@@ -38,20 +38,36 @@ const registerTransaction = async (transaction: Transaction) => {
           recurrent: true,
         });
       }
-
       await Transactions.insertMany(transactionsToInsert);
 
-      await months.forEach(async (month) => {
+      const incrementValue = transaction.value;
+
+      for (const month of months) {
+        if (month.id !== transaction.idMonth) {
+          transaction.value += incrementValue;
+        }
         await monthService.updateMonthBalance(month, idUser, transaction);
-      });
+      }
 
       break;
 
     case false:
+      
       await Transactions.create(transaction);
+
       await months.forEach(async (month) => {
-        await monthService.updateMonthBalance(month, idUser, transaction);
+
+        const transactionIdMonth = new Date(transaction.idMonth);
+        const monthTransaction = transactionIdMonth.getMonth();
+        const monthIdDate = new Date(month.id);
+        const monthId = monthIdDate.getMonth();
+
+        if (monthId >= monthTransaction) {
+          await monthService.updateMonthBalance(month, idUser, transaction);
+        }
       });
+
+      break;
   }
 };
 
@@ -75,7 +91,7 @@ const deleteTransaction = async (idTransaction: string) => {
     );
 
   await connectMongo();
-  
+
   await Transactions.findByIdAndDelete({ _id: idTransaction });
 };
 
