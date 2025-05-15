@@ -26,7 +26,6 @@ export default function MonthButton({
   const now = new Date();
   const dateMonth = new Date(month.id);
 
-
   return (
     <>
       {dateMonth > now && month.balance === null ? (

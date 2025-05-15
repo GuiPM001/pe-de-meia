@@ -8,15 +8,13 @@ interface TransactionContextProps {
   setTransactions: (transactions: Transaction[]) => void;
 }
 
-const initialState: Transaction[] = [];
-
 const TransactionContext = createContext<TransactionContextProps>({
-  transactions: initialState,
+  transactions: [],
   setTransactions: () => {},
 });
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>(initialState);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   return (
     <TransactionContext.Provider value={{ transactions, setTransactions }}>

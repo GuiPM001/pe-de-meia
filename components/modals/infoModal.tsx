@@ -5,11 +5,12 @@ import { TbCaretDownFilled, TbCaretUpFilled } from "react-icons/tb";
 
 interface InfoModalProps {
   onClose: () => void;
+  open: boolean;
 }
 
-export default function InfoModal({ onClose }: InfoModalProps) {
+export default function InfoModal({ onClose, open }: InfoModalProps) {
   return (
-    <ModalContainer>
+    <ModalContainer open={open}>
       <ModalTitle title="Info" onClose={onClose} />
 
       <div className="flex flex-col gap-6">

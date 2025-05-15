@@ -16,19 +16,19 @@ import { useTransaction } from "@/app/context/TransactionContext";
 
 interface TransactionModalProps {
   onClose: () => void;
+  open: boolean,
   idMonth: string;
 }
 
 export default function TransactionModal({
   onClose,
+  open,
   idMonth,
 }: TransactionModalProps) {
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<ErrorResponse | null>(null);
-  const [form, setForm] = useState<Transaction>({
+  const initialState = {
     date: new Date().toISODateString(),
     description: "",
     recurrent: false,
@@ -36,7 +36,11 @@ export default function TransactionModal({
     value: 0,
     idUser: "",
     idMonth,
-  });
+  }
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<ErrorResponse | null>(null);
+  const [form, setForm] = useState<Transaction>(initialState);
 
   const handleForm = (
     value: string | boolean | number | TransactionType,
@@ -62,6 +66,7 @@ export default function TransactionModal({
       setTransactions([...transactions, newTransaction]);
 
       setLoading(false);
+      setForm(initialState);
       onClose();
     } catch (e: unknown) {
       setError(e as ErrorResponse);
@@ -70,7 +75,7 @@ export default function TransactionModal({
   };
 
   return (
-    <ModalContainer>
+    <ModalContainer open={open}>
       <ModalTitle title="Adicionar transação" onClose={onClose} />
 
       <div className="flex flex-row gap-6 mb-6">

@@ -6,8 +6,10 @@ import { useProfile } from "@/app/context/ProfileContext";
 import IconButton from "./ui/iconButton";
 import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
-import MonthButton from "./monthButton";
+import { useTransaction } from "@/app/context/TransactionContext";
 import "@/core/utils/date.extensions";
+import { useMonth } from "@/app/context/MonthContext";
+import MonthButton from "./monthButton";
 
 interface SidebarProps {
   monthSelected: number;
@@ -22,14 +24,15 @@ export default function Sidebar({
   setMonthSelected,
   yearSelected,
   setYearSelected,
-  setMonth
+  setMonth,
 }: SidebarProps) {
   const { profile } = useProfile();
 
-  const [monthsResponse, setMonthsResponse] = useState<Month[]>([]);
-  const [months, setMonths] = useState<Month[]>([]);
   const [monthLoading, setMonthLoading] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { transactions } = useTransaction();
+  const { months, setMonths } = useMonth();
 
   const generateEmptyMonth = useCallback(
     (indexMonth: number) => ({
@@ -40,60 +43,63 @@ export default function Sidebar({
     [profile._id, yearSelected]
   );
 
-  const getMonthList = useCallback(
-    (months: Month[]) => {
-      const allMonths: Month[] = [];
+  const getMonthList = (months: Month[]) => {
+    const allMonths: Month[] = [];
 
-      if (!months.length) {
-        allMonths.push(generateEmptyMonth(0));
-        setMonths(allMonths);
-        return;
-      }
-
-      const firstMonth = new Date(months[0].id).getUTCMonth();
-      const lastMonth = new Date(months.at(-1)!.id).getUTCMonth();
-      
-      for (let i = 0; i < 12; i++) {
-        if (i > lastMonth + 1) break;
-
-        if (i === firstMonth) {
-          i += months.length - 1;
-          allMonths.push(...months);
-          continue;
-        }
-
-        allMonths.push(generateEmptyMonth(i));
-      }
-
+    if (!months.length) {
+      allMonths.push(generateEmptyMonth(0));
       setMonths(allMonths);
-    },
-    [generateEmptyMonth]
-  );
+      return;
+    }
+
+    const firstMonth = new Date(months[0].id).getUTCMonth();
+    const lastMonth = new Date(months.at(-1)!.id).getUTCMonth();
+
+    for (let i = 0; i < 12; i++) {
+      if (i > lastMonth + 1) break;
+
+      if (i === firstMonth) {
+        allMonths.push(...months);
+        i += months.length - 1;
+        continue;
+      }
+
+      allMonths.push(generateEmptyMonth(i));
+    }
+
+    setMonths(allMonths);
+  };
+
+  const getMonths = async () => {
+    setMonths([]);
+
+    const userMonths: Month[] = await api.get(`/month/get-by-id-user`, {
+      params: {
+        year: yearSelected,
+        idUser: profile._id,
+      },
+    });
+
+    getMonthList(userMonths);
+  };
 
   useEffect(() => {
-    setMonths([]);
-    setMonthsResponse([]);
+    if (!profile._id) return;
+
     setLoading(true);
 
-    const getMonths = async () => {
-      const userMonths: Month[] = await api.get(`/month/get-by-id-user`, {
-        params: {
-          year: yearSelected,
-          idUser: profile._id,
-        },
-      });
-
-      setMonthsResponse(userMonths);
-      getMonthList(userMonths);
-      setLoading(false);
-    };
-
     getMonths();
-  }, [profile._id, yearSelected, getMonthList]);
+
+    setLoading(false);
+  }, [profile._id, yearSelected]);
+
+  useEffect(() => {
+    getMonths();
+  }, [transactions]);
 
   const createMonth = async (month: string) => {
     setMonthLoading(month);
-    const lastBalance = monthsResponse.at(-1)?.balance ?? 0;
+    const lastBalance = months.at(-2)?.balance ?? 0;
 
     const response: Month = await api.post("/month", {
       id: month,
@@ -101,8 +107,9 @@ export default function Sidebar({
       balance: lastBalance,
     });
 
-    const newMonths = [...monthsResponse, response];
-    setMonthsResponse(newMonths);
+    months.pop();
+    const newMonths = [...months, response];
+
     getMonthList(newMonths);
     setMonthLoading("");
   };

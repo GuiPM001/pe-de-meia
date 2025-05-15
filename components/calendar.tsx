@@ -11,6 +11,7 @@ import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useTransaction } from "@/app/context/TransactionContext";
+import { useMonth } from "@/app/context/MonthContext";
 import "@/core/utils/date.extensions";
 
 interface CalendarProps {
@@ -22,19 +23,22 @@ interface CalendarProps {
 export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [lastBalance, setLastBalance] = useState<number>(0);
 
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
+  const { months } = useMonth();
 
   const today = new Date();
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!profile._id) return;
+
       setLoading(true);
 
-      await Promise.all([getTransactions(), getLastBalance()]);
+      const transactions = await getTransactions();
 
+      setTransactions(transactions);
       setLoading(false);
     };
 
@@ -46,7 +50,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     const currentDate = getStartDate();
 
     addDaysBefore(currentDate, dayBalances);
-    addMonthlyDays(currentDate, dayBalances, transactions, lastBalance);
+    addMonthlyDays(currentDate, dayBalances, transactions);
     completeGrid(currentDate, dayBalances);
 
     setDayBalances(dayBalances);
@@ -63,22 +67,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
       }
     );
 
-    setTransactions(response);
     return response;
-  };
-
-  const getLastBalance = async () => {
-    const [y, m, d] = month.id.split("-").map(Number);
-
-    const response: Month = await api.get(`/month/get-by-id`, {
-      params: {
-        idMonth: new Date(y, m - 2, d).toISODateString(),
-        idUser: profile._id,
-      },
-    });
-
-    setLastBalance(response?.balance ?? 0);
-    return response?.balance ?? 0;
   };
 
   const getStartDate = useCallback(() => {
@@ -124,10 +113,9 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const addMonthlyDays = (
     currentDate: Date,
     dayBalances: DayBalance[],
-    transactions: Transaction[],
-    lastBalance: number
+    transactions: Transaction[]
   ) => {
-    let balance = lastBalance;
+    let balance = months[indexMonth - 1]?.balance ?? 0;
 
     while (currentDate.getUTCMonth() === indexMonth) {
       const transactionsActual = transactions.filter(

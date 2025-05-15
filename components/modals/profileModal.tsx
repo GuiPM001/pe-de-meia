@@ -2,7 +2,7 @@
 
 import { useProfile } from "@/app/context/ProfileContext";
 import { Profile } from "@/core/types/Profile";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalActions from "./modalActions";
 import ModalContainer from "./modalContainer";
 import ModalTitle from "./modalTitle";
@@ -13,9 +13,10 @@ import { api } from "@/core/services/api";
 
 interface ProfileModalProps {
   onClose: () => void;
+  open: boolean
 }
 
-export default function ProfileModal({ onClose }: ProfileModalProps) {
+export default function ProfileModal({ onClose, open }: ProfileModalProps) {
   const { profile, setProfile } = useProfile();
 
   const [form, setForm] = useState<Profile>(profile);
@@ -28,6 +29,10 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
       [name]: value,
     });
   };
+
+  useEffect(() => {
+    setForm(profile);
+  }, [open])
 
   const onSave = async () => {
     try {
@@ -45,7 +50,7 @@ export default function ProfileModal({ onClose }: ProfileModalProps) {
   };
 
   return (
-    <ModalContainer>
+    <ModalContainer open={open}>
       <ModalTitle title="Perfil" onClose={onClose} />
 
       <div className="flex flex-col gap-6">
