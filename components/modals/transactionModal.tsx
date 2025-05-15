@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../ui/input";
 import CurrencyInput from "../ui/currencyInput";
 import { TransactionType } from "@/core/enums/transactionType";
@@ -16,7 +16,7 @@ import { useTransaction } from "@/app/context/TransactionContext";
 
 interface TransactionModalProps {
   onClose: () => void;
-  open: boolean,
+  open: boolean;
   idMonth: string;
 }
 
@@ -36,11 +36,22 @@ export default function TransactionModal({
     value: 0,
     idUser: "",
     idMonth,
-  }
+  };
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [form, setForm] = useState<Transaction>(initialState);
+
+  useEffect(() => {
+    const today = new Date();
+    const [year, month] = idMonth.split("-").map(Number);
+
+    setForm({
+      ...form,
+      idMonth,
+      date: new Date(year, month - 1, today.getDate()).toISODateString(),
+    });
+  }, [idMonth]);
 
   const handleForm = (
     value: string | boolean | number | TransactionType,

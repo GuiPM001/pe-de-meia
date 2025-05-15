@@ -24,20 +24,24 @@ const registerTransaction = async (transaction: Transaction) => {
   switch (transaction.recurrent) {
     case true:
       const transactionsToInsert = [];
-      const originalDate = new Date(transaction.date);
-      const monthOriginal = originalDate.getUTCMonth();
+
+      const [year, month, day] = transaction.date.split("-").map(Number);
+      const baseYear = year;
+      const baseMonth = month - 1;
 
       for (let i = 0; i < months.length; i++) {
-        const futureDate = new Date(originalDate);
-        futureDate.setMonth(monthOriginal + i);
-        futureDate.setDate(1);
+        const date = new Date(Date.UTC(baseYear, baseMonth + i, 1));
 
         transactionsToInsert.push({
           ...transaction,
-          idMonth: futureDate.toISODateString(),
+          idMonth: date.toISOString().split("T")[0],
           recurrent: true,
+          date: new Date(Date.UTC(baseYear, baseMonth + i, day))
+            .toISOString()
+            .split("T")[0],
         });
       }
+
       await Transactions.insertMany(transactionsToInsert);
 
       const incrementValue = transaction.value;
@@ -52,11 +56,9 @@ const registerTransaction = async (transaction: Transaction) => {
       break;
 
     case false:
-      
       await Transactions.create(transaction);
 
       await months.forEach(async (month) => {
-
         const transactionIdMonth = new Date(transaction.idMonth);
         const monthTransaction = transactionIdMonth.getMonth();
         const monthIdDate = new Date(month.id);
