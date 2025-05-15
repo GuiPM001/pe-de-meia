@@ -41,7 +41,7 @@ export default function Register() {
   const submitRegister = async () => {
     try {
       setLoading(true);
-      
+
       await api.post("/user/register", form);
 
       router.replace("/login");
@@ -106,6 +106,16 @@ export default function Register() {
           {error && (
             <span className="text-red-600 text-sm">{error.message}</span>
           )}
+
+          <p className="text-center text-gray-500 text-sm mt-2">
+            Já possui conta?{" "}
+            <a
+              href="login"
+              className="text-primary hover:underline font-semibold"
+            >
+              Entrar
+            </a>
+          </p>
         </div>
       </div>
     </div>
