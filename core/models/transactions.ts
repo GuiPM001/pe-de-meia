@@ -26,6 +26,9 @@ const UserSchema = new Schema({
     idMonth: {
         type: String,
         required: [true, 'idMonth é obrigatorio']
+    },
+     recurrenceId: {
+        type: String,
     }
 })
 
