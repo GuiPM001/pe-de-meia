@@ -4,6 +4,7 @@ import { Transaction } from "../types/Transaction";
 import { monthService } from "./month.service";
 import { User } from "../models/user";
 import "@/core/utils/date.extensions";
+import { TransactionType } from "../enums/transactionType";
 import { Month } from "../types/Month";
 
 const registerTransaction = async (transaction: Transaction) => {
@@ -133,22 +134,15 @@ const updateTransaction = async (
   if (transaction.recurrenceId) {
     switch (transactionNew.recurrent) {
       case true:
-        transaction.description = transactionNew.description;
-        transaction.value = transactionNew.value;
-        transaction.recurrent = transactionNew.recurrent;
-        transaction.date = transactionNew.date;
-        transaction.type = transactionNew.type;
-        await registerTransaction(transaction);
-        await updateTransactionsRecurrents(transaction, months);
+        // await updateTransactionsRecurrents(transaction, months);
         return;
       case false:
-        await deleteFutureTransactions(transaction, idTransaction);
-        await updateMonthBalanceNoRecurrent(transaction, months);
-        console.log(transactionNew);
-        await Transactions.findByIdAndUpdate(idTransaction, {
-          $set: transactionNew,
-        });
-
+        await updateRecurringTransactionInstances(
+          transactionNew,
+          transaction,
+          months,
+          idTransaction
+        );
         break;
     }
   }
@@ -163,6 +157,42 @@ const deleteFutureTransactions = async (
     recurrenceId: transaction.recurrenceId,
     _id: { $ne: idTransaction },
   });
+};
+
+const updateRecurringTransactionInstances = async (
+  transactionNew: Transaction,
+  transactionOld: Transaction,
+  months: Month[],
+  idTransaction: string
+) => {
+  await deleteFutureTransactions(transactionOld, idTransaction);
+  await Transactions.findByIdAndUpdate(idTransaction, {
+    $set: transactionNew,
+  });
+
+  const incrementValue = transactionOld.value;
+  let hasSwitchedType = false;
+  for (const month of months) {
+    if (month.id !== transactionOld.idMonth) {
+      transactionOld.value += incrementValue;
+
+      if (!hasSwitchedType) {
+        transactionNew.type =
+          transactionNew.type == TransactionType.income
+            ? TransactionType.expense
+            : TransactionType.income;
+
+        hasSwitchedType = true;
+      }
+
+      transactionNew.value = transactionOld.value;
+    }
+    await monthService.updateMonthBalance(
+      month,
+      transactionOld.idUser,
+      transactionNew
+    );
+  }
 };
 
 export const transactionService = {
