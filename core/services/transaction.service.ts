@@ -29,6 +29,7 @@ const registerTransaction = async (transaction: Transaction) => {
       const [year, month, day] = transaction.date.split("-").map(Number);
       const baseYear = year;
       const baseMonth = month - 1;
+      const recurrenceId = crypto.randomUUID();
 
       for (let i = 0; i < months.length; i++) {
         const date = new Date(Date.UTC(baseYear, baseMonth + i, 1));
@@ -40,19 +41,43 @@ const registerTransaction = async (transaction: Transaction) => {
           date: new Date(Date.UTC(baseYear, baseMonth + i, day))
             .toISOString()
             .split("T")[0],
-          recurrenceId: crypto.randomUUID(),
+          recurrenceId: recurrenceId,
         });
       }
 
       await Transactions.insertMany(transactionsToInsert);
-      await updateTransactionsRecurrents(transaction, months);
+      const incrementValue = transaction.value;
+
+      for (const month of months) {
+        if (month.id !== transaction.idMonth) {
+          transaction.value += incrementValue;
+        }
+        await monthService.updateMonthBalance(
+          month,
+          transaction.idUser,
+          transaction
+        );
+      }
 
       break;
 
     case false:
       await Transactions.create(transaction);
 
-      await updateTransactionsNotRecurrents(transaction, months);
+      await months.forEach(async (month) => {
+        const transactionIdMonth = new Date(transaction.idMonth);
+        const monthTransaction = transactionIdMonth.getMonth();
+        const monthIdDate = new Date(month.id);
+        const monthId = monthIdDate.getMonth();
+
+        if (monthId >= monthTransaction) {
+          await monthService.updateMonthBalance(
+            month,
+            transaction.idUser,
+            transaction
+          );
+        }
+      });
       break;
   }
 };
@@ -97,7 +122,7 @@ const updateTransaction = async (
       "É necessario informar os campos obrigatorios para concluir a atualização da transação"
     );
   }
-  
+
   await connectMongo();
   const transaction = await Transactions.findById({ _id: idTransaction });
   const months = await monthService.getFutureMonthsByIdUser(
@@ -106,73 +131,27 @@ const updateTransaction = async (
   );
 
   if (transaction.recurrenceId) {
-    switch (transaction.recurrent) {
+    switch (transactionNew.recurrent) {
       case true:
-        await deleteFutureTransactions(transaction, idTransaction);
-        await updateTransactionsNotRecurrents(transaction, months);
-        break;
-      case false:
         transaction.description = transactionNew.description;
         transaction.value = transactionNew.value;
         transaction.recurrent = transactionNew.recurrent;
         transaction.date = transactionNew.date;
         transaction.type = transactionNew.type;
         await registerTransaction(transaction);
+        await updateTransactionsRecurrents(transaction, months);
         return;
+      case false:
+        await deleteFutureTransactions(transaction, idTransaction);
+        await updateMonthBalanceNoRecurrent(transaction, months);
+        console.log(transactionNew);
+        await Transactions.findByIdAndUpdate(idTransaction, {
+          $set: transactionNew,
+        });
+
+        break;
     }
   }
-
-  transaction.description = transactionNew.description;
-  transaction.value = transactionNew.value;
-  transaction.recurrent = transactionNew.recurrent;
-  transaction.date = transactionNew.date;
-  transaction.type = transactionNew.type;
-
-  switch (transaction.recurrent) {
-    case true:
-      await updateTransactionsRecurrents(transaction, months);
-      break;
-    case false:
-      break;
-  }
-};
-
-const updateTransactionsRecurrents = async (
-  transaction: Transaction,
-  months: Month[]
-) => {
-  const incrementValue = transaction.value;
-
-  for (const month of months) {
-    if (month.id !== transaction.idMonth) {
-      transaction.value += incrementValue;
-    }
-    await monthService.updateMonthBalance(
-      month,
-      transaction.idUser,
-      transaction
-    );
-  }
-};
-
-const updateTransactionsNotRecurrents = async (
-  transaction: Transaction,
-  months: Month[]
-) => {
-  await months.forEach(async (month) => {
-    const transactionIdMonth = new Date(transaction.idMonth);
-    const monthTransaction = transactionIdMonth.getMonth();
-    const monthIdDate = new Date(month.id);
-    const monthId = monthIdDate.getMonth();
-
-    if (monthId >= monthTransaction) {
-      await monthService.updateMonthBalance(
-        month,
-        transaction.idUser,
-        transaction
-      );
-    }
-  });
 };
 
 const deleteFutureTransactions = async (
