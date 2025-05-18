@@ -3,10 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(request: NextRequest) {
   try {
-   const { searchParams } = new URL(request.url);
-    const idTransaction = searchParams.get("idTransaction") || "";
+    const jsonRequest = await request.json();
 
-    await transactionService.deleteTransaction(idTransaction);
+    await transactionService.deleteTransaction(
+      jsonRequest.idsTransaction,
+      jsonRequest.deleteRecurrent
+    );
 
     return NextResponse.json(
       { message: "Transação excluida com sucesso." },

@@ -85,7 +85,11 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     if (recurrent !== undefined)
       filtered = filtered.filter((x) => x.recurrent === recurrent);
 
-    return filtered.reduce((acc, x) => acc + x.value, 0);
+    return {
+      idsTransaction: filtered.map(x => x._id),
+      value: filtered.reduce((acc, x) => acc + x.value, 0),
+      description: filtered.map(x => x.description).join(' - ')
+    };
   };
 
   const addDay = (
@@ -95,10 +99,11 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   ) => {
     balances.push({
       day: date.getDate(),
-      income: 0,
-      expense: 0,
-      daily: 0,
+      income: null,
+      expense: null,
+      daily: null,
       total: null,
+      description: '',
       ...values,
     });
   };
@@ -137,7 +142,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
         false
       );
 
-      const todayTotal = todayIncome - todayExpense - todayDaily;
+      const todayTotal = todayIncome.value - todayExpense.value - todayDaily.value;
 
       balance += todayTotal;
 
@@ -145,7 +150,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
         income: todayIncome,
         expense: todayExpense,
         daily: todayDaily,
-        total: balance,
+        total: balance
       });
 
       currentDate.setDate(currentDate.getDate() + 1);
@@ -169,7 +174,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
 
       {dayBalances.map((x) => (
         <div
-          className="border border-gray-200 h-28"
+          className="border border-gray-200 h-30"
           key={`${x.day}-${x.total}`}
         >
           {x.total === null ? (

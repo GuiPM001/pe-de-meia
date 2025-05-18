@@ -96,15 +96,15 @@ const getTransactionsByMonthId = async (
   return await Transactions.find({ idMonth, idUser });
 };
 
-const deleteTransaction = async (idTransaction: string) => {
-  if (!idTransaction)
+const deleteTransaction = async (idsTransaction: string[], deleteRecurrent: boolean) => {
+  if (!idsTransaction)
     throw new Error(
       "É necessario informar o id da transação para excluir a transação."
     );
 
   await connectMongo();
 
-  await Transactions.findByIdAndDelete({ _id: idTransaction });
+  await Transactions.findByIdAndDelete({ _id: idsTransaction[0] });
 };
 
 const updateTransaction = async (
