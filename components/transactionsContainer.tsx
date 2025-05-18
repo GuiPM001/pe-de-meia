@@ -15,14 +15,17 @@ export default function TransactionsContainer({
       <TransactionLabel
         type={TransactionType.income}
         transaction={dayBalance.income}
+        idMonth={dayBalance.idMonth}
       />
       <TransactionLabel
         type={TransactionType.expense}
         transaction={dayBalance.expense}
+        idMonth={dayBalance.idMonth}
       />
       <TransactionLabel
         type={TransactionType.daily}
         transaction={dayBalance.daily}
+        idMonth={dayBalance.idMonth}
       />
     </div>
   );

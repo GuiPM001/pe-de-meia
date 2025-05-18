@@ -9,11 +9,13 @@ import DeleteTransactionModal from "./modals/deleteTransactionModal";
 interface TransactionLabelProps {
   transaction: TransactionDay | null;
   type: TransactionType;
+  idMonth: string;
 }
 
 export default function TransactionLabel({
   transaction,
   type,
+  idMonth
 }: TransactionLabelProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -71,6 +73,7 @@ export default function TransactionLabel({
           onClose={() => setModalOpen(false)}
           open={modalOpen}
           transaction={transaction}
+          idMonth={idMonth}
         />
       )}
     </>

@@ -96,7 +96,13 @@ const getTransactionsByMonthId = async (
   return await Transactions.find({ idMonth, idUser });
 };
 
-const deleteTransaction = async (idsTransaction: string[], deleteRecurrent: boolean) => {
+const deleteTransaction = async (
+  idsTransaction: string[],
+  totalValue: number,
+  deleteRecurrent: boolean,
+  idUser: string,
+  idMonth: string
+) => {
   if (!idsTransaction)
     throw new Error(
       "É necessario informar o id da transação para excluir a transação."
@@ -104,7 +110,24 @@ const deleteTransaction = async (idsTransaction: string[], deleteRecurrent: bool
 
   await connectMongo();
 
-  await Transactions.findByIdAndDelete({ _id: idsTransaction[0] });
+  await Transactions.deleteMany({ _id: { $in: idsTransaction } });
+
+  const months = await monthService.getFutureMonthsByIdUser(idUser, idMonth);
+
+  await months.forEach(async (month) => {
+    const transactionIdMonth = new Date(idMonth);
+    const monthTransaction = transactionIdMonth.getMonth();
+    const monthIdDate = new Date(month.id);
+    const monthId = monthIdDate.getMonth();
+
+    if (monthId >= monthTransaction) {
+      await monthService.updateMonthBalance(
+        month,
+        idUser,
+        {_id: '', date: '', description: '', idMonth: month.id, idUser, recurrenceId: '', value: totalValue, recurrent: false, type: TransactionType.expense}
+      );
+    }
+  });
 };
 
 const updateTransaction = async (

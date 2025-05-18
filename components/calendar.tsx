@@ -99,6 +99,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   ) => {
     balances.push({
       day: date.getDate(),
+      idMonth: month.id,
       income: null,
       expense: null,
       daily: null,

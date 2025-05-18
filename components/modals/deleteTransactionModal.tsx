@@ -7,18 +7,25 @@ import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { TransactionDay } from "@/core/types/DayBalance";
 import "@/core/utils/date.extensions";
 import { api } from "@/core/services/api";
+import { useProfile } from "@/app/context/ProfileContext";
+import { useTransaction } from "@/app/context/TransactionContext";
 
 interface DeleteTransactionModalProps {
   onClose: () => void;
   open: boolean;
   transaction: TransactionDay;
+  idMonth: string;
 }
 
 export default function DeleteTransactionModal({
   onClose,
   open,
   transaction,
+  idMonth,
 }: DeleteTransactionModalProps) {
+  const { profile } = useProfile();
+  const { transactions, setTransactions } = useTransaction();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [deleteRecurrent, setDeleteRecurrent] = useState<boolean>(false);
@@ -27,11 +34,19 @@ export default function DeleteTransactionModal({
     try {
       setLoading(true);
 
-      await api.post("/transaction/delete", {
-        idsTransaction: transaction.idsTransaction,
-        deleteRecurrent,
+      await api.delete("/transaction/delete", {
+        data: {
+          idsTransaction: transaction.idsTransaction,
+          totalValue: transaction.value,
+          deleteRecurrent,
+          idUser: profile._id,
+          idMonth,
+        },
       });
 
+      setTransactions(
+        transactions.filter((x) => !transaction.idsTransaction.includes(x._id))
+      );
       setLoading(false);
       onClose();
     } catch (e: unknown) {
