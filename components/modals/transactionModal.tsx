@@ -29,7 +29,6 @@ export default function TransactionModal({
   const { transactions, setTransactions } = useTransaction();
 
   const initialState = {
-    _id: "",
     date: new Date().toISODateString(),
     description: "",
     recurrent: false,

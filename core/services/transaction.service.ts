@@ -3,9 +3,10 @@ import { Transactions } from "../models/transactions";
 import { Transaction } from "../types/Transaction";
 import { monthService } from "./month.service";
 import { User } from "../models/user";
-import "@/core/utils/date.extensions";
 import { TransactionType } from "../enums/transactionType";
 import { Month } from "../types/Month";
+import { TransactionDay } from "../types/DayBalance";
+import "@/core/utils/date.extensions";
 
 const registerTransaction = async (transaction: Transaction) => {
   const { date, value, description, idUser, idMonth } = transaction;
@@ -16,71 +17,70 @@ const registerTransaction = async (transaction: Transaction) => {
     );
 
   await connectMongo();
+  
   const user = await User.findById({ _id: idUser });
-
   if (!user)
-    throw new Error("É necessário um usuário cadastrado cadastrar um mês");
+    throw new Error("É necessário um usuário cadastrado para cadastrar um mês");
 
   const months = await monthService.getFutureMonthsByIdUser(idUser, idMonth);
 
-  switch (transaction.recurrent) {
-    case true:
-      const transactionsToInsert = [];
-
-      const [year, month, day] = transaction.date.split("-").map(Number);
-      const baseYear = year;
-      const baseMonth = month - 1;
-      const recurrenceId = crypto.randomUUID();
-
-      for (let i = 0; i < months.length; i++) {
-        const date = new Date(Date.UTC(baseYear, baseMonth + i, 1));
-
-        transactionsToInsert.push({
-          ...transaction,
-          idMonth: date.toISOString().split("T")[0],
-          recurrent: true,
-          date: new Date(Date.UTC(baseYear, baseMonth + i, day))
-            .toISOString()
-            .split("T")[0],
-          recurrenceId: recurrenceId,
-        });
-      }
-
-      await Transactions.insertMany(transactionsToInsert);
-      const incrementValue = transaction.value;
-
-      for (const month of months) {
-        if (month.id !== transaction.idMonth) {
-          transaction.value += incrementValue;
-        }
-        await monthService.updateMonthBalance(
-          month,
-          transaction.idUser,
-          transaction
-        );
-      }
-
-      break;
-
-    case false:
-      await Transactions.create(transaction);
-
-      await months.forEach(async (month) => {
-        const transactionIdMonth = new Date(transaction.idMonth);
-        const monthTransaction = transactionIdMonth.getMonth();
-        const monthIdDate = new Date(month.id);
-        const monthId = monthIdDate.getMonth();
-
-        if (monthId >= monthTransaction) {
-          await monthService.updateMonthBalance(
-            month,
-            transaction.idUser,
-            transaction
-          );
-        }
-      });
-      break;
+  if (transaction.recurrent) {
+    await handleRecurrentTransaction(transaction, months);
+    return;
   }
+
+  await handleSingleTransaction(transaction, months);
+};
+
+const handleRecurrentTransaction = async (
+  transaction: Transaction,
+  months: Month[]
+) => {
+  const [year, month, day] = transaction.date.split("-").map(Number);
+  const baseMonth = month - 1;
+  const recurrenceId = crypto.randomUUID();
+
+  const transactionsToInsert = months.map((month, index) => {
+    const indexMonth = baseMonth + index;
+
+    return {
+      ...transaction,
+      recurrenceId,
+      recurrent: true,
+      idMonth: new Date(Date.UTC(year, indexMonth, 1)).toISODateString(),
+      date: new Date(Date.UTC(year, indexMonth, day)).toISODateString(),
+    };
+  });
+
+  await Transactions.insertMany(transactionsToInsert);
+
+  let accumulatedValue = transaction.value;
+  for (const month of months) {
+    const updatedTransaction = { ...transaction, value: accumulatedValue };
+    await monthService.updateMonthBalance(
+      month,
+      transaction.idUser,
+      updatedTransaction
+    );
+    accumulatedValue += transaction.value;
+  }
+};
+
+const handleSingleTransaction = async (
+  transaction: Transaction,
+  months: Month[]
+) => {
+  await Transactions.create(transaction);
+
+  await Promise.all(
+    months.map(async (month) => {
+      await monthService.updateMonthBalance(
+        month,
+        transaction.idUser,
+        transaction
+      );
+    })
+  );
 };
 
 const getTransactionsByMonthId = async (
@@ -97,20 +97,16 @@ const getTransactionsByMonthId = async (
 };
 
 const deleteTransaction = async (
-  idsTransaction: string[],
-  totalValue: number,
+  transactionDay: TransactionDay,
   deleteRecurrent: boolean,
   idUser: string,
   idMonth: string
 ) => {
-  if (!idsTransaction)
-    throw new Error(
-      "É necessario informar o id da transação para excluir a transação."
-    );
-
   await connectMongo();
 
-  await Transactions.deleteMany({ _id: { $in: idsTransaction } });
+  await Transactions.deleteMany({
+    _id: { $in: transactionDay.idsTransactions },
+  });
 
   const months = await monthService.getFutureMonthsByIdUser(idUser, idMonth);
 
@@ -121,11 +117,11 @@ const deleteTransaction = async (
     const monthId = monthIdDate.getMonth();
 
     if (monthId >= monthTransaction) {
-      await monthService.updateMonthBalance(
-        month,
-        idUser,
-        {_id: '', date: '', description: '', idMonth: month.id, idUser, recurrenceId: '', value: totalValue, recurrent: false, type: TransactionType.expense}
-      );
+      await monthService.updateMonthBalance(month, idUser, {
+        idMonth: month.id,
+        value: transactionDay.value,
+        type: transactionDay.type,
+      });
     }
   });
 };
@@ -140,7 +136,9 @@ const updateTransaction = async (
     );
 
   if (
-    (!transactionNew.recurrent, !transactionNew.value, !transactionNew.type)
+    !transactionNew.recurrent &&
+    !transactionNew.value &&
+    !transactionNew.type
   ) {
     throw new Error(
       "É necessario informar os campos obrigatorios para concluir a atualização da transação"

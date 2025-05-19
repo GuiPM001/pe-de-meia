@@ -1,7 +1,7 @@
 import { TransactionType } from "../enums/transactionType";
 
 export type Transaction = {
-  _id: string;
+  _id?: string;
   date: string;
   description: string;
   value: number;
