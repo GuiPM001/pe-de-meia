@@ -86,9 +86,10 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
       filtered = filtered.filter((x) => x.recurrent === recurrent);
 
     return {
-      idsTransaction: filtered.map(x => x._id),
+      idsTransactions: filtered.map(x => x._id ?? ""),
       value: filtered.reduce((acc, x) => acc + x.value, 0),
-      description: filtered.map(x => x.description).join(' - ')
+      description: filtered.map(x => x.description).join(' - '),
+      type
     };
   };
 

@@ -67,8 +67,7 @@ const saveMonthsNewUser = async (idUser: string) => {
 
 const updateMonthBalance = async (
   month: Month,
-  idUser: string,
-  transaction: Transaction
+  transaction: Pick<Transaction, "type" | "value" | "idUser">
 ) => {
   await connectMongo();
 
@@ -78,7 +77,7 @@ const updateMonthBalance = async (
       : month.balance! - transaction.value;
 
   await Months.updateOne(
-    { id: month.id, idUser },
+    { id: month.id, idUser: transaction.idUser },
     { $set: { balance: totalBalance } },
     { new: true }
   );

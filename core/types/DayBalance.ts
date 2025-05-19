@@ -1,3 +1,5 @@
+import { TransactionType } from "../enums/transactionType";
+
 export type DayBalance = {
   day: number;
   idMonth: string;
@@ -9,7 +11,8 @@ export type DayBalance = {
 };
 
 export type TransactionDay = {
-  idsTransaction: string[];
+  idsTransactions: string[];
   value: number;
   description: string;
+  type: TransactionType
 }

@@ -36,8 +36,7 @@ export default function DeleteTransactionModal({
 
       await api.delete("/transaction/delete", {
         data: {
-          idsTransaction: transaction.idsTransaction,
-          totalValue: transaction.value,
+          transactionDay: transaction,
           deleteRecurrent,
           idUser: profile._id,
           idMonth,
@@ -45,7 +44,9 @@ export default function DeleteTransactionModal({
       });
 
       setTransactions(
-        transactions.filter((x) => !transaction.idsTransaction.includes(x._id))
+        transactions.filter(
+          (x) => !transaction.idsTransactions.includes(x._id ?? "")
+        )
       );
       setLoading(false);
       onClose();

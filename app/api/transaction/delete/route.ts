@@ -6,8 +6,7 @@ export async function DELETE(request: NextRequest) {
     const jsonRequest = await request.json();
 
     await transactionService.deleteTransaction(
-      jsonRequest.idsTransaction,
-      jsonRequest.totalValue,
+      jsonRequest.transactionDay,
       jsonRequest.deleteRecurrent,
       jsonRequest.idUser,
       jsonRequest.idMonth
