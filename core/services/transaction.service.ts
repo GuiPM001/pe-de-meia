@@ -4,6 +4,8 @@ import { Transaction } from "../types/Transaction";
 import { monthService } from "./month.service";
 import { User } from "../models/user";
 import { TransactionDay } from "../types/DayBalance";
+import { ObjectId } from "mongodb";
+import { Month } from "../types/Month";
 import "@/core/utils/date.extensions";
 
 const registerTransaction = async (transaction: Transaction) => {
@@ -28,33 +30,54 @@ const registerTransaction = async (transaction: Transaction) => {
   await handleSingleTransaction(transaction);
 };
 
-const handleRecurrentTransaction = async (transaction: Transaction) => {
-  const months = await monthService.getFutureMonthsByIdUser(
+const handleRecurrentTransaction = async (
+  transaction: Transaction,
+  idsToDelete?: string[]
+) => {
+  const months: Month[] = await monthService.getFutureMonthsByIdUser(
     transaction.idUser,
     transaction.idMonth
   );
 
+  if (idsToDelete) {
+    await Transactions.deleteMany({
+      recurrenceId: { $in: idsToDelete },
+      idMonth: { $gte: transaction.idMonth },
+    });
+    await updateAccumulatedBalanceValue(transaction, months, true);
+    return;
+  }
+
   const [year, month, day] = transaction.date.split("-").map(Number);
   const baseMonth = month - 1;
-  const recurrenceId = crypto.randomUUID();
 
-  const transactionsToInsert = months.map((month, index) => {
+  transaction.recurrenceId = new ObjectId().toString();
+
+  const transactionsToInsert = months.map((_, index) => {
     const indexMonth = baseMonth + index;
 
     return {
       ...transaction,
-      recurrenceId,
+      _id: index === 0 ? transaction.recurrenceId : undefined,
       idMonth: new Date(Date.UTC(year, indexMonth, 1)).toISODateString(),
       date: new Date(Date.UTC(year, indexMonth, day)).toISODateString(),
     };
   });
 
   await Transactions.insertMany(transactionsToInsert);
+  await updateAccumulatedBalanceValue(transaction, months, false);
+};
 
+const updateAccumulatedBalanceValue = async (
+  transaction: Pick<Transaction, "type" | "value" | "idUser" | "idMonth">,
+  months: Month[],
+  isDelete: boolean
+) => {
   let accumulatedValue = transaction.value;
+
   for (const month of months) {
     const updatedTransaction = { ...transaction, value: accumulatedValue };
-    await monthService.updateMonthBalance(month, updatedTransaction);
+    await monthService.updateMonthBalance(month, updatedTransaction, isDelete);
     accumulatedValue += transaction.value;
   }
 };
@@ -63,7 +86,7 @@ const handleSingleTransaction = async (
   transaction: Pick<Transaction, "type" | "value" | "idUser" | "idMonth">,
   idsToDelete?: string[]
 ) => {
-  const months = await monthService.getFutureMonthsByIdUser(
+  const months: Month[] = await monthService.getFutureMonthsByIdUser(
     transaction.idUser,
     transaction.idMonth
   );
@@ -78,7 +101,7 @@ const handleSingleTransaction = async (
 
   await Promise.all(
     months.map(async (month) => {
-      await monthService.updateMonthBalance(month, transaction);
+      await monthService.updateMonthBalance(month, transaction, !!idsToDelete);
     })
   );
 };
@@ -104,16 +127,20 @@ const deleteTransaction = async (
 ) => {
   await connectMongo();
 
-  if (deleteRecurrent) {
-    return;
-  }
-
   const transaction = {
-    value: -transactionDay.value,
+    value: transactionDay.value,
     type: transactionDay.type,
     idUser,
     idMonth,
+    description: "",
+    date: "",
+    recurrent: false,
+    recurrenceId: "",
   };
+
+  if (deleteRecurrent) {
+    handleRecurrentTransaction(transaction, transactionDay.idsTransactions);
+  }
 
   await handleSingleTransaction(transaction, transactionDay.idsTransactions);
 };
@@ -121,5 +148,5 @@ const deleteTransaction = async (
 export const transactionService = {
   registerTransaction,
   getTransactionsByMonthId,
-  deleteTransaction
+  deleteTransaction,
 };

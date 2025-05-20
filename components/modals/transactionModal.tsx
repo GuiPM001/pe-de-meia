@@ -36,7 +36,7 @@ export default function TransactionModal({
     value: 0,
     idUser: "",
     idMonth,
-    recurrenceId: "",
+    recurrenceId: null,
   };
 
   const [loading, setLoading] = useState<boolean>(false);

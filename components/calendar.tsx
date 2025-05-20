@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import PaymentFlag from "./paymentFlag";
 import { TransactionType } from "@/core/enums/transactionType";
 import { Transaction } from "@/core/types/Transaction";
-import { DayBalance } from "@/core/types/DayBalance";
+import { DayBalance, TransactionDay } from "@/core/types/DayBalance";
 import CalendarHeader from "./calendarHeader";
 import TransactionsContainer from "./transactionsContainer";
 import { Month } from "@/core/types/Month";
@@ -79,17 +79,18 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     transactions: Transaction[],
     type: TransactionType,
     recurrent?: boolean
-  ) => {
+  ): TransactionDay => {
     let filtered = transactions.filter((x) => x.type === type);
 
     if (recurrent !== undefined)
       filtered = filtered.filter((x) => x.recurrent === recurrent);
 
     return {
-      idsTransactions: filtered.map(x => x._id ?? ""),
+      recurrent: filtered[0]?.recurrent,
+      idsTransactions: filtered.map(x => x.recurrenceId ?? x._id!),
       value: filtered.reduce((acc, x) => acc + x.value, 0),
       description: filtered.map(x => x.description).join(' - '),
-      type
+      type,
     };
   };
 

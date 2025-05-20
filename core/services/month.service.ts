@@ -67,20 +67,32 @@ const saveMonthsNewUser = async (idUser: string) => {
 
 const updateMonthBalance = async (
   month: Month,
-  transaction: Pick<Transaction, "type" | "value" | "idUser">
+  transaction: Pick<Transaction, "type" | "value" | "idUser">,
+  isDelete: boolean
 ) => {
   await connectMongo();
 
-  const totalBalance =
-    transaction.type == TransactionType.income
-      ? month.balance! + transaction.value
-      : month.balance! - transaction.value;
+  const totalBalance = getTotalBalance(transaction, month, isDelete);
 
   await Months.updateOne(
     { id: month.id, idUser: transaction.idUser },
     { $set: { balance: totalBalance } },
     { new: true }
   );
+};
+
+const getTotalBalance = (
+  transaction: Pick<Transaction, "type" | "value" | "idUser">,
+  month: Month,
+  isDelete: boolean
+) => {
+  if (
+    (transaction.type === TransactionType.income && isDelete) ||
+    (transaction.type === TransactionType.expense && !isDelete)
+  )
+    return month.balance! - transaction.value;
+
+  return month.balance! + transaction.value;
 };
 
 const getMonthById = async (idUser: string, idMonth: string) => {

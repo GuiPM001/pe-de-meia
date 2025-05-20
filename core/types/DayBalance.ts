@@ -14,5 +14,6 @@ export type TransactionDay = {
   idsTransactions: string[];
   value: number;
   description: string;
-  type: TransactionType
-}
+  type: TransactionType;
+  recurrent: boolean;
+};

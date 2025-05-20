@@ -9,5 +9,5 @@ export type Transaction = {
   type: TransactionType;
   idUser: string;
   idMonth: string;
-  recurrenceId: string;
+  recurrenceId: string | null;
 };

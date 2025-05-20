@@ -45,7 +45,7 @@ export default function DeleteTransactionModal({
 
       setTransactions(
         transactions.filter(
-          (x) => !transaction.idsTransactions.includes(x._id ?? "")
+          (x) => !transaction.idsTransactions.includes(x.recurrenceId ?? x._id!)
         )
       );
       setLoading(false);
@@ -77,13 +77,15 @@ export default function DeleteTransactionModal({
         </p>
       </div>
 
-      <div className="flex flex-row gap-6 mb-6 w-1/3">
-        <Checkbox
-          label="Excluir recorrência"
-          checked={deleteRecurrent}
-          onChange={(e) => setDeleteRecurrent(e.target.checked)}
-        />
-      </div>
+      {transaction.recurrent && (
+        <div className="flex flex-row gap-6 mb-6 w-1/3">
+          <Checkbox
+            label="Excluir recorrência"
+            checked={deleteRecurrent}
+            onChange={(e) => setDeleteRecurrent(e.target.checked)}
+          />
+        </div>
+      )}
 
       <ModalActions
         onClose={onClose}
