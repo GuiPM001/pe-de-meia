@@ -42,13 +42,29 @@ export default function Register() {
     try {
       setLoading(true);
 
+      if (form.password.length < 8) {
+        setError({ message: "A senha deve ter pelo menos 8 caracteres." });
+        return;
+      }
+
+      if (!isValidEmail(form.email)) {
+        setError({ message: "E-mail informado é inválido." });
+        return;
+      }
+
       await api.post("/user/register", form);
 
       router.replace("/login");
     } catch (e: unknown) {
       setError(e as ErrorResponse);
+    } finally {
       setLoading(false);
     }
+  };
+
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   return (
@@ -96,7 +112,7 @@ export default function Register() {
             />
 
             <Button
-              type="submit"
+              type="button"
               onClick={submitRegister}
               disabled={loading || !form.name || !form.email || !form.password}
             >
