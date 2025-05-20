@@ -49,6 +49,8 @@ const saveMonth = async (month: Month) => {
   if (monthRegistered) throw new Error("Mês ja cadastrado para usuario.");
 
   return await Months.create(month);
+
+  // TODO: salvar transações recorrentes no novo mês e já atualizar saldo 
 };
 
 const saveMonthsNewUser = async (idUser: string) => {
