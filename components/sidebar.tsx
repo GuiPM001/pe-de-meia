@@ -1,15 +1,16 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import { TbChevronLeft, TbChevronRight, TbCirclesFilled } from "react-icons/tb";
+import { TbChevronLeft, TbChevronRight } from "react-icons/tb";
 import { useProfile } from "@/app/context/ProfileContext";
-import IconButton from "./ui/iconButton";
 import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
 import { useTransaction } from "@/app/context/TransactionContext";
-import "@/core/utils/date.extensions";
 import { useMonth } from "@/app/context/MonthContext";
+import IconButton from "./ui/iconButton";
 import MonthButton from "./monthButton";
+import LoadingSpinner from "./ui/loadingSpinner";
+import "@/core/utils/date.extensions";
 
 interface SidebarProps {
   monthSelected: number;
@@ -29,7 +30,7 @@ export default function Sidebar({
   const { profile } = useProfile();
 
   const [monthLoading, setMonthLoading] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const { transactions } = useTransaction();
   const { months, setMonths } = useMonth();
@@ -129,11 +130,7 @@ export default function Sidebar({
       </div>
 
       <div>
-        {loading && (
-          <div>
-            <TbCirclesFilled size="20px" className="animate-spin" />
-          </div>
-        )}
+        {loading && <LoadingSpinner />}
         {months.map((x, index) => (
           <MonthButton
             key={x.id}

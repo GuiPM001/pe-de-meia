@@ -23,8 +23,7 @@ const login = async (request: LoginRequest): Promise<LoginResponse> => {
 
   const token = jwt.sign(
     { ...user, _id: user._id },
-    //process.env.JWT_SECRET!,
-    "seuSegredoSuperSecretoAqui123",
+    process.env.JWT_SECRET!,
     { expiresIn: "1h" }
   );
 

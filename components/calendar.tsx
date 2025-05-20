@@ -22,7 +22,7 @@ interface CalendarProps {
 
 export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
@@ -167,10 +167,6 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     }
   };
 
-  if (loading) {
-    return <div>CARREGANDO...</div>;
-  }
-
   return (
     <div className="grid grid-cols-7 w-full">
       <CalendarHeader />
@@ -191,6 +187,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
               }`}
             >
               <PaymentFlag
+                loading={loading}
                 dayBalance={x}
                 today={
                   x.day === today.getDate() &&
