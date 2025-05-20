@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <MonthProvider>
       <TransactionProvider>
-        <div className="w-screen h-screen flex flex-row py-2 px-6 overflow-x-hidden">
+        <div className="w-screen h-screen flex flex-row py-2 px-2 overflow-x-hidden">
           <Sidebar
             monthSelected={indexMonthSelected}
             setMonthSelected={setIndexMonthSelected}

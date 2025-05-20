@@ -116,7 +116,7 @@ export default function Sidebar({
   };
 
   return (
-    <div className="w-80 h-full flex flex-col items-center">
+    <div className="w-72 h-full flex flex-col items-center">
       <div className="flex flex-row items-center gap-2 mb-10">
         <IconButton onClick={() => setYearSelected(yearSelected - 1)}>
           <TbChevronLeft size="24px" />

@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "../ui/button";
+import LoadingSpinner from "../ui/loadingSpinner";
 
 interface ModalActionsProps {
   onClose: () => void;
@@ -26,7 +27,7 @@ export default function ModalActions({
         Cancelar
       </Button>
       <Button onClick={onSave} disabled={saveDisabled || loading}>
-        {labelSaveButton ?? "Salvar"}
+        {loading ? <LoadingSpinner /> : labelSaveButton ?? "Salvar"}
       </Button>
     </div>
   );
