@@ -118,85 +118,8 @@ const deleteTransaction = async (
   await handleSingleTransaction(transaction, transactionDay.idsTransactions);
 };
 
-const updateTransaction = async (
-  idTransaction: string,
-  transactionNew: Transaction
-) => {
-  // if (!idTransaction)
-  //   throw new Error(
-  //     "É necessario informar o id da transação para atualizar a transação."
-  //   );
-  // if (
-  //   !transactionNew.recurrent &&
-  //   !transactionNew.value &&
-  //   !transactionNew.type
-  // ) {
-  //   throw new Error(
-  //     "É necessario informar os campos obrigatorios para concluir a atualização da transação"
-  //   );
-  // }
-  // await connectMongo();
-  // const transaction = await Transactions.findById({ _id: idTransaction });
-  // const months = await monthService.getFutureMonthsByIdUser(
-  //   transaction.idUser,
-  //   transaction.idMonth
-  // );
-  // if (transaction.recurrenceId) {
-  //   switch (transactionNew.recurrent) {
-  //     case true:
-  //       // await updateTransactionsRecurrents(transaction, months);
-  //       return;
-  //     case false:
-  //       await updateRecurringTransactionInstances(
-  //         transactionNew,
-  //         transaction,
-  //         months,
-  //         idTransaction
-  //       );
-  //       break;
-  //   }
-  // }
-};
-
-// const updateRecurringTransactionInstances = async (
-//   transactionNew: Transaction,
-//   transactionOld: Transaction,
-//   months: Month[],
-//   idTransaction: string
-// ) => {
-//   await deleteFutureTransactions(transactionOld, idTransaction);
-//   await Transactions.findByIdAndUpdate(idTransaction, {
-//     $set: transactionNew,
-//   });
-
-//   const incrementValue = transactionOld.value;
-//   let hasSwitchedType = false;
-//   for (const month of months) {
-//     if (month.id !== transactionOld.idMonth) {
-//       transactionOld.value += incrementValue;
-
-//       if (!hasSwitchedType) {
-//         transactionNew.type =
-//           transactionNew.type == TransactionType.income
-//             ? TransactionType.expense
-//             : TransactionType.income;
-
-//         hasSwitchedType = true;
-//       }
-
-//       transactionNew.value = transactionOld.value;
-//     }
-//     await monthService.updateMonthBalance(
-//       month,
-//       transactionOld.idUser,
-//       transactionNew
-//     );
-//   }
-// };
-
 export const transactionService = {
   registerTransaction,
   getTransactionsByMonthId,
-  deleteTransaction,
-  updateTransaction,
+  deleteTransaction
 };
