@@ -139,7 +139,8 @@ const deleteTransaction = async (
   };
 
   if (deleteRecurrent) {
-    handleRecurrentTransaction(transaction, transactionDay.idsTransactions);
+    await handleRecurrentTransaction(transaction, transactionDay.idsTransactions);
+    return;
   }
 
   await handleSingleTransaction(transaction, transactionDay.idsTransactions);
