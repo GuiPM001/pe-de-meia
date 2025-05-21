@@ -58,7 +58,7 @@ export default function TransactionLabel({
           <TbTrash size={ICON_SIZE} />
         </IconButton>
 
-        <div className="absolute whitespace-nowrap right-full top-1/2 z-20 mr-3 -translate-y-1/2 rounded bg-black py-2 px-4 text-sm text-white opacity-0 group-hover:opacity-100">
+        <div className="absolute whitespace-nowrap right-full top-1/2 z-20 mr-3 -translate-y-1/2 rounded bg-black py-2 px-4 text-sm text-white hidden group-hover:block">
           <span className="absolute right-[-3px] top-1/2 -z-10 h-2 w-2 -translate-y-1/2 rotate-45 bg-black"></span>
           {transaction.description.split(" - ").map((line, index) => (
             <p key={`${index}${line}`} className="text-right">
