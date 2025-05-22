@@ -22,3 +22,9 @@ export default function RootLayout({
     </html>
   );
 }
+
+// TODO editar uma transação (não permitir editar recorrência)
+// TODO editar saída diária -> escolher qual editar antes
+
+// TODO incluir novo tipo de transação -> investimento
+// TODO adicionar nova tela com o total de investimentos (seprados por mês)
