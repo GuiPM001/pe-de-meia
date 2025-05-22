@@ -4,6 +4,7 @@ import { Months } from "@/core/models/months";
 import { User } from "@/core/models/user";
 import { TransactionType } from "../enums/transactionType";
 import { Transaction } from "../types/Transaction";
+import { transactionService } from "./transaction.service";
 import "@/core/utils/date.extensions";
 
 const getMonthsByIdUser = async (idUser: string, year: number) => {
@@ -48,9 +49,12 @@ const saveMonth = async (month: Month) => {
 
   if (monthRegistered) throw new Error("Mês ja cadastrado para usuario.");
 
-  return await Months.create(month);
+  const [newMonth] = await Promise.all([
+    Months.create(month),
+    transactionService.registerRecurrentTransactionsNewMonth(month),
+  ]);
 
-  // TODO: salvar transações recorrentes no novo mês e já atualizar saldo 
+  return newMonth;
 };
 
 const saveMonthsNewUser = async (idUser: string) => {

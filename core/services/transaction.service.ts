@@ -6,6 +6,7 @@ import { User } from "../models/user";
 import { TransactionDay } from "../types/DayBalance";
 import { ObjectId } from "mongodb";
 import { Month } from "../types/Month";
+import { TransactionType } from "../enums/transactionType";
 import "@/core/utils/date.extensions";
 
 const registerTransaction = async (transaction: Transaction) => {
@@ -139,15 +140,62 @@ const deleteTransaction = async (
   };
 
   if (deleteRecurrent) {
-    await handleRecurrentTransaction(transaction, transactionDay.idsTransactions);
+    await handleRecurrentTransaction(
+      transaction,
+      transactionDay.idsTransactions
+    );
     return;
   }
 
   await handleSingleTransaction(transaction, transactionDay.idsTransactions);
 };
 
+const getPreviousRecurrentTransactions = async (
+  idUser: string,
+  idMonth: string
+): Promise<Transaction[]> => {
+  const [year, month] = idMonth.split("-").map(Number);
+
+  const previousIdMonth = `${year}-${(month - 1)
+    .toString()
+    .padStart(2, "0")}-01`;
+
+  return Transactions.find({
+    idUser,
+    recurrent: true,
+    idMonth: previousIdMonth,
+  });
+};
+
+const registerRecurrentTransactionsNewMonth = async (newMonth: Month) => {
+  await connectMongo();
+
+  const recurrentTransactions = await getPreviousRecurrentTransactions(
+    newMonth.idUser,
+    newMonth.id
+  );
+
+  if (!recurrentTransactions.length) {
+    return;
+  }
+
+  recurrentTransactions.forEach((t) => {
+    const [y, m, d] = t.date.split("-").map(Number);
+
+    t._id = undefined;
+    t.idMonth = newMonth.id;
+    t.date = new Date(y, m, d).toISODateString();
+
+    if (t.type === TransactionType.income) newMonth.balance! += t.value;
+    else newMonth.balance! -= t.value;
+  });
+
+  await Transactions.insertMany(recurrentTransactions);
+};
+
 export const transactionService = {
   registerTransaction,
   getTransactionsByMonthId,
   deleteTransaction,
+  registerRecurrentTransactionsNewMonth,
 };
