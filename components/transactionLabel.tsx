@@ -41,7 +41,7 @@ export default function TransactionLabel({
   return (
     <>
       <button
-        className={`relative group flex flex-row items-center justify-between text-xs hover:bg-${COLOR}-hover py-0.5 rounded-md`}
+        className={`relative group/transaction flex flex-row items-center justify-between text-xs hover:bg-${COLOR}-hover py-0.5 rounded-md`}
       >
         <div className="flex flex-row items-center">
           {renderIcon()}
@@ -52,13 +52,13 @@ export default function TransactionLabel({
         </div>
 
         <IconButton
-          className="opacity-0 group-hover:opacity-100 text-gray-600"
+          className="opacity-0 group-hover/transaction:opacity-100 text-gray-600"
           onClick={() => setModalOpen(true)}
         >
           <TbTrash size={ICON_SIZE} />
         </IconButton>
 
-        <div className="absolute whitespace-nowrap right-full top-1/2 z-20 mr-3 -translate-y-1/2 rounded bg-black py-2 px-4 text-sm text-white hidden group-hover:block">
+        <div className="absolute whitespace-nowrap right-full top-1/2 z-20 mr-3 -translate-y-1/2 rounded bg-black py-2 px-4 text-sm text-white hidden group-hover/transaction:block">
           <span className="absolute right-[-3px] top-1/2 -z-10 h-2 w-2 -translate-y-1/2 rotate-45 bg-black"></span>
           {transaction.description.split(" - ").map((line, index) => (
             <p key={`${index}${line}`} className="text-right">
