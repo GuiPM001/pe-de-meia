@@ -4,7 +4,10 @@ import React, { useEffect, useState } from "react";
 import { DayBalance } from "@/core/types/DayBalance";
 import { getColors } from "@/core/utils/getColors";
 import { useProfile } from "@/app/context/ProfileContext";
+import { TbPlus } from "react-icons/tb";
 import LoadingSpinner from "./ui/loadingSpinner";
+import IconButton from "./ui/iconButton";
+import { useNewTransactionModal } from "@/app/context/NewTransactionModalContext";
 
 interface PaymentFlagProps {
   dayBalance: DayBalance;
@@ -18,6 +21,7 @@ export default function PaymentFlag({
   loading,
 }: PaymentFlagProps) {
   const { profile } = useProfile();
+  const { openModal } = useNewTransactionModal();
 
   const [currencyValue, setCurrencyValue] = useState<string>();
 
@@ -31,9 +35,9 @@ export default function PaymentFlag({
   }, [dayBalance]);
 
   return (
-    <div className={`flex flex-row justify-around p-2`}>
+    <div className="flex flex-row justify-between items-center p-2 relative">
       <span
-        className={`px-1 font-bold ${
+        className={`w-7 text-center font-bold ${
           today ? "bg-gray-600 rounded-md text-white" : ""
         }`}
       >
@@ -43,7 +47,7 @@ export default function PaymentFlag({
         <LoadingSpinner />
       ) : (
         <span
-          className={`mr-4 ${getColors(
+          className={`${getColors(
             dayBalance.total!,
             profile.savingTarget
           )} px-2 rounded-md font-bold`}
@@ -51,6 +55,13 @@ export default function PaymentFlag({
           {currencyValue}
         </span>
       )}
+
+      <IconButton
+        className="invisible group-hover:visible"
+        onClick={() => openModal(dayBalance.idMonth, dayBalance.day)}
+      >
+        <TbPlus size="20px" />
+      </IconButton>
     </div>
   );
 }

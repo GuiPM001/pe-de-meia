@@ -180,7 +180,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
             <div className="bg-gray-100 h-full w-full"></div>
           ) : (
             <div
-              className={`h-full ${
+              className={`h-full group ${
                 x.day === today.getDate() && today.getUTCMonth() === indexMonth
                   ? "border-3 border-gray-600 rounded-md"
                   : ""

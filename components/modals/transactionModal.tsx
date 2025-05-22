@@ -14,16 +14,18 @@ import { api } from "@/core/services/api";
 import "@/core/utils/date.extensions";
 import { useTransaction } from "@/app/context/TransactionContext";
 
-interface TransactionModalProps {
+export interface TransactionModalProps {
   onClose: () => void;
   open: boolean;
   idMonth: string;
+  day?: number;
 }
 
 export default function TransactionModal({
   onClose,
   open,
   idMonth,
+  day,
 }: TransactionModalProps) {
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
@@ -44,15 +46,17 @@ export default function TransactionModal({
   const [form, setForm] = useState<Transaction>(initialState);
 
   useEffect(() => {
-    const today = new Date();
+    if (!idMonth) return;
+
+    const initialDay = day ?? new Date().getDate();
     const [year, month] = idMonth.split("-").map(Number);
 
     setForm({
       ...form,
       idMonth,
-      date: new Date(year, month - 1, today.getDate()).toISODateString(),
+      date: new Date(year, month - 1, initialDay).toISODateString(),
     });
-  }, [idMonth]);
+  }, [idMonth, day]);
 
   const handleForm = (
     value: string | boolean | number | TransactionType,
