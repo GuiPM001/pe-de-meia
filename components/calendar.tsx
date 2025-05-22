@@ -169,7 +169,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
 
   return (
     <div className="grid grid-cols-7 w-full">
-      <CalendarHeader />
+      <CalendarHeader dayBalances={dayBalances} />
 
       {dayBalances.map((x) => (
         <div
