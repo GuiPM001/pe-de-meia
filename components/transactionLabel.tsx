@@ -15,7 +15,7 @@ interface TransactionLabelProps {
 export default function TransactionLabel({
   transaction,
   type,
-  idMonth
+  idMonth,
 }: TransactionLabelProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
@@ -28,19 +28,25 @@ export default function TransactionLabel({
 
   const renderIcon = () => {
     if (type === TransactionType.income) {
-      return <TbCaretUpFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />;
+      return (
+        <TbCaretUpFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
+      );
     }
 
     if (type === TransactionType.expense) {
-      return <TbCaretDownFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />;
+      return (
+        <TbCaretDownFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
+      );
     }
 
-    return <TbCaretDownFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />;
+    return (
+      <TbCaretDownFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
+    );
   };
 
   return (
     <>
-      <button
+      <div
         className={`relative group/transaction flex flex-row items-center justify-between text-xs hover:bg-${COLOR}-hover py-0.5 rounded-md`}
       >
         <div className="flex flex-row items-center">
@@ -66,8 +72,8 @@ export default function TransactionLabel({
             </p>
           ))}
         </div>
-      </button>
-      
+      </div>
+
       {modalOpen && (
         <DeleteTransactionModal
           onClose={() => setModalOpen(false)}
