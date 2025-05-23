@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import PaymentFlag from "./paymentFlag";
 import { TransactionType } from "@/core/enums/transactionType";
 import { Transaction } from "@/core/types/Transaction";
-import { DayBalance, TransactionDay } from "@/core/types/DayBalance";
+import { DayBalance } from "@/core/types/DayBalance";
 import CalendarHeader from "./calendarHeader";
 import TransactionsContainer from "./transactionsContainer";
 import { Month } from "@/core/types/Month";
@@ -12,6 +12,7 @@ import { api } from "@/core/services/api";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
+import { sumValues } from "@/core/utils/sumValues";
 import "@/core/utils/date.extensions";
 
 interface CalendarProps {
@@ -79,19 +80,13 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     transactions: Transaction[],
     type: TransactionType,
     recurrent?: boolean
-  ): TransactionDay => {
+  ): Transaction[] => {
     let filtered = transactions.filter((x) => x.type === type);
 
     if (recurrent !== undefined)
       filtered = filtered.filter((x) => x.recurrent === recurrent);
 
-    return {
-      recurrent: filtered[0]?.recurrent,
-      idsTransactions: filtered.map(x => x.recurrenceId ?? x._id!),
-      value: filtered.reduce((acc, x) => acc + x.value, 0),
-      description: filtered.map(x => x.description).join(' - '),
-      type,
-    };
+    return filtered;
   };
 
   const addDay = (
@@ -102,11 +97,11 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     balances.push({
       day: date.getDate(),
       idMonth: month.id,
-      income: null,
-      expense: null,
-      daily: null,
+      incomes: null,
+      expenses: null,
+      dailies: null,
       total: null,
-      description: '',
+      description: "",
       ...values,
     });
   };
@@ -130,30 +125,30 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
         (x) => x.date === currentDate.toISODateString()
       );
 
-      const todayIncome = getTotalByType(
+      const incomes = getTotalByType(
         transactionsActual,
         TransactionType.income
       );
-      const todayExpense = getTotalByType(
+      const expenses = getTotalByType(
         transactionsActual,
         TransactionType.expense,
         true
       );
-      const todayDaily = getTotalByType(
+      const dailies = getTotalByType(
         transactionsActual,
         TransactionType.expense,
         false
       );
 
-      const todayTotal = todayIncome.value - todayExpense.value - todayDaily.value;
+      const todayTotal = sumValues(incomes) - sumValues(expenses) - sumValues(dailies);
 
       balance += todayTotal;
 
       addDay(currentDate, dayBalances, {
-        income: todayIncome,
-        expense: todayExpense,
-        daily: todayDaily,
-        total: balance
+        incomes,
+        expenses,
+        dailies,
+        total: balance,
       });
 
       currentDate.setDate(currentDate.getDate() + 1);

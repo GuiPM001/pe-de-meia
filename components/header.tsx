@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import IconButton from "./ui/iconButton";
-import { useNewTransactionModal } from "@/app/context/NewTransactionModalContext";
 import { getMonthNameByMonth } from "@/core/utils/date";
 import {
   TbCirclePlusFilled,
@@ -12,6 +11,7 @@ import {
 import ProfileModal from "./modals/profileModal";
 import InfoModal from "./modals/infoModal";
 import { Month } from "@/core/types/Month";
+import { useTransactionModal } from "@/app/context/TransactionModalContext";
 
 interface HeaderProps {
   yearSelected: number;
@@ -24,7 +24,7 @@ export default function Header({
   indexMonthSelected,
   month,
 }: HeaderProps) {
-  const { openModal } = useNewTransactionModal();
+  const { openModal } = useTransactionModal();
 
   const [modalOpen, setModalOpen] = useState({
     profile: false,

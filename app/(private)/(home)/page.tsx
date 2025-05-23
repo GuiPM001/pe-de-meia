@@ -6,8 +6,8 @@ import Sidebar from "@/components/sidebar";
 import { Month } from "@/core/types/Month";
 import { TransactionProvider } from "@/app/context/TransactionContext";
 import { MonthProvider } from "@/app/context/MonthContext";
-import { NewTransactionModalProvider } from "@/app/context/NewTransactionModalContext";
 import Header from "@/components/header";
+import { TransactionModalProvider } from "@/app/context/TransactionModalContext";
 import "@/core/utils/date.extensions";
 
 export default function Home() {
@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <MonthProvider>
       <TransactionProvider>
-        <NewTransactionModalProvider>
+        <TransactionModalProvider>
           <div className="w-screen h-screen flex flex-row py-2 px-2 overflow-x-hidden">
             <Sidebar
               monthSelected={indexMonthSelected}
@@ -52,7 +52,7 @@ export default function Home() {
               />
             </div>
           </div>
-        </NewTransactionModalProvider>
+        </TransactionModalProvider>
       </TransactionProvider>
     </MonthProvider>
   );

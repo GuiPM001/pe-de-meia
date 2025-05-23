@@ -3,6 +3,7 @@
 import { DayBalance } from "@/core/types/DayBalance";
 import React, { useEffect, useState } from "react";
 import BalanceLabel from "./balanceLabel";
+import { sumValues } from "@/core/utils/sumValues";
 
 interface CalendarHeaderProps {
   dayBalances: DayBalance[];
@@ -25,20 +26,15 @@ export default function CalendarHeader({ dayBalances }: CalendarHeaderProps) {
   });
 
   useEffect(() => {
-    const income = dayBalances.reduce(
-      (acc, x) => acc + (x.income?.value ?? 0),
-      0
-    );
+    let income = 0;
+    let expense = 0;
+    let daily = 0;
 
-    const expense = dayBalances.reduce(
-      (acc, x) => acc + (x.expense?.value ?? 0),
-      0
-    );
-
-    const daily = dayBalances.reduce(
-      (acc, x) => acc + (x.daily?.value ?? 0),
-      0
-    );
+    dayBalances.forEach((d) => {
+      income += sumValues(d.incomes ?? []);
+      expense += sumValues(d.expenses ?? []);
+      daily += sumValues(d.dailies ?? []);
+    });
 
     setTotals({ income, expense, daily });
   }, [dayBalances]);

@@ -1,32 +1,22 @@
-"use client";
-
-import React, { ChangeEvent, InputHTMLAttributes, useState } from "react";
+import React, { InputHTMLAttributes } from "react";
 
 interface CheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
 export default function Checkbox(props: CheckboxProps) {
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setIsChecked(!isChecked);
-
-    if (props.onChange) props.onChange(e);
-  };
   return (
-    <label className="flex items-center cursor-pointer select-none">
+    <label
+      className={`flex items-center select-none ${
+        props.disabled ? "text-gray-400 cursor-default" : "cursor-pointer"
+      }`}
+    >
       <div className="relative">
-        <input
-          type="checkbox"
-          checked={isChecked}
-          onChange={handleCheckboxChange}
-          className="sr-only"
-        />
+        <input type="checkbox" className="sr-only" {...props} />
         <div className="mr-2 flex h-[20px] w-[20px] items-center justify-center rounded-md border border-gray-400">
           <span
             className={`h-[15px] w-[15px] rounded-sm ${
-              isChecked ? "bg-primary" : "bg-transparent"
+              props.checked ? "bg-primary" : "bg-transparent"
             }`}
           ></span>
         </div>

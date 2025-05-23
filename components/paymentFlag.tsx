@@ -7,7 +7,7 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { TbPlus } from "react-icons/tb";
 import LoadingSpinner from "./ui/loadingSpinner";
 import IconButton from "./ui/iconButton";
-import { useNewTransactionModal } from "@/app/context/NewTransactionModalContext";
+import { useTransactionModal } from "@/app/context/TransactionModalContext";
 
 interface PaymentFlagProps {
   dayBalance: DayBalance;
@@ -21,7 +21,7 @@ export default function PaymentFlag({
   loading,
 }: PaymentFlagProps) {
   const { profile } = useProfile();
-  const { openModal } = useNewTransactionModal();
+  const { openModal } = useTransactionModal();
 
   const [currencyValue, setCurrencyValue] = useState<string>();
 

@@ -1,47 +1,49 @@
 import React, { useState } from "react";
 import { TransactionType } from "@/core/enums/transactionType";
 import { TbCaretDownFilled, TbCaretUpFilled } from "react-icons/tb";
-import { TransactionDay } from "@/core/types/DayBalance";
-import { TbTrash } from "react-icons/tb";
-import IconButton from "./ui/iconButton";
+import { TbTrash, TbPencil } from "react-icons/tb";
+import { Transaction } from "@/core/types/Transaction";
 import DeleteTransactionModal from "./modals/deleteTransactionModal";
+import IconButton from "./ui/iconButton";
+import EditTransactionModal from "./modals/selectTransactionModal";
+import { sumValues } from "@/core/utils/sumValues";
 
 interface TransactionLabelProps {
-  transaction: TransactionDay | null;
+  transactions: Transaction[] | null;
   type: TransactionType;
   idMonth: string;
 }
 
 export default function TransactionLabel({
-  transaction,
+  transactions,
   type,
-  idMonth,
 }: TransactionLabelProps) {
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [openModals, setOpenModals] = useState({
+    delete: false,
+    edit: false,
+  });
 
-  if (!transaction || !transaction.value) return <></>;
+  if (!transactions || !transactions.length) return <></>;
 
   const ICON_SIZE = "18px";
+
   let COLOR = "yellow";
   if (type === TransactionType.income) COLOR = "green";
   if (type === TransactionType.expense) COLOR = "red";
 
   const renderIcon = () => {
-    if (type === TransactionType.income) {
+    if (type === TransactionType.income)
       return (
         <TbCaretUpFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
       );
-    }
-
-    if (type === TransactionType.expense) {
-      return (
-        <TbCaretDownFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
-      );
-    }
 
     return (
       <TbCaretDownFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
     );
+  };
+
+  const handleModals = (name: "delete" | "edit", open: boolean) => {
+    setOpenModals({ ...openModals, [name]: open });
   };
 
   return (
@@ -52,36 +54,48 @@ export default function TransactionLabel({
         <div className="flex flex-row items-center">
           {renderIcon()}
 
-          {transaction.value.toLocaleString("pt-BR", {
+          {sumValues(transactions).toLocaleString("pt-BR", {
             minimumFractionDigits: 2,
           })}
         </div>
 
-        <IconButton
-          className="opacity-0 group-hover/transaction:opacity-100 text-gray-600"
-          onClick={() => setModalOpen(true)}
-        >
-          <TbTrash size={ICON_SIZE} />
-        </IconButton>
+        <div className="flex flex-row gap-1">
+          <IconButton
+            className="opacity-0 group-hover/transaction:opacity-100 text-gray-600"
+            onClick={() => handleModals("edit", true)}
+          >
+            <TbPencil size={ICON_SIZE} />
+          </IconButton>
+
+          <IconButton
+            className="opacity-0 group-hover/transaction:opacity-100 text-gray-600"
+            onClick={() => handleModals("delete", true)}
+          >
+            <TbTrash size={ICON_SIZE} />
+          </IconButton>
+        </div>
 
         <div className="absolute whitespace-nowrap right-full top-1/2 z-20 mr-3 -translate-y-1/2 rounded bg-black py-2 px-4 text-sm text-white hidden group-hover/transaction:block">
           <span className="absolute right-[-3px] top-1/2 -z-10 h-2 w-2 -translate-y-1/2 rotate-45 bg-black"></span>
-          {transaction.description.split(" - ").map((line, index) => (
-            <p key={`${index}${line}`} className="text-right">
-              {line}
+          {transactions.map((t) => (
+            <p key={t._id} className="text-right">
+              {t.description}
             </p>
           ))}
         </div>
       </div>
 
-      {modalOpen && (
-        <DeleteTransactionModal
-          onClose={() => setModalOpen(false)}
-          open={modalOpen}
-          transaction={transaction}
-          idMonth={idMonth}
-        />
-      )}
+      <DeleteTransactionModal
+        open={openModals.delete}
+        onClose={() => handleModals("delete", false)}
+        transactionsToDelete={transactions}
+      />
+
+      <EditTransactionModal
+        open={openModals.edit}
+        onClose={() => handleModals("edit", false)}
+        transactions={transactions}
+      />
     </>
   );
 }

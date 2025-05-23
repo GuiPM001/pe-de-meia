@@ -4,24 +4,22 @@ import ModalContainer from "./modalContainer";
 import ModalActions from "./modalActions";
 import ModalTitle from "./modalTitle";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
-import { TransactionDay } from "@/core/types/DayBalance";
-import "@/core/utils/date.extensions";
 import { api } from "@/core/services/api";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useTransaction } from "@/app/context/TransactionContext";
+import { Transaction } from "@/core/types/Transaction";
+import "@/core/utils/date.extensions";
 
 interface DeleteTransactionModalProps {
   onClose: () => void;
   open: boolean;
-  transaction: TransactionDay;
-  idMonth: string;
+  transactionsToDelete: Transaction[];
 }
 
 export default function DeleteTransactionModal({
   onClose,
   open,
-  transaction,
-  idMonth,
+  transactionsToDelete,
 }: DeleteTransactionModalProps) {
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
@@ -36,16 +34,17 @@ export default function DeleteTransactionModal({
 
       await api.delete("/transaction/delete", {
         data: {
-          transactionDay: transaction,
+          idMonth: transactionsToDelete[0].idMonth,
+          transactionDay: transactionsToDelete, // TODO: alterar endpoint para receber lista de transação
           deleteRecurrent,
           idUser: profile._id,
-          idMonth,
         },
       });
 
       setTransactions(
         transactions.filter(
-          (x) => !transaction.idsTransactions.includes(x.recurrenceId ?? x._id!)
+          (x) =>
+            !transactions.map((t) => t._id).includes(x.recurrenceId ?? x._id!)
         )
       );
       setLoading(false);
@@ -63,21 +62,25 @@ export default function DeleteTransactionModal({
       <div className="flex flex-col text-start mb-6">
         <p>
           Confirmar exclusão da(s) transação(ções):{" "}
-          <span className="font-bold">{transaction.description}</span>
+          <span className="font-bold">
+            {transactionsToDelete.map((t) => t.description).join(" | ")}
+          </span>
         </p>
 
         <p>
           Com valor total de{" "}
           <span className="font-bold">
             R$
-            {transaction.value.toLocaleString("pt-BR", {
-              minimumFractionDigits: 2,
-            })}
+            {transactionsToDelete
+              .reduce((acc, t) => acc + t.value, 0)
+              .toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+              })}
           </span>
         </p>
       </div>
 
-      {transaction.recurrent && (
+      {!!transactionsToDelete.find((t) => t.recurrent) && (
         <div className="flex flex-row gap-6 mb-6 w-1/3">
           <Checkbox
             label="Excluir recorrência"

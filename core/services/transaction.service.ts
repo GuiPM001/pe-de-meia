@@ -120,7 +120,7 @@ const getTransactionsByMonthId = async (
   return await Transactions.find({ idMonth, idUser });
 };
 
-const deleteTransaction = async (
+const deleteTransaction = async ( // TODO: alterar para receber lista de transações
   transactionDay: TransactionDay,
   deleteRecurrent: boolean,
   idUser: string,
