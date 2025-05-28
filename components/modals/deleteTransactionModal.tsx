@@ -5,7 +5,6 @@ import ModalActions from "./modalActions";
 import ModalTitle from "./modalTitle";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
-import { useProfile } from "@/app/context/ProfileContext";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { Transaction } from "@/core/types/Transaction";
 import "@/core/utils/date.extensions";
@@ -21,7 +20,6 @@ export default function DeleteTransactionModal({
   open,
   transactionsToDelete,
 }: DeleteTransactionModalProps) {
-  const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -32,26 +30,33 @@ export default function DeleteTransactionModal({
     try {
       setLoading(true);
 
-      await api.delete("/transaction/delete", {
+      await api.delete("/transaction", {
         data: {
-          idMonth: transactionsToDelete[0].idMonth,
-          transactionDay: transactionsToDelete, // TODO: alterar endpoint para receber lista de transação
+          transactions: transactionsToDelete,
           deleteRecurrent,
-          idUser: profile._id,
         },
       });
 
-      setTransactions(
-        transactions.filter(
-          (x) =>
-            !transactions.map((t) => t._id).includes(x.recurrenceId ?? x._id!)
-        )
-      );
+      filterTransactions();
       setLoading(false);
       onClose();
     } catch (e: unknown) {
       setError(e as ErrorResponse);
       setLoading(false);
+    }
+  };
+
+  const filterTransactions = () => {
+    if (deleteRecurrent) {
+      const idsTransactions = transactionsToDelete.map((t) => t._id);
+      setTransactions(
+        transactions.filter((x) => !idsTransactions.includes(x._id!))
+      );
+    } else {
+      const idsTransactions = transactionsToDelete.map((t) => t.recurrenceId);
+      setTransactions(
+        transactions.filter((x) => !idsTransactions.includes(x.recurrenceId))
+      );
     }
   };
 
@@ -80,7 +85,7 @@ export default function DeleteTransactionModal({
         </p>
       </div>
 
-      {!!transactionsToDelete.find((t) => t.recurrent) && (
+      {transactionsToDelete.every((t) => t.recurrent) && (
         <div className="flex flex-row gap-6 mb-6 w-1/3">
           <Checkbox
             label="Excluir recorrência"

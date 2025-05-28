@@ -1,4 +1,3 @@
-import { TransactionType } from "../enums/transactionType";
 import { Transaction } from "./Transaction";
 
 export type DayBalance = {
@@ -9,12 +8,4 @@ export type DayBalance = {
   expenses: Transaction[] | null;
   dailies: Transaction[] | null;
   total: number | null;
-};
-
-export type TransactionDay = { // TODO: excluir type
-  idsTransactions: string[];
-  value: number;
-  description: string;
-  type: TransactionType;
-  recurrent: boolean;
 };

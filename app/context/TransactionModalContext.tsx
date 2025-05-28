@@ -12,12 +12,11 @@ interface TransactionModalContextProps {
   openModalFilled: (transaction: Transaction) => void;
 }
 
-const TransactionModalContext =
-  createContext<TransactionModalContextProps>({
-    open: false,
-    openModal: () => {},
-    openModalFilled: () => {},
-  });
+const TransactionModalContext = createContext<TransactionModalContextProps>({
+  open: false,
+  openModal: () => {},
+  openModalFilled: () => {},
+});
 
 export const TransactionModalProvider = ({
   children,
@@ -36,11 +35,8 @@ export const TransactionModalProvider = ({
     );
 
   const openModal = (idMonth: string, day?: number) => {
+    setModalProps({ idMonth, day });
     setOpen(true);
-    setModalProps({
-      idMonth,
-      day,
-    });
   };
 
   const openModalFilled = (transaction: Transaction) => {
@@ -53,7 +49,9 @@ export const TransactionModalProvider = ({
   };
 
   return (
-    <TransactionModalContext.Provider value={{ open, openModal, openModalFilled }}>
+    <TransactionModalContext.Provider
+      value={{ open, openModal, openModalFilled }}
+    >
       {children}
 
       <TransactionModal

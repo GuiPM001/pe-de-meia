@@ -33,8 +33,13 @@ export default function TransactionModal({
   const { transactions, setTransactions } = useTransaction();
 
   const initialState = useMemo(() => {
+    const initialDay = day ?? new Date().getDate();
+
+    const actualDate = !!idMonth ? idMonth : new Date().toISODateString();
+    const [year, month] = actualDate.split("-").map(Number);
+
     return {
-      date: new Date().toISODateString(),
+      date: new Date(year, month - 1, initialDay).toISODateString(),
       description: "",
       recurrent: false,
       type: TransactionType.expense,
@@ -43,24 +48,12 @@ export default function TransactionModal({
       idMonth,
       recurrenceId: null,
     };
-  }, [idMonth]);
+  }, [idMonth, day]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [form, setForm] = useState<Transaction>(transaction ?? initialState);
 
-  useEffect(() => {
-    if (!idMonth) return;
-
-    const initialDay = day ?? new Date().getDate();
-    const [year, month] = idMonth.split("-").map(Number);
-
-    setForm({
-      ...form,
-      idMonth,
-      date: new Date(year, month - 1, initialDay).toISODateString(),
-    });
-  }, [idMonth, day]);
 
   useEffect(() => {
     setForm(transaction ?? initialState);
@@ -86,7 +79,7 @@ export default function TransactionModal({
         type: parseInt(form.type.toString()),
       };
 
-      await api.post("/transaction/register", newTransaction);
+      await api.post("/transaction", newTransaction);
       setTransactions([...transactions, newTransaction]);
 
       setLoading(false);
@@ -100,7 +93,7 @@ export default function TransactionModal({
 
   const onEdit = async () => {
     // TODO: chamar endpoint edição
-  }
+  };
 
   const closeModal = () => {
     setForm(transaction ?? initialState);

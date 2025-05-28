@@ -1,15 +1,29 @@
 import { transactionService } from "@/core/services/transaction.service";
 import { NextRequest, NextResponse } from "next/server";
 
+export async function POST(request: NextRequest) {
+  try {
+    const profileRequest = await request.json();
+
+    await transactionService.registerTransaction(profileRequest);
+
+    return NextResponse.json(
+      { message: "Transação registrada com sucesso." },
+      { status: 201 }
+    );
+  } catch (error: unknown) {
+    const errorMessage = (error as Error).message;
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
+}
+
 export async function DELETE(request: NextRequest) {
   try {
     const jsonRequest = await request.json();
 
     await transactionService.deleteTransaction(
-      jsonRequest.transactionDay,
-      jsonRequest.deleteRecurrent,
-      jsonRequest.idUser,
-      jsonRequest.idMonth
+      jsonRequest.transactions,
+      jsonRequest.deleteRecurrent
     );
 
     return NextResponse.json(

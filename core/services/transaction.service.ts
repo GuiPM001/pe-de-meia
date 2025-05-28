@@ -3,7 +3,6 @@ import { Transactions } from "../models/transactions";
 import { Transaction } from "../types/Transaction";
 import { monthService } from "./month.service";
 import { User } from "../models/user";
-import { TransactionDay } from "../types/DayBalance";
 import { ObjectId } from "mongodb";
 import { Month } from "../types/Month";
 import { TransactionType } from "../enums/transactionType";
@@ -24,25 +23,25 @@ const registerTransaction = async (transaction: Transaction) => {
     throw new Error("É necessário um usuário cadastrado para cadastrar um mês");
 
   if (transaction.recurrent) {
-    await handleRecurrentTransaction(transaction);
+    await handleRecurrentTransaction(transaction, false);
     return;
   }
 
-  await handleSingleTransaction(transaction);
+  await handleSingleTransaction(transaction, false);
 };
 
 const handleRecurrentTransaction = async (
   transaction: Transaction,
-  idsToDelete?: string[]
+  isDelete: boolean
 ) => {
   const months: Month[] = await monthService.getFutureMonthsByIdUser(
     transaction.idUser,
     transaction.idMonth
   );
 
-  if (idsToDelete) {
+  if (isDelete) {
     await Transactions.deleteMany({
-      recurrenceId: { $in: idsToDelete },
+      recurrenceId: { $in: transaction.recurrenceId },
       idMonth: { $gte: transaction.idMonth },
     });
     await updateAccumulatedBalanceValue(transaction, months, true);
@@ -69,6 +68,30 @@ const handleRecurrentTransaction = async (
   await updateAccumulatedBalanceValue(transaction, months, false);
 };
 
+const handleSingleTransaction = async (
+  transaction: Transaction,
+  isDelete: boolean
+) => {
+  const months: Month[] = await monthService.getFutureMonthsByIdUser(
+    transaction.idUser,
+    transaction.idMonth
+  );
+
+  if (isDelete) {
+    await Transactions.deleteOne({
+      _id: transaction._id,
+    });
+  } else {
+    await Transactions.create(transaction);
+  }
+
+  const promises = months.map((month) =>
+    monthService.updateMonthBalance(month, transaction, isDelete)
+  );
+
+  await Promise.all(promises);
+};
+
 const updateAccumulatedBalanceValue = async (
   transaction: Pick<Transaction, "type" | "value" | "idUser" | "idMonth">,
   months: Month[],
@@ -81,30 +104,6 @@ const updateAccumulatedBalanceValue = async (
     await monthService.updateMonthBalance(month, updatedTransaction, isDelete);
     accumulatedValue += transaction.value;
   }
-};
-
-const handleSingleTransaction = async (
-  transaction: Pick<Transaction, "type" | "value" | "idUser" | "idMonth">,
-  idsToDelete?: string[]
-) => {
-  const months: Month[] = await monthService.getFutureMonthsByIdUser(
-    transaction.idUser,
-    transaction.idMonth
-  );
-
-  if (idsToDelete) {
-    await Transactions.deleteMany({
-      _id: { $in: idsToDelete },
-    });
-  } else {
-    await Transactions.create(transaction);
-  }
-
-  await Promise.all(
-    months.map(async (month) => {
-      await monthService.updateMonthBalance(month, transaction, !!idsToDelete);
-    })
-  );
 };
 
 const getTransactionsByMonthId = async (
@@ -120,34 +119,19 @@ const getTransactionsByMonthId = async (
   return await Transactions.find({ idMonth, idUser });
 };
 
-const deleteTransaction = async ( // TODO: alterar para receber lista de transações
-  transactionDay: TransactionDay,
-  deleteRecurrent: boolean,
-  idUser: string,
-  idMonth: string
+const deleteTransaction = async (
+  transactions: Transaction[],
+  deleteRecurrent: boolean
 ) => {
   await connectMongo();
 
-  const transaction = {
-    value: transactionDay.value,
-    type: transactionDay.type,
-    idUser,
-    idMonth,
-    description: "",
-    date: "",
-    recurrent: false,
-    recurrenceId: "",
-  };
+  const promises = transactions.map((transaction) =>
+    deleteRecurrent
+      ? handleRecurrentTransaction(transaction, true)
+      : handleSingleTransaction(transaction, true)
+  );
 
-  if (deleteRecurrent) {
-    await handleRecurrentTransaction(
-      transaction,
-      transactionDay.idsTransactions
-    );
-    return;
-  }
-
-  await handleSingleTransaction(transaction, transactionDay.idsTransactions);
+  await Promise.all(promises);
 };
 
 const getPreviousRecurrentTransactions = async (
