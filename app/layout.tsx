@@ -24,9 +24,6 @@ export default function RootLayout({
 }
 
 // TODO editar uma transação (não permitir editar recorrência)
-// TODO editar saída diária -> escolher qual editar antes
-
-// TODO alterar endpoint delete
 
 // TODO incluir novo tipo de transação -> investimento
 // TODO adicionar nova tela com o total de investimentos (seprados por mês)
