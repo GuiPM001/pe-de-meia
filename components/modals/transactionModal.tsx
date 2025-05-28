@@ -79,8 +79,8 @@ export default function TransactionModal({
         type: parseInt(form.type.toString()),
       };
 
-      await api.post("/transaction", newTransaction);
-      setTransactions([...transactions, newTransaction]);
+      const response: Transaction = await api.post("/transaction", newTransaction);
+      setTransactions([...transactions, response]);
 
       setLoading(false);
       setForm(initialState);

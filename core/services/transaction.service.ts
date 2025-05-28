@@ -23,11 +23,10 @@ const registerTransaction = async (transaction: Transaction) => {
     throw new Error("É necessário um usuário cadastrado para cadastrar um mês");
 
   if (transaction.recurrent) {
-    await handleRecurrentTransaction(transaction, false);
-    return;
+    return await handleRecurrentTransaction(transaction, false);
   }
 
-  await handleSingleTransaction(transaction, false);
+  return await handleSingleTransaction(transaction, false);
 };
 
 const handleRecurrentTransaction = async (
@@ -66,6 +65,8 @@ const handleRecurrentTransaction = async (
 
   await Transactions.insertMany(transactionsToInsert);
   await updateAccumulatedBalanceValue(transaction, months, false);
+
+  return transaction;
 };
 
 const handleSingleTransaction = async (
@@ -90,6 +91,8 @@ const handleSingleTransaction = async (
   );
 
   await Promise.all(promises);
+
+  return transaction;
 };
 
 const updateAccumulatedBalanceValue = async (

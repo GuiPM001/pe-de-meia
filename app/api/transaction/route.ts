@@ -5,12 +5,9 @@ export async function POST(request: NextRequest) {
   try {
     const profileRequest = await request.json();
 
-    await transactionService.registerTransaction(profileRequest);
+    const newTransaction = await transactionService.registerTransaction(profileRequest);
 
-    return NextResponse.json(
-      { message: "Transação registrada com sucesso." },
-      { status: 201 }
-    );
+    return NextResponse.json(newTransaction, { status: 201 });
   } catch (error: unknown) {
     const errorMessage = (error as Error).message;
     return NextResponse.json({ message: errorMessage }, { status: 500 });
