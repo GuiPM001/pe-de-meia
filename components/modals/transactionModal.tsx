@@ -47,13 +47,13 @@ export default function TransactionModal({
       idUser: "",
       idMonth,
       recurrenceId: null,
+      _id: undefined
     };
   }, [idMonth, day]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | null>(null);
   const [form, setForm] = useState<Transaction>(transaction ?? initialState);
-
 
   useEffect(() => {
     setForm(transaction ?? initialState);
@@ -92,7 +92,20 @@ export default function TransactionModal({
   };
 
   const onEdit = async () => {
-    // TODO: chamar endpoint edição
+    try {
+      setLoading(true); 
+      
+      const response: Transaction = await api.put("/transaction", form);
+      const newTransactions = transactions.filter(t => t._id !== response._id);
+
+      setTransactions([...newTransactions, response]);
+
+      setLoading(false);
+      onClose();
+    } catch (e: unknown) {
+      setError(e as ErrorResponse);
+      setLoading(false);
+    }
   };
 
   const closeModal = () => {
@@ -131,6 +144,7 @@ export default function TransactionModal({
           label="Tipo"
           value={form.type}
           onChange={(e) => handleForm(e.target.value, "type")}
+          disabled={!!transaction}
           options={[
             { label: "Entrada", value: TransactionType.income },
             { label: "Saída", value: TransactionType.expense },

@@ -73,26 +73,35 @@ const handleSingleTransaction = async (
   transaction: Transaction,
   isDelete: boolean
 ) => {
-  const months: Month[] = await monthService.getFutureMonthsByIdUser(
-    transaction.idUser,
-    transaction.idMonth
-  );
-
   if (isDelete) {
     await Transactions.deleteOne({
       _id: transaction._id,
     });
-  } else {
-    await Transactions.create(transaction);
+
+    await updateBalanceValue(transaction, isDelete);
+    return transaction;
   }
+
+  const newTransaction = await Transactions.create(transaction);
+  await updateBalanceValue(transaction, isDelete);
+
+  return newTransaction;
+};
+
+const updateBalanceValue = async (
+  transaction: Pick<Transaction, "type" | "value" | "idUser" | "idMonth">,
+  isDelete: boolean
+) => {
+  const months: Month[] = await monthService.getFutureMonthsByIdUser(
+    transaction.idUser,
+    transaction.idMonth
+  );
 
   const promises = months.map((month) =>
     monthService.updateMonthBalance(month, transaction, isDelete)
   );
 
   await Promise.all(promises);
-
-  return transaction;
 };
 
 const updateAccumulatedBalanceValue = async (
@@ -128,13 +137,29 @@ const deleteTransaction = async (
 ) => {
   await connectMongo();
 
-  const promises = transactions.map((transaction) =>
-    deleteRecurrent
-      ? handleRecurrentTransaction(transaction, true)
-      : handleSingleTransaction(transaction, true)
+  for (const transaction of transactions) {
+    if (deleteRecurrent) {
+      await handleRecurrentTransaction(transaction, true);
+      continue;
+    }
+
+    await handleSingleTransaction(transaction, true);
+  }
+};
+
+const updateTransaction = async (transaction: Transaction) => {
+  await connectMongo();
+
+  const originalTransaction = await Transactions.findById(transaction._id);
+
+  await Transactions.updateOne({ _id: transaction._id }, { $set: transaction });
+
+  await updateBalanceValue(
+    { ...transaction, value: -(originalTransaction.value - transaction.value) },
+    false
   );
 
-  await Promise.all(promises);
+  return transaction;
 };
 
 const getPreviousRecurrentTransactions = async (
@@ -184,5 +209,6 @@ export const transactionService = {
   registerTransaction,
   getTransactionsByMonthId,
   deleteTransaction,
+  updateTransaction,
   registerRecurrentTransactionsNewMonth,
 };
