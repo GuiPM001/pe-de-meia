@@ -5,10 +5,10 @@ import Calendar from "@/components/calendar";
 import Sidebar from "@/components/sidebar";
 import { Month } from "@/core/types/Month";
 import { TransactionProvider } from "@/app/context/TransactionContext";
-import { MonthProvider } from "@/app/context/MonthContext";
 import Header from "@/components/header";
 import { TransactionModalProvider } from "@/app/context/TransactionModalContext";
 import "@/core/utils/date.extensions";
+import Wrapper from "@/components/ui/wrapper";
 
 export default function Home() {
   const [indexMonthSelected, setIndexMonthSelected] = useState<number>(
@@ -26,10 +26,10 @@ export default function Home() {
   });
 
   return (
-    <MonthProvider>
-      <TransactionProvider>
-        <TransactionModalProvider>
-          <div className="w-screen h-screen flex flex-row py-2 px-2 overflow-x-hidden">
+    <TransactionProvider>
+      <TransactionModalProvider>
+        <Wrapper>
+          <div className="flex flex-row">
             <Sidebar
               monthSelected={indexMonthSelected}
               setMonthSelected={setIndexMonthSelected}
@@ -52,8 +52,8 @@ export default function Home() {
               />
             </div>
           </div>
-        </TransactionModalProvider>
-      </TransactionProvider>
-    </MonthProvider>
+        </Wrapper>
+      </TransactionModalProvider>
+    </TransactionProvider>
   );
 }

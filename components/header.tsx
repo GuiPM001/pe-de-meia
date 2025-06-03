@@ -3,12 +3,7 @@
 import React, { useState } from "react";
 import IconButton from "./ui/iconButton";
 import { getMonthNameByMonth } from "@/core/utils/date";
-import {
-  TbCirclePlusFilled,
-  TbInfoCircleFilled,
-  TbSettingsFilled,
-} from "react-icons/tb";
-import ProfileModal from "./modals/profileModal";
+import { TbCirclePlusFilled, TbInfoCircleFilled } from "react-icons/tb";
 import InfoModal from "./modals/infoModal";
 import { Month } from "@/core/types/Month";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
@@ -26,10 +21,7 @@ export default function Header({
 }: HeaderProps) {
   const { openModal } = useTransactionModal();
 
-  const [modalOpen, setModalOpen] = useState({
-    profile: false,
-    info: false,
-  });
+  const [modalOpen, setModalOpen] = useState(false);
 
   return (
     <div className="flex flex-row gap-5 items-center">
@@ -43,29 +35,11 @@ export default function Header({
         <TbCirclePlusFilled size="24px" />
       </IconButton>
 
-      <IconButton
-        onClick={() => setModalOpen({ ...modalOpen, profile: true })}
-        label="Configurar perfil"
-      >
-        <TbSettingsFilled size="24px" />
-      </IconButton>
-
-      <IconButton
-        label="Informações"
-        onClick={() => setModalOpen({ ...modalOpen, info: true })}
-      >
+      <IconButton label="Informações" onClick={() => setModalOpen(true)}>
         <TbInfoCircleFilled size="24px" />
       </IconButton>
 
-      <ProfileModal
-        onClose={() => setModalOpen({ ...modalOpen, profile: false })}
-        open={modalOpen.profile}
-      />
-
-      <InfoModal
-        onClose={() => setModalOpen({ ...modalOpen, info: false })}
-        open={modalOpen.info}
-      />
+      <InfoModal onClose={() => setModalOpen(false)} open={modalOpen} />
     </div>
   );
 }
