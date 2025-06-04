@@ -36,11 +36,13 @@ export default function Sidebar({
   useEffect(() => {
     if (!profile._id) return;
 
-    setLoading(true);
+    const fetchMonths = async () => {
+      setLoading(true);
+      await getMonths(yearSelected, profile._id);
+      setLoading(false);
+    };
 
-    getMonths(yearSelected, profile._id);
-
-    setLoading(false);
+    fetchMonths();
   }, [profile._id, yearSelected, transactions]);
 
   const createMonth = async (month: string) => {
@@ -55,7 +57,7 @@ export default function Sidebar({
 
     months.pop();
 
-    getMonths(yearSelected, profile._id);
+    await getMonths(yearSelected, profile._id);
     setMonthLoading("");
   };
 

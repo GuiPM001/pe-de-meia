@@ -2,13 +2,18 @@
 
 import { useMonth } from "@/app/context/MonthContext";
 import { useProfile } from "@/app/context/ProfileContext";
+import ProgressBar from "@/components/ui/progressBar";
 import Wrapper from "@/components/ui/wrapper";
+import YearSelect from "@/components/yearSelect";
 import { getMonthNameByDate } from "@/core/utils/date";
+import { getColors } from "@/core/utils/getColors";
+import { currencyNumber } from "@/core/utils/numberFormat";
 import React, { useEffect, useState } from "react";
 
 export default function Investments() {
   const [loading, setLoading] = useState<boolean>(false);
-  const [yearSelected] = useState<number>(
+  const [totalInvested, setTotalInvested] = useState<number>(0);
+  const [yearSelected, setYearSelected] = useState<number>(
     new Date().getFullYear()
   );
 
@@ -18,32 +23,47 @@ export default function Investments() {
   useEffect(() => {
     if (!profile._id) return;
 
-    setLoading(true);
+    const fetchMonths = async () => {
+      setLoading(true);
+      await getMonths(yearSelected, profile._id);
+      setLoading(false);
+    };
 
-    getMonths(yearSelected, profile._id);
-
-    setLoading(false);
+    fetchMonths();
   }, [yearSelected, profile._id]);
+
+  useEffect(() => {
+    const totalInvested = months.reduce((acc, m) => m.invested! + acc, 0);
+    setTotalInvested(totalInvested);
+  }, [months]);
 
   return (
     <Wrapper>
-      {loading && <div>OOOI</div>}
+      <div className=" w-[620px]">
+        <YearSelect value={yearSelected} onChange={setYearSelected} />
 
-      <div className="grid grid-cols-4 gap-4 w-1/2 flex-wrap">
-        {months.map((month) => (
-          <div
-            key={month.id}
-            className="capitalize min-h-32 min-w-32 rounded-xl border border-gray-300 flex flex-col items-center py-4 relative"
-          >
-            <span>{getMonthNameByDate(month.id)}</span>
-            <span className="m-auto">
-              {new Intl.NumberFormat("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              }).format(month.invested!)}
-            </span>
-          </div>
-        ))}
+        <ProgressBar
+          value={totalInvested}
+          minLabel="Total investido:"
+          max={profile.savingTarget * 12}
+          maxLabel="Meta:"
+          loading={loading}
+        />
+
+        <div className="grid grid-cols-4 gap-2 flex-wrap">
+          {months.map((month) => (
+            <div
+              key={month.id}
+              className={`capitalize h-[100px] w-[150px] rounded-xl flex flex-col items-center py-4 relative
+                        ${getColors(month.invested!, 0, profile.savingTarget)}`}
+            >
+              <span>{getMonthNameByDate(month.id)}</span>
+              <span className="m-auto font-bold">
+                {currencyNumber(month.invested!)}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </Wrapper>
   );
