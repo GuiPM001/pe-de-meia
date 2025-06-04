@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 
 export default function Investments() {
   const [loading, setLoading] = useState<boolean>(false);
-  const [yearSelected, setYearSelected] = useState<number>(
+  const [yearSelected] = useState<number>(
     new Date().getFullYear()
   );
 
