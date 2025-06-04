@@ -44,7 +44,7 @@ export default function TransactionLabel({
 
     if (type === TransactionType.investment)
       return (
-        <div className={`h-1 w-3 m-[3px] rounded-xl bg-${COLOR}-default`}></div>
+        <div className={`h-1 w-3 m-[3px] rounded-xl bg-blue-default`}></div>
       );
 
     return (
