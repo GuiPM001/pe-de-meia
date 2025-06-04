@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { TbChevronLeft, TbChevronRight } from "react-icons/tb";
 import { useProfile } from "@/app/context/ProfileContext";
 import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
-import IconButton from "./ui/iconButton";
 import MonthButton from "./monthButton";
 import LoadingSpinner from "./ui/loadingSpinner";
+import YearSelect from "./yearSelect";
 
 interface SidebarProps {
   monthSelected: number;
@@ -61,18 +60,8 @@ export default function Sidebar({
   };
 
   return (
-    <div className="w-72 h-full flex flex-col items-center">
-      <div className="flex flex-row items-center gap-2 mb-10">
-        <IconButton onClick={() => setYearSelected(yearSelected - 1)}>
-          <TbChevronLeft size="24px" />
-        </IconButton>
-
-        <span className="text-5xl font-black">{yearSelected}</span>
-
-        <IconButton onClick={() => setYearSelected(yearSelected + 1)}>
-          <TbChevronRight size="24px" />
-        </IconButton>
-      </div>
+    <div className="h-full flex flex-col items-center">
+      <YearSelect value={yearSelected} onChange={setYearSelected} />
 
       <div>
         {loading && <LoadingSpinner />}

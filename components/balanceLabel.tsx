@@ -1,3 +1,4 @@
+import { currencyNumber } from "@/core/utils/numberFormat";
 import React from "react";
 
 interface BalanceLabelProps {
@@ -7,16 +8,9 @@ interface BalanceLabelProps {
 }
 
 export default function BalanceLabel({ label, value }: BalanceLabelProps) {
-  const formatNumber = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value);
-  };
-
   return (
     <span>
-      {label} <span className="font-bold">{formatNumber(value)}</span>
+      {label} <span className="font-bold">{currencyNumber(value)}</span>
     </span>
   );
 }

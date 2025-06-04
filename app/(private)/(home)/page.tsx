@@ -30,7 +30,7 @@ export default function Home() {
     <TransactionProvider>
       <TransactionModalProvider>
         <Wrapper>
-          <div className="flex flex-row">
+          <div className="flex flex-row gap-8">
             <Sidebar
               monthSelected={indexMonthSelected}
               setMonthSelected={setIndexMonthSelected}

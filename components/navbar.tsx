@@ -27,8 +27,9 @@ export default function NavBar() {
     document.cookie = `authToken=; path=/; expires=${expiryDate}; Secure; SameSite=Strict`;
     router.replace("/login");
   };
+
   return (
-    <div className="w-screen flex flex-row px-20 py-4 h-16 items-center gap-8 self-center relative mb-8">
+    <div className="w-screen flex flex-row px-20 py-4 h-16 items-center gap-8 self-center relative">
       <div className="flex flex-row items-center mr-4">
         <Image alt="Pé de meia logo" src={logo} width={28} />
         <span className="ml-1 w-18 leading-none text-wrap font-extrabold text-xl text-green-800">

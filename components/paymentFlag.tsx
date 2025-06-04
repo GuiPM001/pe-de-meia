@@ -8,6 +8,7 @@ import { TbPlus } from "react-icons/tb";
 import LoadingSpinner from "./ui/loadingSpinner";
 import IconButton from "./ui/iconButton";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
+import { currencyNumber } from "@/core/utils/numberFormat";
 
 interface PaymentFlagProps {
   dayBalance: DayBalance;
@@ -28,12 +29,7 @@ export default function PaymentFlag({
   const [currencyValue, setCurrencyValue] = useState<string>();
 
   useEffect(() => {
-    setCurrencyValue(
-      new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(dayBalance.total!)
-    );
+    setCurrencyValue(currencyNumber(dayBalance.total!));
   }, [dayBalance]);
 
   return (

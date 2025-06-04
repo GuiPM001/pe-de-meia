@@ -9,7 +9,7 @@ export default function Wrapper({
   return (
     <div className="w-screen h-screen flex flex-col overflow-x-hidden">
       <NavBar />
-      <div className="p-2">{children}</div>
+      <div className="p-8">{children}</div>
     </div>
   );
 }
