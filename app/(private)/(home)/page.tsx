@@ -21,6 +21,7 @@ export default function Home() {
 
   const [monthSelected, setMonthSelected] = useState<Month>({
     balance: 0,
+    invested: 0,
     id: new Date(yearSelected, indexMonthSelected, 1).toISODateString(),
     idUser: "",
   });
