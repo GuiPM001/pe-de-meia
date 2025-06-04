@@ -148,6 +148,7 @@ export default function TransactionModal({
           options={[
             { label: "Entrada", value: TransactionType.income },
             { label: "Saída", value: TransactionType.expense },
+            { label: "Investimento", value: TransactionType.investment },
           ]}
         />
       </div>
@@ -156,7 +157,7 @@ export default function TransactionModal({
         <Checkbox
           label="Recorrente"
           checked={form.recurrent}
-          disabled={!!transaction}
+          disabled={!!transaction || form.type == TransactionType.investment}
           onChange={(e) => handleForm(e.target.checked, "recurrent")}
         />
       </div>

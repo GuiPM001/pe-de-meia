@@ -1,3 +1,4 @@
+import { MonthProvider } from "./context/MonthContext";
 import { ProfileProvider } from "./context/ProfileContext";
 import "./globals.css";
 
@@ -17,11 +18,12 @@ export default function RootLayout({
     <html lang="pt">
       <head></head>
       <body className="font-nunito">
-        <ProfileProvider>{children}</ProfileProvider>
+        <ProfileProvider>
+          <MonthProvider>{children}</MonthProvider>
+        </ProfileProvider>
       </body>
     </html>
   );
 }
 
-// TODO incluir novo tipo de transação -> investimento
 // TODO adicionar nova tela com o total de investimentos (seprados por mês)

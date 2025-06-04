@@ -67,34 +67,42 @@ const saveMonthsNewUser = async (idUser: string) => {
   for (let i = 0; i < 6; i++) {
     const id = new Date(actualYear, actualMonth + i, 1).toISODateString();
 
-    await Months.create({ idUser, id, balance: 0 });
+    await Months.create({ idUser, id, balance: 0, invested: 0 });
   }
 };
 
 const updateMonthBalance = async (
   month: Month,
-  transaction: Pick<Transaction, "type" | "value" | "idUser">,
+  transaction: Pick<Transaction, "type" | "value" | "idUser" | "idMonth">,
   isDelete: boolean
 ) => {
   await connectMongo();
+  let totalInvested = month.invested;
+
+  if (transaction.type === TransactionType.investment && transaction.idMonth === month.id) {
+    totalInvested = isDelete
+      ? month.invested! - transaction.value
+      : month.invested! + transaction.value;
+  }
 
   const totalBalance = getTotalBalance(transaction, month, isDelete);
 
   await Months.updateOne(
     { id: month.id, idUser: transaction.idUser },
-    { $set: { balance: totalBalance } },
+    { $set: { balance: totalBalance, invested: totalInvested } },
     { new: true }
   );
 };
 
 const getTotalBalance = (
-  transaction: Pick<Transaction, "type" | "value" | "idUser">,
+  transaction: Pick<Transaction, "type" | "value">,
   month: Month,
   isDelete: boolean
 ) => {
   if (
     (transaction.type === TransactionType.income && isDelete) ||
-    (transaction.type === TransactionType.expense && !isDelete)
+    (transaction.type === TransactionType.expense && !isDelete) || 
+    (transaction.type === TransactionType.investment && !isDelete)
   )
     return month.balance! - transaction.value;
 

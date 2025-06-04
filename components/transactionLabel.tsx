@@ -27,14 +27,24 @@ export default function TransactionLabel({
 
   const ICON_SIZE = "18px";
 
-  let COLOR = "yellow";
-  if (type === TransactionType.income) COLOR = "green";
-  if (type === TransactionType.expense) COLOR = "red";
+  const colorMap: Record<TransactionType, string> = {
+    [TransactionType.income]: "green",
+    [TransactionType.expense]: "red",
+    [TransactionType.daily]: "yellow",
+    [TransactionType.investment]: "blue",
+  };
+
+  const COLOR = colorMap[type];
 
   const renderIcon = () => {
     if (type === TransactionType.income)
       return (
         <TbCaretUpFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
+      );
+
+    if (type === TransactionType.investment)
+      return (
+        <div className={`h-1 w-3 m-[3px] rounded-xl bg-${COLOR}-default`}></div>
       );
 
     return (

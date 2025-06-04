@@ -60,7 +60,12 @@ export default function MonthButton({
           className={`capitalize w-24 h-[32px] py-1 px-2 mb-2 rounded-md flex justify-center cursor-pointer
                     disabled:bg-gray-200 disabled:cursor-default disabled:text-gray-400
                       ${selected ? "font-bold" : "font-semibold"}
-                      ${getColors(month.balance || 0, savingTarget, selected)}`}
+                      ${getColors(
+                        month.balance!,
+                        month.invested!,
+                        savingTarget,
+                        selected
+                      )}`}
         >
           <span>{getMonthNameByDate(month.id)}</span>
         </button>

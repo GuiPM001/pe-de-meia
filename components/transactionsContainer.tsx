@@ -29,6 +29,12 @@ export default function TransactionsContainer({
         transactions={dayBalance.dailies}
         idMonth={dayBalance.idMonth}
       />
+
+      <TransactionLabel
+        type={TransactionType.investment}
+        transactions={dayBalance.investeds}
+        idMonth={dayBalance.idMonth}
+      />
     </div>
   );
 }

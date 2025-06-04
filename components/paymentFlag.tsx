@@ -11,12 +11,14 @@ import { useTransactionModal } from "@/app/context/TransactionModalContext";
 
 interface PaymentFlagProps {
   dayBalance: DayBalance;
+  totalInvested: number;
   today: boolean;
   loading: boolean;
 }
 
 export default function PaymentFlag({
   dayBalance,
+  totalInvested,
   today,
   loading,
 }: PaymentFlagProps) {
@@ -49,6 +51,7 @@ export default function PaymentFlag({
         <span
           className={`${getColors(
             dayBalance.total!,
+            totalInvested,
             profile.savingTarget
           )} px-2 rounded-md font-bold`}
         >

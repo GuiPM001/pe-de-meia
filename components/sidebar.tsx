@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TbChevronLeft, TbChevronRight } from "react-icons/tb";
 import { useProfile } from "@/app/context/ProfileContext";
 import { Month } from "@/core/types/Month";
@@ -10,7 +10,6 @@ import { useMonth } from "@/app/context/MonthContext";
 import IconButton from "./ui/iconButton";
 import MonthButton from "./monthButton";
 import LoadingSpinner from "./ui/loadingSpinner";
-import "@/core/utils/date.extensions";
 
 interface SidebarProps {
   monthSelected: number;
@@ -33,85 +32,31 @@ export default function Sidebar({
   const [loading, setLoading] = useState<boolean>(true);
 
   const { transactions } = useTransaction();
-  const { months, setMonths } = useMonth();
-
-  const generateEmptyMonth = useCallback(
-    (indexMonth: number) => ({
-      id: new Date(yearSelected, indexMonth, 1).toISODateString(),
-      balance: null,
-      idUser: profile._id,
-    }),
-    [profile._id, yearSelected]
-  );
-
-  const getMonthList = (months: Month[]) => {
-    const allMonths: Month[] = [];
-
-    if (!months.length) {
-      allMonths.push(generateEmptyMonth(0));
-      setMonths(allMonths);
-      return;
-    }
-
-    const firstMonth = new Date(months[0].id).getUTCMonth();
-    const lastMonth = new Date(months.at(-1)!.id).getUTCMonth();
-
-    for (let i = 0; i < 12; i++) {
-      if (i > lastMonth + 1) break;
-
-      if (i === firstMonth) {
-        allMonths.push(...months);
-        i += months.length - 1;
-        continue;
-      }
-
-      allMonths.push(generateEmptyMonth(i));
-    }
-
-    setMonths(allMonths);
-  };
-
-  const getMonths = async () => {
-    setMonths([]);
-
-    const userMonths: Month[] = await api.get(`/month/get-by-id-user`, {
-      params: {
-        year: yearSelected,
-        idUser: profile._id,
-      },
-    });
-
-    getMonthList(userMonths);
-  };
+  const { months, getMonths } = useMonth();
 
   useEffect(() => {
     if (!profile._id) return;
 
     setLoading(true);
 
-    getMonths();
+    getMonths(yearSelected, profile._id);
 
     setLoading(false);
-  }, [profile._id, yearSelected]);
-
-  useEffect(() => {
-    getMonths();
-  }, [transactions]);
+  }, [profile._id, yearSelected, transactions]);
 
   const createMonth = async (month: string) => {
     setMonthLoading(month);
     const lastBalance = months.at(-2)?.balance ?? 0;
 
-    const response: Month = await api.post("/month", {
+    await api.post("/month", {
       id: month,
       idUser: profile._id,
       balance: lastBalance,
     });
 
     months.pop();
-    const newMonths = [...months, response];
 
-    getMonthList(newMonths);
+    getMonths(yearSelected, profile._id);
     setMonthLoading("");
   };
 
