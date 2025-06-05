@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import { useMonth } from "@/app/context/MonthContext";
 import { useProfile } from "@/app/context/ProfileContext";
 import ProgressBar from "@/components/ui/progressBar";
@@ -8,7 +9,7 @@ import YearSelect from "@/components/yearSelect";
 import { getMonthNameByDate } from "@/core/utils/date";
 import { getColors } from "@/core/utils/getColors";
 import { currencyNumber } from "@/core/utils/numberFormat";
-import React, { useEffect, useState } from "react";
+import "@/core/utils/date.extensions";
 
 export default function Investments() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -19,6 +20,8 @@ export default function Investments() {
 
   const { months, getMonths } = useMonth();
   const { profile } = useProfile();
+
+  const actualDate = new Date().toISODateString();
 
   useEffect(() => {
     if (!profile._id) return;
@@ -54,12 +57,16 @@ export default function Investments() {
           {months.map((month) => (
             <div
               key={month.id}
-              className={`capitalize h-[100px] w-[150px] rounded-xl flex flex-col items-center py-4 relative
-                        ${getColors(month.invested!, 0, profile.savingTarget)}`}
+              className={`capitalize h-[100px] w-[148px] rounded-xl flex flex-col items-center py-4 relative
+                          ${
+                            month.id > actualDate
+                              ? "bg-gray-200"
+                              : getColors(month.invested!, 0, profile.savingTarget)
+                          }`}
             >
               <span>{getMonthNameByDate(month.id)}</span>
               <span className="m-auto font-bold">
-                {currencyNumber(month.invested!)}
+                {month.id <= actualDate ? currencyNumber(month.invested!) : "-"}
               </span>
             </div>
           ))}
