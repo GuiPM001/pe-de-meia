@@ -38,14 +38,10 @@ export default function TransactionLabel({
 
   const renderIcon = () => {
     if (type === TransactionType.income)
-      return (
-        <TbCaretUpFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
-      );
+      return <TbCaretUpFilled className="text-green-text" size={ICON_SIZE} />;
 
     if (type === TransactionType.investment)
-      return (
-        <div className={`h-1 w-3 m-[3px] rounded-xl bg-blue-default`}></div>
-      );
+      return <div className="h-1 w-3 m-[3px] rounded-xl bg-blue-default"></div>;
 
     return (
       <TbCaretDownFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />

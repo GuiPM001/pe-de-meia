@@ -21,10 +21,10 @@ export default function ProgressBar({
     <div className="w-full">
       <div className="flex flex-row justify-between">
         <div className="flex flex-row gap-1">
-          <span className="text-green-text font-semibold text-sm">
+          <span className="text-primary font-semibold text-sm">
             {minLabel}
           </span>
-          <span className="text-green-text font-semibold text-sm">
+          <span className="text-primary font-semibold text-sm">
             {loading ? <LoadingSpinner /> : currencyNumber(value)}
           </span>
         </div>
