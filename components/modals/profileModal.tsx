@@ -65,7 +65,7 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
         <CurrencyInput
           label="Meta de economia mensal"
           value={form.savingTarget}
-          onChange={(e) => handleForm(e.target.value, "savingTarget")}
+          onValueChange={(floatValue) => handleForm(floatValue, "savingTarget")}
         />
 
         <ModalActions

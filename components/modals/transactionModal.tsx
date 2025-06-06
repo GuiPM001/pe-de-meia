@@ -138,7 +138,7 @@ export default function TransactionModal({
         <CurrencyInput
           label="Valor"
           value={form.value}
-          onChange={(e) => handleForm(parseFloat(e.target.value), "value")}
+          onValueChange={(floatValue) => handleForm(floatValue, "value")}
         />
         <Select
           label="Tipo"

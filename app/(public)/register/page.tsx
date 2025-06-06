@@ -108,7 +108,12 @@ export default function Register() {
               label="Meta de economia mensal"
               name="savingTarget"
               value={form.savingTarget}
-              onChange={handleForm}
+              onValueChange={(floatValue) =>
+                setForm({
+                  ...form,
+                  savingTarget: floatValue,
+                })
+              }
             />
 
             <Button
