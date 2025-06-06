@@ -13,6 +13,7 @@ import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
 import { useTransaction } from "@/app/context/TransactionContext";
 import "@/core/utils/date.extensions";
+import { useTranslation } from "react-i18next";
 
 export interface TransactionModalProps {
   onClose: () => void;
@@ -31,6 +32,7 @@ export default function TransactionModal({
 }: TransactionModalProps) {
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
+  const { t } = useTranslation();
 
   const initialState = useMemo(() => {
     const initialDay = day ?? new Date().getDate();
@@ -116,18 +118,18 @@ export default function TransactionModal({
   return (
     <ModalContainer open={open}>
       <ModalTitle
-        title={`${!!transaction ? "Editar" : "Salvar"} transação`}
+        title={`${!!transaction ? t('modal.transaction.edit') : t('modal.transaction.register')}`}
         onClose={onClose}
       />
 
       <div className="flex flex-row gap-6 mb-6">
         <Input
-          label="Descrição"
+          label={t('modal.transaction.description')}
           value={form.description}
           onChange={(e) => handleForm(e.target.value, "description")}
         />
         <Input
-          label="Data"
+          label={t('modal.transaction.date')}
           value={form.date}
           type="date"
           onChange={(e) => handleForm(e.target.value, "date")}
@@ -136,26 +138,26 @@ export default function TransactionModal({
 
       <div className="flex flex-row gap-6 mb-6">
         <CurrencyInput
-          label="Valor"
+          label={t('modal.transaction.value')}
           value={form.value}
           onValueChange={(floatValue) => handleForm(floatValue, "value")}
         />
         <Select
-          label="Tipo"
+          label={t('modal.transaction.type')}
           value={form.type}
           onChange={(e) => handleForm(e.target.value, "type")}
           disabled={!!transaction}
           options={[
-            { label: "Entrada", value: TransactionType.income },
-            { label: "Saída", value: TransactionType.expense },
-            { label: "Investimento", value: TransactionType.investment },
+            { label: t('transactionType.income'), value: TransactionType.income },
+            { label: t('transactionType.expense'), value: TransactionType.expense },
+            { label: t('transactionType.investment'), value: TransactionType.investment },
           ]}
         />
       </div>
 
       <div className="flex flex-row gap-6 mb-6 w-1/3">
         <Checkbox
-          label="Recorrente"
+          label={t('modal.transaction.recurrent')}
           checked={form.recurrent}
           disabled={!!transaction || form.type == TransactionType.investment}
           onChange={(e) => handleForm(e.target.checked, "recurrent")}

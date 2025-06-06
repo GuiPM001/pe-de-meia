@@ -10,6 +10,7 @@ import Input from "../ui/input";
 import CurrencyInput from "../ui/currencyInput";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
+import { useTranslation } from "react-i18next";
 
 interface ProfileModalProps {
   onClose: () => void;
@@ -18,6 +19,7 @@ interface ProfileModalProps {
 
 export default function ProfileModal({ onClose, open }: ProfileModalProps) {
   const { profile, setProfile } = useProfile();
+  const { t } = useTranslation();
 
   const [form, setForm] = useState<Profile>(profile);
   const [loading, setLoading] = useState<boolean>();
@@ -51,19 +53,19 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
 
   return (
     <ModalContainer open={open}>
-      <ModalTitle title="Perfil" onClose={onClose} />
+      <ModalTitle title={t('modal.profile.title')} onClose={onClose} />
 
       <div className="flex flex-col gap-6">
         <Input
-          label="Nome"
+          label={t('register.name')}
           value={form.name}
           onChange={(e) => handleForm(e.target.value, "name")}
         />
 
-        <Input label="E-mail" value={form.email} disabled />
+        <Input label={t('register.email')} value={form.email} disabled />
 
         <CurrencyInput
-          label="Meta de economia mensal"
+          label={t('register.savingTarget')}
           value={form.savingTarget}
           onValueChange={(floatValue) => handleForm(floatValue, "savingTarget")}
         />

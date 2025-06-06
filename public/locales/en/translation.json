@@ -1,6 +1,50 @@
 {
   "slogan": "See your financial future with clarity and security.",
   "loading": "Loading...",
+  "transactionType": {
+    "income": "Income",
+    "expense": "Expense",
+    "fixedExpense": "Fixed expense",
+    "daily": "Daily spending",
+    "investment": "Investment"
+  },
+  "modal": {
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "transaction": {
+      "edit": "Edit transaction",
+      "register": "Save transaction",
+      "description": "Description",
+      "date": "Date",
+      "value": "Value",
+      "type": "Type",
+      "recurrent": "Recurrent"
+    },
+    "info": {
+      "title": "Informations",
+      "green": "Balance above the set goal",
+      "red": "Negative balance",
+      "yellow": "Balance below the set goal"
+    },
+    "profile": {
+      "title": "Profile"
+    },
+    "selectTransaction": {
+      "title": "Select a transaction to edit",
+      "description": "Description",
+      "value": "Amount",
+      "button": "Finish"
+    },
+    "deleteTransaction": {
+      "title": "Delete transaction",
+      "p1": "Confirm deletion of the transaction(s): ",
+      "p2": "With a total value of ",
+      "recurrent": "Delete recurrence",
+      "saveButton": "Confirm"
+    }
+  },
   "login": {
     "title": "Welcome back!",
     "email": "E-mail",
@@ -29,5 +73,20 @@
   "navBar": {
     "monthlySummary": "Monthly summary",
     "investments": "Investments"
+  },
+  "iconButton": {
+    "addTransaction": "Add transaction",
+    "info": "Informations",
+    "profile": "Profile",
+    "logout": "Log out"
+  },
+  "home": {
+    "totalIncome": "Total income",
+    "totalExpense": "Total fixed expenses",
+    "totalDaily": "Total daily spending"
+  },
+  "investments": {
+    "total": "Total invested:",
+    "goal": "Goal:"
   }
 }

@@ -8,6 +8,7 @@ import { api } from "@/core/services/api";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { Transaction } from "@/core/types/Transaction";
 import "@/core/utils/date.extensions";
+import { useTranslation } from "react-i18next";
 
 interface DeleteTransactionModalProps {
   onClose: () => void;
@@ -21,6 +22,7 @@ export default function DeleteTransactionModal({
   transactionsToDelete,
 }: DeleteTransactionModalProps) {
   const { transactions, setTransactions } = useTransaction();
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<ErrorResponse | null>(null);
@@ -62,18 +64,18 @@ export default function DeleteTransactionModal({
 
   return (
     <ModalContainer open={open}>
-      <ModalTitle title="Excluir transação" onClose={onClose} />
+      <ModalTitle title={t('modal.deleteTransaction.title')} onClose={onClose} />
 
       <div className="flex flex-col text-start mb-6">
         <p>
-          Confirmar exclusão da(s) transação(ções):{" "}
+          {t('modal.deleteTransaction.p1')}
           <span className="font-bold">
             {transactionsToDelete.map((t) => t.description).join(" | ")}
           </span>
         </p>
 
         <p>
-          Com valor total de{" "}
+          {t('modal.deleteTransaction.p2')}
           <span className="font-bold">
             R$
             {transactionsToDelete
@@ -88,7 +90,7 @@ export default function DeleteTransactionModal({
       {transactionsToDelete.every((t) => t.recurrent) && (
         <div className="flex flex-row gap-6 mb-6 w-1/3">
           <Checkbox
-            label="Excluir recorrência"
+            label={t('modal.deleteTransaction.recurrent')}
             checked={deleteRecurrent}
             onChange={(e) => setDeleteRecurrent(e.target.checked)}
           />
@@ -100,7 +102,7 @@ export default function DeleteTransactionModal({
         onSave={confirm}
         loading={loading}
         saveDisabled={false}
-        labelSaveButton="Confirmar"
+        labelSaveButton={t('modal.deleteTransaction.saveButton')}
       />
 
       {error && <span className="text-red-600 text-sm">{error.message}</span>}

@@ -5,6 +5,7 @@ import { Transaction } from "@/core/types/Transaction";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import "@/core/utils/date.extensions";
 import Button from "../ui/button";
+import { useTranslation } from "react-i18next";
 
 interface EditTransactionModalProps {
   transactions: Transaction[];
@@ -18,22 +19,23 @@ export default function EditTransactionModal({
   transactions,
 }: EditTransactionModalProps) {
   const { openModalFilled } = useTransactionModal();
+  const { t } = useTranslation();
 
   return (
     <ModalContainer open={open}>
       <ModalTitle
-        title="Selecione uma transação para editar"
+        title={t('modal.selectTransaction.title')}
         onClose={onClose}
       />
 
       <div className="flex flex-col text-start">
         <div className="flex flex-row justify-between p-2">
           <span className="w-4/6 text-start text-gray-400 font-semibold text-sm">
-            Descrição
+            {t('modal.selectTransaction.description')}
           </span>
 
           <span className="w-2/6 text-center text-gray-400 font-semibold text-sm">
-            Valor
+            {t('modal.selectTransaction.value')}
           </span>
         </div>
 
@@ -57,7 +59,7 @@ export default function EditTransactionModal({
 
       <div className="mt-6">
         <Button onClick={onClose} variant="ghost" color="confirm">
-          Concluir
+          {t('modal.selectTransaction.button')}
         </Button>
       </div>
     </ModalContainer>

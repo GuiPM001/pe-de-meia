@@ -9,6 +9,7 @@ import LoadingSpinner from "./ui/loadingSpinner";
 import IconButton from "./ui/iconButton";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import { currencyNumber } from "@/core/utils/numberFormat";
+import { useTranslation } from "react-i18next";
 
 interface PaymentFlagProps {
   dayBalance: DayBalance;
@@ -25,6 +26,7 @@ export default function PaymentFlag({
 }: PaymentFlagProps) {
   const { profile } = useProfile();
   const { openModal } = useTransactionModal();
+  const { t } = useTranslation();
 
   const [currencyValue, setCurrencyValue] = useState<string>();
 
@@ -57,7 +59,7 @@ export default function PaymentFlag({
 
       <IconButton
         className="invisible group-hover:visible"
-        label="Adicionar transação"
+        label={t('iconButton.addTransaction')}
         onClick={() => openModal(dayBalance.idMonth, dayBalance.day)}
       >
         <TbPlus size="20px" />

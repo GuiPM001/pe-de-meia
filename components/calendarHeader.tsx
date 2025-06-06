@@ -4,6 +4,8 @@ import { DayBalance } from "@/core/types/DayBalance";
 import React, { useEffect, useState } from "react";
 import BalanceLabel from "./balanceLabel";
 import { sumValues } from "@/core/utils/sumValues";
+import { getWeekDays } from "@/core/utils/date";
+import { useTranslation } from "react-i18next";
 
 interface CalendarHeaderProps {
   dayBalances: DayBalance[];
@@ -17,7 +19,9 @@ type Totals = {
 
 export default function CalendarHeader({ dayBalances }: CalendarHeaderProps) {
   const className =
-    "border border-t-0 border-gray-200 text-center font-black py-1 self-end mt-4";
+    "border border-t-0 border-gray-200 text-center font-black py-1 self-end mt-4 uppercase";
+
+  const { t } = useTranslation();
 
   const [totals, setTotals] = useState<Totals>({
     income: 0,
@@ -42,19 +46,17 @@ export default function CalendarHeader({ dayBalances }: CalendarHeaderProps) {
   return (
     <>
       <div className="col-span-7 flex justify-between mt-8 mb-4">
-        <BalanceLabel label="Total de entradas:" value={totals.income} />
-        <BalanceLabel label="Total de despesas fixas:" value={totals.expense} />
-        <BalanceLabel label="Total de gasto diário:" value={totals.daily} />
+        <BalanceLabel label={t('home.totalIncome')} value={totals.income} />
+        <BalanceLabel label={t('home.totalExpense')} value={totals.expense} />
+        <BalanceLabel label={t('home.totalDaily')} value={totals.daily} />
       </div>
 
       <>
-        <div className={className}>DOM.</div>
-        <div className={className}>SEG.</div>
-        <div className={className}>TER.</div>
-        <div className={className}>QUA.</div>
-        <div className={className}>QUI.</div>
-        <div className={className}>SEX.</div>
-        <div className={className}>SAB.</div>
+        {getWeekDays().map((x) => (
+          <div key={x} className={className}>
+            {x}
+          </div>
+        ))}
       </>
     </>
   );

@@ -1,6 +1,50 @@
 {
   "slogan": "Enxergue seu futuro financeiro com clareza e segurança.",
   "loading": "Carregando...",
+  "transactionType": {
+    "income": "Entrada",
+    "expense": "Saída",
+    "fixedExpense": "Despesa fixa",
+    "daily": "Gasto diário",
+    "investment": "Investimento"
+  },
+  "modal": {
+    "actions": {
+      "save": "Salvar",
+      "cancel": "Cancelar"
+    },
+    "transaction": {
+      "edit": "Editar transação",
+      "register": "Salvar transação",
+      "description": "Descrição",
+      "date": "Data",
+      "value": "Valor",
+      "type": "Tipo",
+      "recurrent": "Recorrente"
+    },
+    "info": {
+      "title": "Informações",
+      "green": "Saldo acima da meta estipulada",
+      "red": "Saldo negativo",
+      "yellow": "Saldo abaixo da meta estipulada"
+    },
+    "profile": {
+      "title": "Perfil"
+    },
+    "selectTransaction": {
+      "title": "Selecione uma transação para editar",
+      "description": "Descrição",
+      "value": "Valor",
+      "button": "Consluir"
+    },
+    "deleteTransaction": {
+      "title": "Excluir Transação",
+      "p1": "Confirmar exclusão da(s) transação(ções): ",
+      "p2": "Com valor total de ",
+      "recurrent": "Excluir recorrência",
+      "saveButton": "Confirmar"
+    }
+  },
   "login": {
     "title": "Bem vindo de volta!",
     "email": "E-mail",
@@ -29,5 +73,20 @@
   "navBar": {
     "monthlySummary": "Resumo mensal",
     "investments": "Investimentos"
+  },
+  "iconButton": {
+    "addTransaction": "Adicionar transação",
+    "info": "Informações",
+    "profile": "Perfil",
+    "logout": "Sair"
+  },
+  "home": {
+    "totalIncome": "Total de entradas",
+    "totalExpense": "Total de despesas fixas",
+    "totalDaily": "Total de gasto diário"
+  },
+  "investments": {
+    "total": "Total investido:",
+    "goal": "Meta:"
   }
 }

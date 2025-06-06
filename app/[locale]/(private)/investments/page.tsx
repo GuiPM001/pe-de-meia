@@ -10,6 +10,7 @@ import { getMonthNameByDate } from "@/core/utils/date";
 import { getColors } from "@/core/utils/getColors";
 import { currencyNumber } from "@/core/utils/numberFormat";
 import "@/core/utils/date.extensions";
+import { useTranslation } from "react-i18next";
 
 export default function Investments() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -20,6 +21,7 @@ export default function Investments() {
 
   const { months, getMonths } = useMonth();
   const { profile } = useProfile();
+  const { t } = useTranslation();
 
   const actualDate = new Date().toISODateString();
 
@@ -47,9 +49,9 @@ export default function Investments() {
 
         <ProgressBar
           value={totalInvested}
-          minLabel="Total investido:"
+          minLabel={t('investments.total')}
           max={profile.savingTarget * 12}
-          maxLabel="Meta:"
+          maxLabel={t('investments.goal')}
           loading={loading}
         />
 

@@ -7,6 +7,7 @@ import { TbCirclePlusFilled, TbInfoCircleFilled } from "react-icons/tb";
 import InfoModal from "./modals/infoModal";
 import { Month } from "@/core/types/Month";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
+import { useTranslation } from "react-i18next";
 
 interface HeaderProps {
   yearSelected: number;
@@ -20,6 +21,7 @@ export default function Header({
   month,
 }: HeaderProps) {
   const { openModal } = useTransactionModal();
+  const { t } = useTranslation();
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -30,12 +32,12 @@ export default function Header({
       </span>
       <IconButton
         onClick={() => openModal(month.id)}
-        label="Adicionar transação"
+        label={t('iconButton.addTransaction')}
       >
         <TbCirclePlusFilled size="24px" />
       </IconButton>
 
-      <IconButton label="Informações" onClick={() => setModalOpen(true)}>
+      <IconButton label={t('iconButton.info')} onClick={() => setModalOpen(true)}>
         <TbInfoCircleFilled size="24px" />
       </IconButton>
 

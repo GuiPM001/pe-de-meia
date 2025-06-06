@@ -58,7 +58,7 @@ export default function NavBar() {
       <div className="absolute right-20 flex flex-row gap-4">
         <IconButton
           className="text-2xl"
-          label="Perfil"
+          label={t('iconButton.profile')}
           onClick={() => setModalOpen(true)}
         >
           <TbUserFilled />
@@ -66,7 +66,7 @@ export default function NavBar() {
 
         <IconButton 
           className="text-2xl" 
-          label="Sair" 
+          label={t('iconButton.logout')} 
           onClick={() => logout()}>
           <TbLogout />
         </IconButton>
