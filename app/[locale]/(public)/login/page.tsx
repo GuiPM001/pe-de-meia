@@ -76,7 +76,7 @@ export default function Login() {
           <form onKeyDown={handleKeyDown} className="space-y-6">
             <Input
               label={t("login.email")}
-              placeholder="seu@email.com"
+              placeholder={t("login.emailPlaceholder")}
               name="email"
               type="email"
               error={!!error}
