@@ -57,6 +57,7 @@ export default function PaymentFlag({
 
       <IconButton
         className="invisible group-hover:visible"
+        label="Adicionar transação"
         onClick={() => openModal(dayBalance.idMonth, dayBalance.day)}
       >
         <TbPlus size="20px" />

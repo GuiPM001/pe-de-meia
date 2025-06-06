@@ -26,5 +26,6 @@ export default function RootLayout({
   );
 }
 
-// TODO adicionar nova tela com o total de investimentos (seprados por mês)
 // TODO não deixar eidtar o mês - edição transação
+// TODO adicionar investimento -> tela investimento
+// TODO permitir adicionar mês -> tela investimento

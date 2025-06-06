@@ -42,6 +42,10 @@ export default function InfoModal({ onClose, open }: InfoModalProps) {
             <TbCaretDownFilled className="text-yellow-text" size="24px" />
             <span>Gasto diário</span>
           </div>
+          <div className="flex flex-row gap-1 items-center">
+            <div className="h-1.5 w-3.5 mx-[5px] rounded-xl bg-blue-default"></div>
+            <span>Investimento</span>
+          </div>
         </div>
       </div>
     </ModalContainer>

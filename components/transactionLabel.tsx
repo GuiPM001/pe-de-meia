@@ -26,15 +26,12 @@ export default function TransactionLabel({
   if (!transactions || !transactions.length) return <></>;
 
   const ICON_SIZE = "18px";
-
-  const colorMap: Record<TransactionType, string> = {
-    [TransactionType.income]: "green",
-    [TransactionType.expense]: "red",
-    [TransactionType.daily]: "yellow",
-    [TransactionType.investment]: "blue",
+  const hoverBgMap: Record<TransactionType, string> = {
+    [TransactionType.income]: "hover:bg-green-hover",
+    [TransactionType.expense]: "hover:bg-red-hover",
+    [TransactionType.daily]: "hover:bg-yellow-hover",
+    [TransactionType.investment]: "hover:bg-blue-hover",
   };
-
-  const COLOR = colorMap[type];
 
   const renderIcon = () => {
     if (type === TransactionType.income)
@@ -43,9 +40,10 @@ export default function TransactionLabel({
     if (type === TransactionType.investment)
       return <div className="h-1 w-3 m-[3px] rounded-xl bg-blue-default"></div>;
 
-    return (
-      <TbCaretDownFilled className={`text-${COLOR}-text`} size={ICON_SIZE} />
-    );
+    if (type === TransactionType.expense)
+      return <TbCaretDownFilled className="text-red-text" size={ICON_SIZE} />;
+
+    return <TbCaretDownFilled className="text-yellow-text" size={ICON_SIZE} />;
   };
 
   const handleModals = (name: "delete" | "edit", open: boolean) => {
@@ -55,7 +53,7 @@ export default function TransactionLabel({
   return (
     <>
       <div
-        className={`relative group/transaction flex flex-row items-center justify-between text-xs hover:bg-${COLOR}-hover py-0.5 rounded-md`}
+        className={`relative group/transaction flex flex-row items-center justify-between text-xs ${hoverBgMap[type]} py-0.5 rounded-md`}
       >
         <div className="flex flex-row items-center">
           {renderIcon()}
@@ -67,14 +65,14 @@ export default function TransactionLabel({
 
         <div className="flex flex-row gap-1">
           <IconButton
-            className="opacity-0 group-hover/transaction:opacity-100 text-gray-600"
+            className="opacity-0 group-hover/transaction:opacity-100 text-gray-700"
             onClick={() => handleModals("edit", true)}
           >
             <TbPencil size={ICON_SIZE} />
           </IconButton>
 
           <IconButton
-            className="opacity-0 group-hover/transaction:opacity-100 text-gray-600"
+            className="opacity-0 group-hover/transaction:opacity-100 text-gray-700"
             onClick={() => handleModals("delete", true)}
           >
             <TbTrash size={ICON_SIZE} />
