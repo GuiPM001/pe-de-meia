@@ -4,23 +4,27 @@ import React, { useState } from "react";
 import Image from "next/image";
 import logo from "@/app/assets/logo-symbol.png";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { TbUserFilled } from "react-icons/tb";
 import { TbLogout } from "react-icons/tb";
 import IconButton from "./ui/iconButton";
 import ProfileModal from "./modals/profileModal";
 import { useRouter } from "next/navigation";
-
-const NAV_ITEMS = [
-  { href: "/", label: "Resumo mensal" },
-  { href: "/investments", label: "Investimentos" },
-];
+import { useTranslation } from "react-i18next";
 
 export default function NavBar() {
+  const { t } = useTranslation();
+  const { locale } = useParams();
+
   const pathname = usePathname();
   const router = useRouter();
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+
+  const NAV_ITEMS = [
+    { href: `/${locale}`, label: t("navBar.monthlySummary") },
+    { href: `/${locale}/investments`, label: t("navBar.investments") },
+  ];
 
   const logout = () => {
     const expiryDate = new Date(1, 1, 1);

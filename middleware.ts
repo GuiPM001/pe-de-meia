@@ -1,55 +1,69 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtDecode } from "jwt-decode";
 
-const routes = [
-  { path: "/login", whenAuthenticated: "redirect" },
-  { path: "/register", whenAuthenticated: "redirect" },
-  { path: "/home", whenAuthenticated: "next" },
-] as const;
-
-const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
+const PUBLIC_ROUTES = ["/login", "/register"] as const;
+const REDIRECT_LOGIN = "/login";
+const SUPPORTED_LOCALES = ["en", "pt"];
 
 function redirectToLogin(request: NextRequest) {
-  const redirectUrl = request.nextUrl.clone();
-  redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE;
-  return NextResponse.redirect(redirectUrl);
+  const url = request.nextUrl.clone();
+  url.pathname = REDIRECT_LOGIN;
+  return NextResponse.redirect(url);
+}
+
+function detectLocale(request: NextRequest): string {
+  const header = request.headers.get("accept-language");
+  const preferredLang = header?.split(",")[0].split("-")[0];
+  return SUPPORTED_LOCALES.includes(preferredLang!) ? preferredLang! : "en";
+}
+
+function getCurrentLocale(pathname: string): string | null {
+  const match = pathname.match(/^\/(en|pt)/);
+  return match ? match[1] : null;
+}
+
+function isPublicRoute(pathname: string): boolean {
+  const cleanedPath = pathname.replace(/^\/(en|pt)/, "");
+  return PUBLIC_ROUTES.includes(cleanedPath as (typeof PUBLIC_ROUTES)[number]);
+}
+
+function isTokenExpired(token: string): boolean {
+  const decoded = jwtDecode<{ exp?: number }>(token);
+  const now = Math.floor(Date.now() / 1000);
+  return !!decoded.exp && decoded.exp < now;
 }
 
 export async function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  const publicRoute = routes.find((route) => route.path === path);
+  const { pathname } = request.nextUrl;
   const token = request.cookies.get("authToken");
+  const currentLocale = getCurrentLocale(pathname);
 
-  if (!token && publicRoute) {
-    return NextResponse.next();
+  if (!currentLocale) {
+    const locale = detectLocale(request);
+    const url = request.nextUrl.clone();
+    url.pathname = `/${locale}${pathname}`;
+    return NextResponse.redirect(url);
   }
 
-  if (!token && !publicRoute) {
-    return redirectToLogin(request);
-  }
+  const isPublic = isPublicRoute(pathname);
 
-  if (token && publicRoute && publicRoute.whenAuthenticated === "redirect") {
+  if (!token && isPublic) return NextResponse.next();
+
+  if (!token && !isPublic) return redirectToLogin(request);
+
+  if (token && isPublic) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/";
+    redirectUrl.pathname = `/${currentLocale}`;
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (token && !publicRoute) {
-    const decoded = jwtDecode(token.value);
-    const now = Math.floor(Date.now() / 1000);
-
-    if (decoded.exp && decoded.exp < now) {
-      const response = redirectToLogin(request);
-
-      response.cookies.set("authToken", "", {
-        path: "/",
-        maxAge: 0,
-      });
-
-      return response;
-    }
-
-    return NextResponse.next();
+  if (token && isTokenExpired(token.value)) {
+    const response = redirectToLogin(request);
+    response.cookies.set("authToken", "", {
+      path: "/",
+      maxAge: 0,
+    });
+    return response;
   }
 
   return NextResponse.next();
@@ -57,13 +71,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico, sitemap.xml, robots.txt (metadata files)
-     */
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
   ],
 };

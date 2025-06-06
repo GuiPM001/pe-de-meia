@@ -1,0 +1,33 @@
+{
+  "slogan": "Enxergue seu futuro financeiro com clareza e segurança.",
+  "loading": "Carregando...",
+  "login": {
+    "title": "Bem vindo de volta!",
+    "email": "E-mail",
+    "emailPlaceholder": "seu@email.com",
+    "password": "Senha",
+    "button": "Entrar",
+    "register": "Não tem uma conta? ",
+    "registerLink": "Cadastre-se"
+  },
+  "register": {
+    "title": "Criar uma conta",
+    "name": "Nome",
+    "namePlaceholder": "Seu nome",
+    "email": "E-mail",
+    "emailPlaceholder": "seu@email.com",
+    "password": "Senha",
+    "savingTarget": "Meta de economia mensal",
+    "button": "Cadastrar",
+    "login": "Já possui conta? ",
+    "loginLink": "Entrar",
+    "error": {
+      "email": "E-mail informado é inválido.",
+      "password": "A senha deve ter pelo menos 8 caracteres."
+    }
+  },
+  "navBar": {
+    "monthlySummary": "Resumo mensal",
+    "investments": "Investimentos"
+  }
+}

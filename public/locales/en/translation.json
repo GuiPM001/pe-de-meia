@@ -1,0 +1,33 @@
+{
+  "slogan": "See your financial future with clarity and security.",
+  "loading": "Loading...",
+  "login": {
+    "title": "Welcome back!",
+    "email": "E-mail",
+    "emailPlaceholder": "your@email.com",
+    "password": "Password",
+    "button": "Sign in",
+    "register": "Don't have an account? ",
+    "registerLink": "Register"
+  },
+  "register": {
+    "title": "Create an account",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "E-mail",
+    "emailPlaceholder": "your@email.com",
+    "password": "Password",
+    "savingTarget": "Monthly savings goal",
+    "button": "Register",
+    "login": "Already have an account? ",
+    "loginLink": "Sign in",
+    "error": {
+      "email": "The email provided is invalid.",
+      "password": "Password must be at least 8 characters long."
+    }
+  },
+  "navBar": {
+    "monthlySummary": "Monthly summary",
+    "investments": "Investments"
+  }
+}
