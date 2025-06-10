@@ -20,7 +20,7 @@ const login = async (
   await connectMongo();
 
   const user = await User.findOne({ email });
-  if (!user) throw new Error(t(locale, "errors..user.userNotFound"));
+  if (!user) throw new Error(t(locale, "errors.user.userNotFound"));
 
   const passwordMatch = await bcrypt.compare(password, user.password);
   if (!passwordMatch) throw new Error(t(locale, "errors.user.incorrectPassword"));
