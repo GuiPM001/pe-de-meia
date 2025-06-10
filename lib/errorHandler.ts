@@ -10,12 +10,15 @@ export type SupportedLocale = "en" | "pt";
 
 export function t(locale: SupportedLocale, key: string): string {
   const keys = key.split(".");
-  let result: any = translations[locale];
+  let result: unknown = translations[locale];
 
   for (const k of keys) {
-    result = result?.[k];
-    if (!result) break;
+    if (typeof result === "object" && result !== null && k in result) {
+      result = (result as Record<string, unknown>)[k];
+    } else {
+      return key;
+    }
   }
 
-  return result || key;
+  return typeof result === "string" ? result : key;
 }
