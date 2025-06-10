@@ -7,41 +7,44 @@ import { User } from "@/core/models/user";
 import { monthService } from "./month.service";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { SupportedLocale, t } from "@/lib/errorHandler";
 
-const login = async (request: LoginRequest): Promise<LoginResponse> => {
+const login = async (
+  request: LoginRequest,
+  locale: SupportedLocale
+): Promise<LoginResponse> => {
   const { email, password } = request;
 
-  if (!email || !password) throw new Error("Email e senha obrigatórios");
+  if (!email || !password) throw new Error(t(locale, "errors.loginRequest"));
 
   await connectMongo();
 
   const user = await User.findOne({ email });
-  if (!user) throw new Error("Usuário não encontrado");
+  if (!user) throw new Error(t(locale, "errors..user.userNotFound"));
 
   const passwordMatch = await bcrypt.compare(password, user.password);
-  if (!passwordMatch) throw new Error("Senha incorreta");
+  if (!passwordMatch) throw new Error(t(locale, "errors.user.incorrectPassword"));
 
   const token = jwt.sign(
     { ...user, _id: user._id },
-    //process.env.JWT_SECRET!,
-    "seuSegredoSuperSecretoAqui123",
+    process.env.JWT_SECRET!,
     { expiresIn: "1h" }
   );
 
   return { token, user };
 };
 
-const register = async (request: RegisterRequest) => {
+const register = async (request: RegisterRequest, locale: SupportedLocale) => {
   const { name, email, password, savingTarget } = request;
 
   if (!name || !email || !password)
-    throw new Error("Preencha todos os campos para concluir o cadastro");
+    throw new Error(t(locale, "errors.user.registerRequest"));
 
   await connectMongo();
 
   const userRegistered = await User.findOne({ email });
 
-  if (userRegistered) throw new Error("Email já cadastrado");
+  if (userRegistered) throw new Error(t(locale, "errors.user.emailAlreadyRegister"));
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -72,8 +75,6 @@ const get = async (idUser: string): Promise<Profile> => {
   await connectMongo();
 
   const user = await User.findById(idUser).select("-password");
-
-  if (!user) throw new Error("Usuário não encontrado.");
 
   return user;
 };

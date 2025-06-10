@@ -88,5 +88,22 @@
   "investments": {
     "total": "Total investido:",
     "goal": "Meta:"
+  },
+  "errors": {
+    "user": {
+      "loginRequest": "Email e senha obrigatórios",
+      "userNotFound": "Usuário não encontrado",
+      "incorrectPassword": "Senha incorreta",
+      "emailAlreadyRegister": "E-mail já cadastrado",
+      "registerRequest": "Preencha todos os campos para concluir o cadastro"
+    },
+    "month": {
+      "required": "É necessario informar um més para retornar as transações",
+      "alreadyExist": "Mês ja cadastrado para usuario",
+      "fieldRequired": "Todos os campos são obrigatórios"
+    },
+    "transaction": {
+      "fieldRequired": "É necessario preencher todos os campos para cadastrar uma transação"
+    }
   }
 }

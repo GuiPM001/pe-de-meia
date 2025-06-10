@@ -5,6 +5,7 @@ import { User } from "@/core/models/user";
 import { TransactionType } from "../enums/transactionType";
 import { Transaction } from "../types/Transaction";
 import { transactionService } from "./transaction.service";
+import { SupportedLocale, t } from "@/lib/errorHandler";
 import "@/core/utils/date.extensions";
 
 const getMonthsByIdUser = async (idUser: string, year: number) => {
@@ -31,23 +32,23 @@ const getFutureMonthsByIdUser = async (
   });
 };
 
-const saveMonth = async (month: Month) => {
+const saveMonth = async (month: Month, locale: SupportedLocale) => {
   if (month.balance === null || !month.idUser || !month.id)
-    throw new Error("Todos os campos são obrigatórios");
+    throw new Error(t(locale, "errors.month.fieldRequired"));
 
   await connectMongo();
 
   const user = await User.findById({ _id: month.idUser });
 
   if (!user)
-    throw new Error("É necessário um usuário cadastrado cadastrar um mês");
+    throw new Error(t(locale, "errors.user.userNotFound"));
 
   const monthRegistered = await Months.findOne({
     id: month.id,
     idUser: month.idUser,
   });
 
-  if (monthRegistered) throw new Error("Mês ja cadastrado para usuario.");
+  if (monthRegistered) throw new Error(t(locale, "errors.month.alreadyExist"));
 
   const [newMonth] = await Promise.all([
     Months.create(month),

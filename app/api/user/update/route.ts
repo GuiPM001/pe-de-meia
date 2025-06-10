@@ -7,10 +7,7 @@ export async function PUT(request: NextRequest) {
 
     await userService.update(updateRequest);
 
-    return NextResponse.json(
-      { message: "Usuário atualizado com sucesso." },
-      { status: 200 }
-    );
+    return new NextResponse(null, { status: 204 });
   } catch (error: unknown) {
     const errorMessage = (error as Error).message;
     return NextResponse.json({ message: errorMessage }, { status: 500 });

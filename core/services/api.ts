@@ -7,6 +7,15 @@ export const api = axios.create({
   },
 });
 
+api.interceptors.request.use((config) => {
+  if (typeof window !== "undefined") {
+    const locale = window.location.pathname.split("/")[1];
+    config.headers["Accept-Language"] = locale || "pt";
+  }
+
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => {
     return response.data;

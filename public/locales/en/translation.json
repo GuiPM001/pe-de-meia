@@ -88,5 +88,22 @@
   "investments": {
     "total": "Total invested:",
     "goal": "Goal:"
+  },
+  "errors": {
+    "user": {
+      "loginRequest": "Email and password are required",
+      "userNotFound": "User not found",
+      "incorrectPassword": "Incorrect password",
+      "emailAlreadyRegister": "Email already registered",
+      "registerRequest": "Please fill in all fields to complete the registration"
+    },
+    "month": {
+      "required": "You must provide a month to retrieve transactions",
+      "alreadyExist": "Month already registered for user",
+      "fieldRequired": "All fields are required"
+    },
+    "transaction": {
+      "fieldRequired": "All fields must be filled in to register a transaction"
+    }
   }
 }

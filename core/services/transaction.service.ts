@@ -6,25 +6,25 @@ import { User } from "../models/user";
 import { ObjectId } from "mongodb";
 import { Month } from "../types/Month";
 import { TransactionType } from "../enums/transactionType";
+import { SupportedLocale, t } from "@/lib/errorHandler";
 import "@/core/utils/date.extensions";
 
-const registerTransaction = async (transaction: Transaction) => {
+const registerTransaction = async (
+  transaction: Transaction,
+  locale: SupportedLocale
+) => {
   const { date, value, description, idUser, idMonth } = transaction;
 
   if (!value || !date || !description || !idUser || !idMonth)
-    throw new Error(
-      "É necessario preencher todos os campos para cadastrar uma transação."
-    );
+    throw new Error(t(locale, "errors.transaction.fieldRequired"));
 
   await connectMongo();
 
-  const user = await User.findById({ _id: idUser });
-  if (!user)
-    throw new Error("É necessário um usuário cadastrado para cadastrar um mês");
+  const user = await User.findById({ _id: transaction.idUser });
+  if (!user) throw new Error(t(locale, "errors.user.userNotFound"));
 
-  if (transaction.recurrent) {
+  if (transaction.recurrent)
     return await handleRecurrentTransaction(transaction, false);
-  }
 
   return await handleSingleTransaction(transaction, false);
 };
@@ -32,7 +32,7 @@ const registerTransaction = async (transaction: Transaction) => {
 const handleRecurrentTransaction = async (
   transaction: Transaction,
   isDelete: boolean
-) => {
+): Promise<Transaction | undefined> => {
   const months: Month[] = await monthService.getFutureMonthsByIdUser(
     transaction.idUser,
     transaction.idMonth
@@ -72,7 +72,7 @@ const handleRecurrentTransaction = async (
 const handleSingleTransaction = async (
   transaction: Transaction,
   isDelete: boolean
-) => {
+): Promise<Transaction> => {
   if (isDelete) {
     await Transactions.deleteOne({
       _id: transaction._id,
@@ -120,12 +120,10 @@ const updateAccumulatedBalanceValue = async (
 
 const getTransactionsByMonthId = async (
   idMonth: string,
-  idUser: string
+  idUser: string,
+  locale: SupportedLocale
 ): Promise<Transaction[]> => {
-  if (!idMonth)
-    throw new Error(
-      "É necessario informar um més para retornar as transações."
-    );
+  if (!idMonth) throw new Error(t(locale, "errors.month.required"));
   await connectMongo();
 
   return await Transactions.find({ idMonth, idUser });

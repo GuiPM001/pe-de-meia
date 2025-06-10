@@ -1,4 +1,5 @@
 import { transactionService } from "@/core/services/transaction.service";
+import { getRequestLocale } from "@/core/utils/locale";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -9,7 +10,8 @@ export async function GET(request: NextRequest) {
 
     const months = await transactionService.getTransactionsByMonthId(
       idMonth,
-      idUser
+      idUser,
+      getRequestLocale(request)
     );
 
     return NextResponse.json(months, { status: 200 });
