@@ -53,7 +53,7 @@ export default function TransactionLabel({
   return (
     <>
       <div
-        className={`relative group/transaction flex flex-row items-center justify-between text-xs ${hoverBgMap[type]} py-0.5 rounded-md`}
+        className={`relative group/transaction flex flex-row items-center justify-between text-xs ${hoverBgMap[type]} py-0.5 rounded-md z-10`}
       >
         <div className="flex flex-row items-center">
           {renderIcon()}

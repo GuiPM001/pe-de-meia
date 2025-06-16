@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "@/components/calendar";
 import Sidebar from "@/components/sidebar";
 import { Month } from "@/core/types/Month";
@@ -9,22 +9,26 @@ import Header from "@/components/header";
 import { TransactionModalProvider } from "@/app/context/TransactionModalContext";
 import "@/core/utils/date.extensions";
 import Wrapper from "@/components/ui/wrapper";
+import { useMonth } from "@/app/context/MonthContext";
 
 export default function Home() {
-  const [indexMonthSelected, setIndexMonthSelected] = useState<number>(
-    new Date().getUTCMonth()
-  );
+  const today = new Date();
+  
+  const { months } = useMonth();
 
-  const [yearSelected, setYearSelected] = useState<number>(
-    new Date().getFullYear()
-  );
-
+  const [indexMonth, setIndexMonth] = useState<number>(today.getUTCMonth());
+  const [yearSelected, setYearSelected] = useState<number>(today.getFullYear());
   const [monthSelected, setMonthSelected] = useState<Month>({
     balance: 0,
     invested: 0,
-    id: new Date(yearSelected, indexMonthSelected, 1).toISODateString(),
+    id: new Date(yearSelected, indexMonth, 1).toISODateString(),
     idUser: "",
   });
+
+  useEffect(() => {
+    const month = months.find((x) => x.id === monthSelected.id);
+    if (month) setMonthSelected(month);
+  }, [months, monthSelected.id]);
 
   return (
     <TransactionProvider>
@@ -32,8 +36,8 @@ export default function Home() {
         <Wrapper>
           <div className="flex flex-row gap-8">
             <Sidebar
-              monthSelected={indexMonthSelected}
-              setMonthSelected={setIndexMonthSelected}
+              monthSelected={indexMonth}
+              setMonthSelected={setIndexMonth}
               yearSelected={yearSelected}
               setYearSelected={setYearSelected}
               setMonth={setMonthSelected}
@@ -42,13 +46,13 @@ export default function Home() {
             <div className="flex flex-col w-full h-full">
               <Header
                 yearSelected={yearSelected}
-                indexMonthSelected={indexMonthSelected}
+                indexMonthSelected={indexMonth}
                 month={monthSelected}
               />
 
               <Calendar
                 month={monthSelected}
-                indexMonth={indexMonthSelected}
+                indexMonth={indexMonth}
                 year={yearSelected}
               />
             </div>

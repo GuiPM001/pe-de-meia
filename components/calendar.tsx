@@ -14,6 +14,7 @@ import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
 import { sumValues } from "@/core/utils/sumValues";
 import "@/core/utils/date.extensions";
+import { currencyNumber } from "@/core/utils/numberFormat";
 
 interface CalendarProps {
   month: Month;
@@ -25,9 +26,10 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [monthlySummary, setMonthlySummary] = useState<MonthlySummary>({
     totalInvested: 0,
-    dayBalances: []
+    dayBalances: [],
+    remainingDailyExpenses: 0,
   });
-  
+
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
   const { months } = useMonth();
@@ -54,11 +56,22 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     const currentDate = getStartDate();
 
     addDaysBefore(currentDate, dayBalances);
-    const totalInvested = addMonthlyDays(currentDate, dayBalances, transactions);
-    completeGrid(currentDate, dayBalances);
+    const totalInvested = addMonthlyDays(
+      currentDate,
+      dayBalances,
+      transactions
+    );
 
-    setMonthlySummary({dayBalances, totalInvested});
-  }, [transactions]);
+    const daysRemaining = dayBalances.at(-1)!.day - today.getDate() + 1;
+    const balanceRemaining = Math.max(0, month.balance! - profile.savingTarget);
+
+    completeGrid(currentDate, dayBalances);
+    setMonthlySummary({
+      dayBalances,
+      totalInvested,
+      remainingDailyExpenses: balanceRemaining / daysRemaining,
+    });
+  }, [transactions, month.balance, profile.savingTarget]);
 
   const getTransactions = async () => {
     const response: Transaction[] = await api.get(
@@ -149,8 +162,12 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
         TransactionType.investment
       );
 
-      const investedToday = sumValues(investeds)
-      const todayTotal = sumValues(incomes) - sumValues(expenses) - sumValues(dailies) - investedToday;
+      const investedToday = sumValues(investeds);
+      const todayTotal =
+        sumValues(incomes) -
+        sumValues(expenses) -
+        sumValues(dailies) -
+        investedToday;
 
       balance += todayTotal;
       totalInvested += investedToday;
@@ -182,7 +199,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
 
       {monthlySummary.dayBalances.map((x) => (
         <div
-          className="border border-gray-200 h-30"
+          className="border border-gray-200 h-30 relative"
           key={`${x.day}-${x.total}`}
         >
           {x.total === null ? (
@@ -206,6 +223,12 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
               />
 
               <TransactionsContainer dayBalance={x} />
+
+              {new Date(year, indexMonth, x.day, 23, 59, 59) >= today && (
+                <span className="absolute bottom-[4px] right-[8px] text-sm font-bold text-gray-300 z-0">
+                  {currencyNumber(monthlySummary.remainingDailyExpenses)}
+                </span>
+              )}
             </div>
           )}
         </div>
