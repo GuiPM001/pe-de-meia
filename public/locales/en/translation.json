@@ -50,6 +50,7 @@
     "email": "E-mail",
     "emailPlaceholder": "your@email.com",
     "password": "Password",
+    "rememberMe": "Remember me",
     "button": "Sign in",
     "register": "Don't have an account? ",
     "registerLink": "Register"

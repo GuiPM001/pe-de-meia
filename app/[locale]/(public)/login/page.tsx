@@ -13,6 +13,7 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { api } from "@/core/services/api";
 import { LoginResponse } from "@/core/types/LoginResponse";
 import { useTranslation } from "react-i18next";
+import Checkbox from "@/components/ui/checkbox";
 
 export default function Login() {
   const router = useRouter();
@@ -24,6 +25,7 @@ export default function Login() {
   const [form, setForm] = useState<LoginRequest>({
     email: "",
     password: "",
+    rememberMe: false,
   });
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,9 +48,9 @@ export default function Login() {
 
       const response: LoginResponse = await api.post("/user/login", form);
 
-      document.cookie = `authToken=${
-        response.token
-      }; path=/; max-age=${3600}; Secure; SameSite=Strict`;
+      document.cookie = `authToken=${response.token}; path=/; max-age=${
+        form.rememberMe ? 160000000 : ""
+      }; Secure; SameSite=Strict`;
 
       setProfile(response.user);
       router.replace("/");
@@ -83,14 +85,25 @@ export default function Login() {
               value={form.email}
               onChange={handleForm}
             />
-            <PasswordInput
-              label={t("login.password")}
-              placeholder="********"
-              name="password"
-              error={!!error}
-              value={form.password}
-              onChange={handleForm}
-            />
+
+            <div className="flex flex-col gap-3">
+              <PasswordInput
+                label={t("login.password")}
+                placeholder="********"
+                name="password"
+                error={!!error}
+                value={form.password}
+                onChange={handleForm}
+              />
+
+              <Checkbox
+                label={t("login.rememberMe")}
+                checked={form.rememberMe}
+                onChange={(e) =>
+                  setForm({ ...form, rememberMe: e.target.checked })
+                }
+              />
+            </div>
 
             <Button
               type="button"
