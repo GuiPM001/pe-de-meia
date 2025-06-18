@@ -9,7 +9,6 @@ import React, {
 } from "react";
 import { Profile } from "@/core/types/Profile";
 import { jwtDecode } from "jwt-decode";
-import { api } from "@/core/services/api";
 
 interface ProfileContextProps {
   profile: Profile;
@@ -31,11 +30,6 @@ const ProfileContext = createContext<ProfileContextProps>({
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile>(initialState);
 
-  const setProfileData = async (id: string) => {
-    const user: Profile = await api.get(`/user?id=${id}`);
-    setProfile(user);
-  };
-
   const getAuthTokenData = (): Profile | null => {
     const cookies = document.cookie.split("; ");
     const tokenCookie = cookies.find((cookie) =>
@@ -55,7 +49,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
     const tokenData = getAuthTokenData();
     if (!tokenData) return;
 
-    setProfileData(tokenData._id);
+    setProfile(tokenData);
   }, [profile._id]);
 
   return (

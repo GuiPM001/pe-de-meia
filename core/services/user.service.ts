@@ -13,7 +13,7 @@ const login = async (
   request: LoginRequest,
   locale: SupportedLocale
 ): Promise<LoginResponse> => {
-  const { email, password } = request;
+  const { email, password, rememberMe } = request;
 
   if (!email || !password) throw new Error(t(locale, "errors.loginRequest"));
 
@@ -23,12 +23,18 @@ const login = async (
   if (!user) throw new Error(t(locale, "errors.user.userNotFound"));
 
   const passwordMatch = await bcrypt.compare(password, user.password);
-  if (!passwordMatch) throw new Error(t(locale, "errors.user.incorrectPassword"));
+  if (!passwordMatch)
+    throw new Error(t(locale, "errors.user.incorrectPassword"));
 
   const token = jwt.sign(
-    { ...user, _id: user._id },
+    {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      savingTarget: user.savingTarget,
+    },
     process.env.JWT_SECRET!,
-    { expiresIn: "1h" }
+    { expiresIn: rememberMe ? "365d" : "1h" }
   );
 
   return { token, user };
@@ -44,7 +50,8 @@ const register = async (request: RegisterRequest, locale: SupportedLocale) => {
 
   const userRegistered = await User.findOne({ email });
 
-  if (userRegistered) throw new Error(t(locale, "errors.user.emailAlreadyRegister"));
+  if (userRegistered)
+    throw new Error(t(locale, "errors.user.emailAlreadyRegister"));
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
