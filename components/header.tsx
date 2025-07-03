@@ -32,12 +32,12 @@ export default function Header({
       </span>
       <IconButton
         onClick={() => openModal(month.id)}
-        label={t('iconButton.addTransaction')}
+        label={t('tooltips.addTransaction')}
       >
         <TbCirclePlusFilled size="24px" />
       </IconButton>
 
-      <IconButton label={t('iconButton.info')} onClick={() => setModalOpen(true)}>
+      <IconButton label={t('tooltips.info')} onClick={() => setModalOpen(true)}>
         <TbInfoCircleFilled size="24px" />
       </IconButton>
 
