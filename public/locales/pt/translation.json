@@ -80,7 +80,8 @@
     "info": "Informações",
     "profile": "Perfil",
     "logout": "Sair",
-    "balance": "Saldo do dia"
+    "balance": "Saldo do dia",
+    "remaining": "Gasto diário para não impactar a meta mensal"
   },
   "home": {
     "totalIncome": "Total de entradas",

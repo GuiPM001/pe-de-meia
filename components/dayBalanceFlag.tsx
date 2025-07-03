@@ -10,6 +10,7 @@ import IconButton from "./ui/iconButton";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import { currencyNumber } from "@/core/utils/numberFormat";
 import { useTranslation } from "react-i18next";
+import Tooltip from "./ui/tooltip";
 
 interface DayBalanceFlagProps {
   dayBalance: DayBalance;
@@ -35,7 +36,7 @@ export default function DayBalanceFlag({
   }, [dayBalance]);
 
   return (
-    <div className="flex flex-row justify-between items-center p-2 relative">
+    <div className="flex flex-row justify-between items-center m-2 relative">
       <span
         className={`w-7 text-center font-bold ${
           today ? "bg-gray-600 rounded-md text-white" : ""
@@ -46,7 +47,7 @@ export default function DayBalanceFlag({
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <div className="group/balance">
+        <div className="group">
           <span
             className={`${getColors(
               dayBalance.total!,
@@ -56,15 +57,16 @@ export default function DayBalanceFlag({
           >
             {currencyValue}
           </span>
-          <div className="absolute whitespace-nowrap top-full left-1/2 z-20 -translate-x-1/2 rounded bg-black py-2 px-4 text-sm text-white hidden group-hover/balance:block">
-            <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 bg-black"></span>
-            <p className="text-bottom">{t("tooltips.balance")}</p>
-          </div>
+
+          <Tooltip
+            position="bottom"
+            label={t("tooltips.balance")}
+          />
         </div>
       )}
 
       <IconButton
-        className="invisible group-hover:visible"
+        className="invisible group-hover/day:visible"
         label={t("tooltips.addTransaction")}
         onClick={() => openModal(dayBalance.idMonth, dayBalance.day)}
       >

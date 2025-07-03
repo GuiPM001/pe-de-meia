@@ -14,6 +14,8 @@ import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
 import { sumValues } from "@/core/utils/sumValues";
 import { currencyNumber } from "@/core/utils/numberFormat";
+import { useTranslation } from "react-i18next";
+import Tooltip from "./ui/tooltip";
 import "@/core/utils/date.extensions";
 
 interface CalendarProps {
@@ -33,6 +35,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
   const { months } = useMonth();
+  const { t } = useTranslation();
 
   const today = new Date();
 
@@ -206,8 +209,9 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
             <div className="bg-gray-100 h-full w-full"></div>
           ) : (
             <div
-              className={`h-full group ${
-                x.day === today.getDate() && today.getUTCMonth() === indexMonth
+              className={`h-full group/day ${
+                x.day === today.getUTCDate() &&
+                today.getUTCMonth() === indexMonth
                   ? "border-3 border-gray-600 rounded-md"
                   : ""
               }`}
@@ -217,7 +221,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
                 dayBalance={x}
                 totalInvested={monthlySummary.totalInvested}
                 today={
-                  x.day === today.getDate() &&
+                  x.day === today.getUTCDate() &&
                   today.getUTCMonth() === indexMonth
                 }
               />
@@ -225,9 +229,13 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
               <TransactionsContainer dayBalance={x} />
 
               {new Date(year, indexMonth, x.day, 23, 59, 59) >= today && (
-                <span className="absolute bottom-[4px] right-[8px] text-sm font-bold text-gray-300 z-0">
-                  {currencyNumber(monthlySummary.remainingDailyExpenses)}
-                </span>
+                <div className="group absolute bottom-[4px] right-[8px] z-0">
+                  <span className="text-sm font-bold text-gray-300">
+                    {currencyNumber(monthlySummary.remainingDailyExpenses)}
+                  </span>
+
+                  <Tooltip position="left" label={t("tooltips.remaining")} />
+                </div>
               )}
             </div>
           )}

@@ -80,7 +80,8 @@
     "info": "Informations",
     "profile": "Profile",
     "logout": "Log out",
-    "balance": "Day balance"
+    "balance": "Day balance",
+    "remaining": "Daily spending to avoid impacting the monthly target"
   },
   "home": {
     "totalIncome": "Total income",
