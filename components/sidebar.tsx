@@ -45,15 +45,18 @@ export default function Sidebar({
     fetchMonths();
   }, [profile._id, yearSelected, transactions]);
 
-  const createMonth = async (month: string) => {
-    setMonthLoading(month);
+  const createMonth = async (idMonth: string) => {
+    setMonthLoading(idMonth);
     const lastBalance = months.at(-2)?.balance ?? 0;
 
-    await api.post("/month", {
-      id: month,
+    const newMonth: Month = {
+      id: idMonth,
       idUser: profile._id,
       balance: lastBalance,
-    });
+      invested: 0
+    };
+
+    await api.post("/month", newMonth);
 
     months.pop();
 
