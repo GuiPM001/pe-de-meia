@@ -75,11 +75,12 @@
     "monthlySummary": "Monthly summary",
     "investments": "Investments"
   },
-  "iconButton": {
+  "tooltips": {
     "addTransaction": "Add transaction",
     "info": "Informations",
     "profile": "Profile",
-    "logout": "Log out"
+    "logout": "Log out",
+    "balance": "Day balance"
   },
   "home": {
     "totalIncome": "Total income",

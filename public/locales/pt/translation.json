@@ -35,7 +35,7 @@
       "title": "Selecione uma transação para editar",
       "description": "Descrição",
       "value": "Valor",
-      "button": "Consluir"
+      "button": "Concluir"
     },
     "deleteTransaction": {
       "title": "Excluir Transação",
@@ -75,11 +75,12 @@
     "monthlySummary": "Resumo mensal",
     "investments": "Investimentos"
   },
-  "iconButton": {
+  "tooltips": {
     "addTransaction": "Adicionar transação",
     "info": "Informações",
     "profile": "Perfil",
-    "logout": "Sair"
+    "logout": "Sair",
+    "balance": "Saldo do dia"
   },
   "home": {
     "totalIncome": "Total de entradas",

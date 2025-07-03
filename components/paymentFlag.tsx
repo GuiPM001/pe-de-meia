@@ -46,20 +46,26 @@ export default function PaymentFlag({
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <span
-          className={`${getColors(
-            dayBalance.total!,
-            totalInvested,
-            profile.savingTarget
-          )} px-2 rounded-md font-bold`}
-        >
-          {currencyValue}
-        </span>
+        <div className="group/balance">
+          <span
+            className={`${getColors(
+              dayBalance.total!,
+              totalInvested,
+              profile.savingTarget
+            )} px-2 rounded-md font-bold`}
+          >
+            {currencyValue}
+          </span>
+          <div className="absolute whitespace-nowrap top-full left-1/2 z-20 -translate-x-1/2 rounded bg-black py-2 px-4 text-sm text-white hidden group-hover/balance:block">
+            <span className="absolute top-[-3px] left-1/2 -z-10 h-2 w-2 -translate-x-1/2 rotate-45 bg-black"></span>
+            <p className="text-bottom">{t("tooltips.balance")}</p>
+          </div>
+        </div>
       )}
 
       <IconButton
         className="invisible group-hover:visible"
-        label={t('iconButton.addTransaction')}
+        label={t("tooltips.addTransaction")}
         onClick={() => openModal(dayBalance.idMonth, dayBalance.day)}
       >
         <TbPlus size="20px" />
