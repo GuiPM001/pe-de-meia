@@ -11,19 +11,19 @@ import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import { currencyNumber } from "@/core/utils/numberFormat";
 import { useTranslation } from "react-i18next";
 
-interface PaymentFlagProps {
+interface DayBalanceFlagProps {
   dayBalance: DayBalance;
   totalInvested: number;
   today: boolean;
   loading: boolean;
 }
 
-export default function PaymentFlag({
+export default function DayBalanceFlag({
   dayBalance,
   totalInvested,
   today,
   loading,
-}: PaymentFlagProps) {
+}: DayBalanceFlagProps) {
   const { profile } = useProfile();
   const { openModal } = useTransactionModal();
   const { t } = useTranslation();

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
-import PaymentFlag from "./paymentFlag";
+import DayBalanceFlag from "./dayBalanceFlag";
 import { TransactionType } from "@/core/enums/transactionType";
 import { Transaction } from "@/core/types/Transaction";
 import { DayBalance, MonthlySummary } from "@/core/types/DayBalance";
@@ -13,8 +13,8 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
 import { sumValues } from "@/core/utils/sumValues";
-import "@/core/utils/date.extensions";
 import { currencyNumber } from "@/core/utils/numberFormat";
+import "@/core/utils/date.extensions";
 
 interface CalendarProps {
   month: Month;
@@ -212,7 +212,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
                   : ""
               }`}
             >
-              <PaymentFlag
+              <DayBalanceFlag
                 loading={loading}
                 dayBalance={x}
                 totalInvested={monthlySummary.totalInvested}
