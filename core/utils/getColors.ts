@@ -7,7 +7,7 @@ export const getColors = (
 ) => {
   const total = balance + invested;
 
-  if (total <= 0 || balance <= 0)
+  if (total <= 0 || Number(balance.toFixed(2)) <= 0)
     return `text-red-text 
             ${bg ? "bg-red-default hover:bg-red-hover" : ""} 
             ${border ? "border-2 border-red-text" : ""}`;

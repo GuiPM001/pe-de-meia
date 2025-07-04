@@ -1,7 +1,6 @@
 import { Transaction } from "./Transaction";
 
 export type MonthlySummary = {
-  totalInvested: number;
   dayBalances: DayBalance[];
   remainingDailyExpenses: number;
 }
@@ -15,4 +14,5 @@ export type DayBalance = {
   dailies: Transaction[] | null;
   investeds: Transaction[] | null;
   total: number | null;
+  totalInvested: number | null;
 };

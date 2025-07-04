@@ -27,7 +27,6 @@ interface CalendarProps {
 export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [monthlySummary, setMonthlySummary] = useState<MonthlySummary>({
-    totalInvested: 0,
     dayBalances: [],
     remainingDailyExpenses: 0,
   });
@@ -59,11 +58,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     const currentDate = getStartDate();
 
     addDaysBefore(currentDate, dayBalances);
-    const totalInvested = addMonthlyDays(
-      currentDate,
-      dayBalances,
-      transactions
-    );
+    addMonthlyDays(currentDate, dayBalances, transactions);
 
     const daysRemaining = dayBalances.at(-1)!.day - today.getDate() + 1;
     const balanceRemaining = Math.max(0, month.balance! - profile.savingTarget);
@@ -71,7 +66,6 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     completeGrid(currentDate, dayBalances);
     setMonthlySummary({
       dayBalances,
-      totalInvested,
       remainingDailyExpenses: balanceRemaining / daysRemaining,
     });
   }, [transactions, month.balance, profile.savingTarget]);
@@ -121,6 +115,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
       dailies: null,
       investeds: null,
       total: null,
+      totalInvested: null,
       description: "",
       ...values,
     });
@@ -139,7 +134,6 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
     transactions: Transaction[]
   ) => {
     let balance = months[indexMonth - 1]?.balance ?? 0;
-    let totalInvested = 0;
 
     while (currentDate.getUTCMonth() === indexMonth) {
       const transactionsActual = transactions.filter(
@@ -165,15 +159,14 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
         TransactionType.investment
       );
 
-      const investedToday = sumValues(investeds);
+      const totalInvested = sumValues(investeds);
       const todayTotal =
         sumValues(incomes) -
         sumValues(expenses) -
         sumValues(dailies) -
-        investedToday;
+        totalInvested;
 
       balance += todayTotal;
-      totalInvested += investedToday;
 
       addDay(currentDate, dayBalances, {
         incomes,
@@ -181,12 +174,11 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
         dailies,
         investeds,
         total: balance,
+        totalInvested,
       });
 
       currentDate.setDate(currentDate.getDate() + 1);
     }
-
-    return totalInvested;
   };
 
   const completeGrid = (currentDate: Date, dayBalances: DayBalance[]) => {
@@ -219,7 +211,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
               <DayBalanceFlag
                 loading={loading}
                 dayBalance={x}
-                totalInvested={monthlySummary.totalInvested}
+                totalInvested={x.totalInvested || 0}
                 today={
                   x.day === today.getUTCDate() &&
                   today.getUTCMonth() === indexMonth
