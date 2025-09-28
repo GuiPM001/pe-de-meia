@@ -11,6 +11,7 @@ import { getColors } from "@/core/utils/getColors";
 import { currencyNumber } from "@/core/utils/numberFormat";
 import "@/core/utils/date.extensions";
 import { useTranslation } from "react-i18next";
+import { Month } from "@/core/types/Month";
 
 export default function Investments() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,6 +43,10 @@ export default function Investments() {
     setTotalInvested(totalInvested);
   }, [months]);
 
+  const isPastUninvested = (month: Month) => {
+    return month.invested === null && month.id < actualDate;
+  };
+
   return (
     <Wrapper>
       <div className=" w-[620px]">
@@ -49,9 +54,12 @@ export default function Investments() {
 
         <ProgressBar
           value={totalInvested}
-          minLabel={t('investments.total')}
-          max={profile.savingTarget * 12}
-          maxLabel={t('investments.goal')}
+          minLabel={t("investments.total")}
+          max={
+            profile.savingTarget *
+            months.filter((m) => m.invested !== null).length
+          }
+          maxLabel={t("investments.goal")}
           loading={loading}
         />
 
@@ -59,16 +67,17 @@ export default function Investments() {
           {months.map((month) => (
             <div
               key={month.id}
-              className={`capitalize h-[100px] w-[148px] rounded-xl flex flex-col items-center py-4 relative
-                          ${
-                            month.id > actualDate
-                              ? "bg-gray-200"
-                              : getColors(month.invested!, 0, profile.savingTarget)
-                          }`}
+              className={`capitalize h-[100px] w-[148px] rounded-xl flex flex-col items-center py-4 relative ${
+                isPastUninvested(month)
+                  ? "bg-gray-200"
+                  : getColors(month.invested!, 0, profile.savingTarget)
+              }`}
             >
               <span>{getMonthNameByDate(month.id)}</span>
               <span className="m-auto font-bold">
-                {month.id <= actualDate ? currencyNumber(month.invested!) : "-"}
+                {isPastUninvested(month)
+                  ? "-"
+                  : currencyNumber(month.invested!)}
               </span>
             </div>
           ))}

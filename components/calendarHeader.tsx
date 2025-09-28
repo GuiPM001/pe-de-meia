@@ -18,9 +18,6 @@ type Totals = {
 };
 
 export default function CalendarHeader({ dayBalances }: CalendarHeaderProps) {
-  const className =
-    "border border-t-0 border-gray-200 text-center font-black py-1 self-end mt-4 uppercase";
-
   const { t } = useTranslation();
 
   const [totals, setTotals] = useState<Totals>({
@@ -51,13 +48,20 @@ export default function CalendarHeader({ dayBalances }: CalendarHeaderProps) {
         <BalanceLabel label={t('home.totalDaily')} value={totals.daily} />
       </div>
 
-      <>
-        {getWeekDays().map((x) => (
-          <div key={x} className={className}>
+      <div className="lg:hidden contents">
+        {getWeekDays('narrow').map((x) => (
+          <div key={x} className="border-b border-gray-200 text-center font-black py-1 self-end mt-4 uppercase">
             {x}
           </div>
         ))}
-      </>
+      </div>
+      <div className="lg:contents hidden ">
+        {getWeekDays('short').map((x) => (
+          <div key={x} className="border border-t-0 border-gray-200 text-center font-black py-1 self-end mt-4 uppercase">
+            {x}
+          </div>
+        ))}
+      </div>
     </>
   );
 }

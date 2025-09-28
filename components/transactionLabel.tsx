@@ -27,24 +27,27 @@ export default function TransactionLabel({
   if (!transactions || !transactions.length) return <></>;
 
   const ICON_SIZE = "18px";
-  const hoverBgMap: Record<TransactionType, string> = {
-    [TransactionType.income]: "hover:bg-green-hover",
-    [TransactionType.expense]: "hover:bg-red-hover",
-    [TransactionType.daily]: "hover:bg-yellow-hover",
-    [TransactionType.investment]: "hover:bg-blue-hover",
+  const textColorMap: Record<TransactionType, string> = {
+    [TransactionType.income]: "text-green-text",
+    [TransactionType.expense]: "text-red-text",
+    [TransactionType.daily]: "text-yellow-text",
+    [TransactionType.investment]: "bg-blue-default",
+  };
+  const bgColorMap: Record<TransactionType, string> = {
+    [TransactionType.income]: "bg-green-hover",
+    [TransactionType.expense]: "bg-red-hover",
+    [TransactionType.daily]: "bg-yellow-hover",
+    [TransactionType.investment]: "bg-blue-hover",
   };
 
   const renderIcon = () => {
     if (type === TransactionType.income)
-      return <TbCaretUpFilled className="text-green-text" size={ICON_SIZE} />;
+      return <TbCaretUpFilled className={textColorMap[type]} size={ICON_SIZE} />;
 
     if (type === TransactionType.investment)
-      return <div className="h-1 w-3 m-[3px] rounded-xl bg-blue-default"></div>;
+      return <div className={`h-1 w-3 m-[3px] rounded-xl ${textColorMap[type]}`}></div>;
 
-    if (type === TransactionType.expense)
-      return <TbCaretDownFilled className="text-red-text" size={ICON_SIZE} />;
-
-    return <TbCaretDownFilled className="text-yellow-text" size={ICON_SIZE} />;
+    return <TbCaretDownFilled className={textColorMap[type]} size={ICON_SIZE} />;
   };
 
   const handleModals = (name: "delete" | "edit", open: boolean) => {
@@ -53,8 +56,10 @@ export default function TransactionLabel({
 
   return (
     <>
+      <div className={`block lg:hidden w-full h-2.5 rounded-lg ${bgColorMap[type]}`}></div>
+
       <div
-        className={`relative group flex flex-row items-center justify-between text-xs ${hoverBgMap[type]} py-0.5 rounded-md z-10`}
+        className={`relative group lg:flex hidden flex-row items-center justify-between text-xs hover:${bgColorMap[type]} py-0.5 rounded-md z-10`}
       >
         <div className="flex flex-row items-center">
           {renderIcon()}

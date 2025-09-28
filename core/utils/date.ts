@@ -15,12 +15,12 @@ export const getMonthNameByDate = (dateString: string) => {
   });
 };
 
-export const getWeekDays = () => {
+export const getWeekDays = (format: 'short' | 'narrow') => {
   const locale = getLocale();
 
   return Array.from({ length: 7 }, (_, index) => {
     const day = new Date(Date.UTC(2001, 0, 1 + index));
 
-    return new Intl.DateTimeFormat(locale, { weekday: "short" }).format(day);
+    return new Intl.DateTimeFormat(locale, { weekday: format }).format(day);
   });
 };

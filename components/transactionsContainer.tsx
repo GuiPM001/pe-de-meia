@@ -11,7 +11,7 @@ export default function TransactionsContainer({
   dayBalance,
 }: TransactionsContainerProps) {
   return (
-    <div className="flex flex-col mx-4 gap-0.5">
+    <div className="flex flex-col mx-2 lg:mx-4 gap-1 lg:gap-0.5">
       <TransactionLabel
         type={TransactionType.income}
         transactions={dayBalance.incomes}

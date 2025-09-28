@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import Tooltip from "./ui/tooltip";
 import "@/core/utils/date.extensions";
 
-interface CalendarProps {
+export interface CalendarProps {
   month: Month;
   indexMonth: number;
   year: number;
@@ -189,50 +189,84 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   };
 
   return (
-    <div className="grid grid-cols-7 w-full">
-      <CalendarHeader dayBalances={monthlySummary.dayBalances} />
+    <>
+      <div className="grid lg:hidden grid-cols-7 w-full mb-10">
+        <CalendarHeader dayBalances={monthlySummary.dayBalances} />
 
-      {monthlySummary.dayBalances.map((x) => (
-        <div
-          className="border border-gray-200 h-30 relative"
-          key={`${x.day}-${x.total}`}
-        >
-          {x.total === null ? (
-            <div className="bg-gray-100 h-full w-full"></div>
-          ) : (
-            <div
-              className={`h-full group/day ${
-                x.day === today.getUTCDate() &&
-                today.getUTCMonth() === indexMonth
-                  ? "border-3 border-gray-600 rounded-md"
-                  : ""
-              }`}
-            >
-              <DayBalanceFlag
-                loading={loading}
-                dayBalance={x}
-                totalInvested={x.totalInvested || 0}
-                today={
-                  x.day === today.getUTCDate() &&
-                  today.getUTCMonth() === indexMonth
-                }
-              />
+        {monthlySummary.dayBalances.map((x) => (
+          <div
+            className="border-b border-gray-200 h-30 relative"
+            key={`${x.day}-${x.total}`}
+          >
+            {x.total === null ? (
+              <div className="w-full"></div>
+            ) : (
+              <div
+                className={`group/day ${
+                  x.day === today.getDate() && today.getMonth() === indexMonth
+                    ? "rounded-md"
+                    : ""
+                }`}
+              >
+                <DayBalanceFlag
+                  loading={loading}
+                  dayBalance={x}
+                  totalInvested={x.totalInvested || 0}
+                  isToday={
+                    x.day === today.getDate() && today.getMonth() === indexMonth
+                  }
+                />
 
-              <TransactionsContainer dayBalance={x} />
+                <TransactionsContainer dayBalance={x} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
 
-              {new Date(year, indexMonth, x.day, 23, 59, 59) >= today && (
-                <div className="group absolute bottom-[4px] right-[8px] z-0">
-                  <span className="text-sm font-bold text-gray-300">
-                    {currencyNumber(monthlySummary.remainingDailyExpenses)}
-                  </span>
+      <div className="hidden lg:grid grid-cols-7 w-full">
+        <CalendarHeader dayBalances={monthlySummary.dayBalances} />
 
-                  <Tooltip position="left" label={t("tooltips.remaining")} />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
+        {monthlySummary.dayBalances.map((x) => (
+          <div
+            className="border border-gray-200 h-30 relative"
+            key={`${x.day}-${x.total}`}
+          >
+            {x.total === null ? (
+              <div className="bg-gray-100 h-full w-full"></div>
+            ) : (
+              <div
+                className={`h-full group/day ${
+                  x.day === today.getDate() && today.getMonth() === indexMonth
+                    ? "border-3 border-gray-600 rounded-md"
+                    : ""
+                }`}
+              >
+                <DayBalanceFlag
+                  loading={loading}
+                  dayBalance={x}
+                  totalInvested={x.totalInvested || 0}
+                  isToday={
+                    x.day === today.getDate() && today.getMonth() === indexMonth
+                  }
+                />
+
+                <TransactionsContainer dayBalance={x} />
+
+                {new Date(year, indexMonth, x.day, 23, 59, 59) >= today && (
+                  <div className="group absolute bottom-[4px] right-[8px] z-0">
+                    <span className="text-sm font-bold text-gray-300">
+                      {currencyNumber(monthlySummary.remainingDailyExpenses)}
+                    </span>
+
+                    <Tooltip position="left" label={t("tooltips.remaining")} />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

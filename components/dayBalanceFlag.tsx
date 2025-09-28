@@ -15,14 +15,14 @@ import Tooltip from "./ui/tooltip";
 interface DayBalanceFlagProps {
   dayBalance: DayBalance;
   totalInvested: number;
-  today: boolean;
+  isToday: boolean;
   loading: boolean;
 }
 
 export default function DayBalanceFlag({
   dayBalance,
   totalInvested,
-  today,
+  isToday,
   loading,
 }: DayBalanceFlagProps) {
   const { profile } = useProfile();
@@ -36,18 +36,26 @@ export default function DayBalanceFlag({
   }, [dayBalance]);
 
   return (
-    <div className="flex flex-row justify-between items-center m-2 relative">
+    <div className="flex lg:flex-row flex-col justify-between items-center m-2 relative">
       <span
-        className={`w-7 text-center font-bold ${
-          today ? "bg-gray-600 rounded-md text-white" : ""
-        }`}
+        className={`hidden lg:block w-7 text-center font-bold  
+          ${isToday ? "bg-gray-600 rounded-md text-white" : ""}
+        `}
+      >
+        {dayBalance.day}
+      </span>
+
+      <span
+        className={`block lg:hidden text-center font-bold h-8 w-8 content-center
+          ${getColors(dayBalance.total!, totalInvested, profile.savingTarget, isToday)} rounded-full
+        `}
       >
         {dayBalance.day}
       </span>
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <div className="group">
+        <div className="group hidden lg:block">
           <span
             className={`${getColors(
               dayBalance.total!,
@@ -58,15 +66,12 @@ export default function DayBalanceFlag({
             {currencyValue}
           </span>
 
-          <Tooltip
-            position="bottom"
-            label={t("tooltips.balance")}
-          />
+          <Tooltip position="bottom" label={t("tooltips.balance")} />
         </div>
       )}
 
       <IconButton
-        className="invisible group-hover/day:visible"
+        className="hidden lg:block invisible group-hover/day:visible"
         label={t("tooltips.addTransaction")}
         onClick={() => openModal(dayBalance.idMonth, dayBalance.day)}
       >
