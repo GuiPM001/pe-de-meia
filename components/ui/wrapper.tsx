@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "../navbar";
+import NavBar from "../navbar/navbar";
 
 export default function Wrapper({
   children,
@@ -9,7 +9,7 @@ export default function Wrapper({
   return (
     <div className="w-screen h-screen flex flex-col overflow-x-hidden">
       <NavBar />
-      <div className="p-8">{children}</div>
+      <div className="p-2 lg:p-8">{children}</div>
     </div>
   );
 }
