@@ -86,7 +86,9 @@
   "home": {
     "totalIncome": "Total income",
     "totalExpense": "Total fixed expenses",
-    "totalDaily": "Total daily spending"
+    "totalDaily": "Total daily spending",
+    "balanceLabel": "Today's balance",
+    "dailyLabel": "Available per day"
   },
   "investments": {
     "total": "Total invested:",

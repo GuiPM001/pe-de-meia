@@ -86,7 +86,9 @@
   "home": {
     "totalIncome": "Total de entradas",
     "totalExpense": "Total de despesas fixas",
-    "totalDaily": "Total de gasto diário"
+    "totalDaily": "Total de gasto diário",
+    "balanceLabel": "Saldo de hoje",
+    "dailyLabel": "Disponível por dia"
   },
   "investments": {
     "total": "Total investido:",

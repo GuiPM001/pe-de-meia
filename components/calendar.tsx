@@ -191,7 +191,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
   return (
     <>
       <div className="grid lg:hidden grid-cols-7 w-full mb-10">
-        <CalendarHeader dayBalances={monthlySummary.dayBalances} />
+        <CalendarHeader monthlySummary={monthlySummary} />
 
         {monthlySummary.dayBalances.map((x) => (
           <div
@@ -199,7 +199,9 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
             key={`${x.day}-${x.total}`}
           >
             {x.total === null ? (
-              <div className="w-full"></div>
+              <div className="flex flex-col justify-between items-center m-3 text-gray-300 font-semibold">
+                {x.day}
+              </div>
             ) : (
               <div
                 className={`group/day ${
@@ -225,7 +227,7 @@ export default function Calendar({ month, indexMonth, year }: CalendarProps) {
       </div>
 
       <div className="hidden lg:grid grid-cols-7 w-full">
-        <CalendarHeader dayBalances={monthlySummary.dayBalances} />
+        <CalendarHeader monthlySummary={monthlySummary} />
 
         {monthlySummary.dayBalances.map((x) => (
           <div
