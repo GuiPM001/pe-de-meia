@@ -39,7 +39,7 @@ export default function NavBar() {
 
   return (
     <div className="w-full bg-white border-b border-green-default">
-      <nav className="flex items-center justify-between gap-8 h-16 px-8 md:px-20 py-4">
+      <nav className="flex items-center justify-between gap-8 h-16 px-8 lg:px-20 py-4">
         <Logo />
 
         <DesktopMenu

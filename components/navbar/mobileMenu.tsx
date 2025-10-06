@@ -21,7 +21,7 @@ export default function MobileMenu({
   t,
 }: MobileMenuPropos) {
   return (
-    <div className="flex flex-row gap-6 md:hidden">
+    <div className="flex flex-row gap-6 lg:hidden">
       <IconButton
         className="text-2xl"
         label={t("tooltips.profile")}

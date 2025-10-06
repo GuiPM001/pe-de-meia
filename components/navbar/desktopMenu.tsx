@@ -12,7 +12,7 @@ export default function DesktopMenu({
   t,
 }: MenuProps) {
   return (
-    <div className="hidden md:flex items-center justify-between w-full">
+    <div className="hidden lg:flex items-center justify-between w-full">
       <div className="flex flex-row gap-8">
         {navItens.map(({ href, label }) => (
           <NavLink
