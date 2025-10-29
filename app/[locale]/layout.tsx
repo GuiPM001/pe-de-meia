@@ -1,7 +1,7 @@
 import "../globals.css";
 import type { Metadata } from "next";
-import { Providers } from "../Providers";
 import { ReactNode } from "react";
+import { ServerProviders } from "../providers/ServerProviders";
 
 export const metadata: Metadata = {
   title: "Pé de Meia",
@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html>
       <body className="font-nunito">
-        <Providers>{children}</Providers>
+        <ServerProviders>{children}</ServerProviders>
       </body>
     </html>
   );

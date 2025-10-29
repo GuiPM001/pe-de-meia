@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { userService } from "@/core/services/user.service";
 import { getRequestLocale } from "@/core/utils/locale";
+import { authService } from "@/core/services/authService";
 
 export async function POST(request: NextRequest) {
   try {
     const profileRequest = await request.json();
 
-    await userService.register(profileRequest, getRequestLocale(request));
+    await authService.register(profileRequest, getRequestLocale(request));
 
     return NextResponse.json({ status: 201 });
   } catch (error: unknown) {

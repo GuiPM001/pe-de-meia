@@ -97,8 +97,8 @@
   "errors": {
     "user": {
       "loginRequest": "Email and password are required",
-      "userNotFound": "User not found",
-      "incorrectPassword": "Incorrect password",
+      "userNotFound": "Username or password are incorrect",
+      "incorrectPassword": "Username or password are incorrect",
       "emailAlreadyRegister": "Email already registered",
       "registerRequest": "Please fill in all fields to complete the registration"
     },

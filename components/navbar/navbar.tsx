@@ -8,6 +8,7 @@ import ProfileModal from "../modals/profileModal";
 import Logo from "./logo";
 import MobileMenu from "./mobileMenu";
 import DesktopMenu from "./desktopMenu";
+import { api } from "@/core/services/api";
 
 export interface MenuProps {
   navItens: { href: string; label: string }[];
@@ -31,9 +32,8 @@ export default function NavBar() {
     { href: `/${locale}/investments`, label: t("navBar.investments") },
   ];
 
-  const logout = () => {
-    const expiryDate = new Date(1, 1, 1);
-    document.cookie = `authToken=; path=/; expires=${expiryDate}; Secure; SameSite=Strict`;
+  const logout = async () => {
+    await api.post("/auth/logout");
     router.replace("/login");
   };
 

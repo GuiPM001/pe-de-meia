@@ -54,7 +54,7 @@ export default function Register() {
         return;
       }
 
-      await api.post("/user/register", form);
+      await api.post("/auth/register", form);
 
       router.replace("/login");
     } catch (e: unknown) {

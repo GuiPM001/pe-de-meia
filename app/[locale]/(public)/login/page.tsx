@@ -13,7 +13,6 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { api } from "@/core/services/api";
 import { LoginResponse } from "@/core/types/LoginResponse";
 import { useTranslation } from "react-i18next";
-import Checkbox from "@/components/ui/checkbox";
 
 export default function Login() {
   const router = useRouter();
@@ -25,7 +24,6 @@ export default function Login() {
   const [form, setForm] = useState<LoginRequest>({
     email: "",
     password: "",
-    rememberMe: false,
   });
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,11 +44,7 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const response: LoginResponse = await api.post("/user/login", form);
-
-      document.cookie = `authToken=${response.token}; path=/; max-age=${
-        form.rememberMe ? 160000000 : ""
-      }; Secure; SameSite=Strict`;
+      const response: LoginResponse = await api.post("/auth/login", form);
 
       setProfile(response.user);
       router.replace("/");
@@ -62,76 +56,64 @@ export default function Login() {
 
   return (
     <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-green-100 to-primary">
-  {/* Seção da logo */}
-  <div className="flex flex-col items-center justify-center p-8 bg-white lg:w-1/2">
-    <Image alt="Pé de meia logo" src={logo} width={384} height={188} />
-    <p className="text-gray-600 mt-4 max-w-xs text-center">
-      {t("slogan")}
-    </p>
-  </div>
+      <div className="flex flex-col items-center justify-center p-8 bg-white lg:w-1/2">
+        <Image alt="Pé de meia logo" src={logo} width={384} height={188} />
+        <p className="text-gray-600 mt-4 max-w-xs text-center">{t("slogan")}</p>
+      </div>
 
-  {/* Seção do formulário */}
-  <div className="flex flex-1 items-center justify-center p-6 sm:p-10">
-    <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-10 w-full max-w-md">
-      <h2 className="text-2xl font-bold text-primary-dark text-center mb-8">
-        {t("login.title")}
-      </h2>
+      <div className="flex flex-1 items-center justify-center p-6 sm:p-10">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-10 w-full max-w-md">
+          <h2 className="text-2xl font-bold text-primary-dark text-center mb-8">
+            {t("login.title")}
+          </h2>
 
-      <form onKeyDown={handleKeyDown} className="space-y-6">
-        <Input
-          label={t("login.email")}
-          placeholder={t("login.emailPlaceholder")}
-          name="email"
-          type="email"
-          error={!!error}
-          value={form.email}
-          onChange={handleForm}
-        />
+          <form onKeyDown={handleKeyDown} className="space-y-6">
+            <Input
+              label={t("login.email")}
+              placeholder={t("login.emailPlaceholder")}
+              name="email"
+              type="email"
+              error={!!error}
+              value={form.email}
+              onChange={handleForm}
+            />
 
-        <div className="flex flex-col gap-3">
-          <PasswordInput
-            label={t("login.password")}
-            placeholder="********"
-            name="password"
-            error={!!error}
-            value={form.password}
-            onChange={handleForm}
-          />
+            <div className="flex flex-col gap-3">
+              <PasswordInput
+                label={t("login.password")}
+                placeholder="********"
+                name="password"
+                error={!!error}
+                value={form.password}
+                onChange={handleForm}
+              />
+            </div>
 
-          <Checkbox
-            label={t("login.rememberMe")}
-            checked={form.rememberMe}
-            onChange={(e) =>
-              setForm({ ...form, rememberMe: e.target.checked })
-            }
-          />
+            <Button
+              type="button"
+              onClick={submitLogin}
+              disabled={loading || !form.email || !form.password}
+              className="w-full"
+            >
+              {loading ? t("loading") : t("login.button")}
+            </Button>
+          </form>
+
+          {error && (
+            <span className="text-red-600 text-sm">{error.message}</span>
+          )}
+
+          <p className="text-center text-gray-500 text-sm mt-4">
+            {t("login.register")}{" "}
+            <a
+              href="register"
+              className="text-primary hover:underline font-semibold"
+            >
+              {t("login.registerLink")}
+            </a>
+          </p>
         </div>
-
-        <Button
-          type="button"
-          onClick={submitLogin}
-          disabled={loading || !form.email || !form.password}
-          className="w-full"
-        >
-          {loading ? t("loading") : t("login.button")}
-        </Button>
-      </form>
-
-      {error && (
-        <span className="text-red-600 text-sm">{error.message}</span>
-      )}
-
-      <p className="text-center text-gray-500 text-sm mt-4">
-        {t("login.register")}{" "}
-        <a
-          href="register"
-          className="text-primary hover:underline font-semibold"
-        >
-          {t("login.registerLink")}
-        </a>
-      </p>
+      </div>
     </div>
-  </div>
-</div>
   );
 }
