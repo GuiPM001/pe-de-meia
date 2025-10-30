@@ -88,7 +88,8 @@
     "totalExpense": "Total de despesas fixas",
     "totalDaily": "Total de gasto diário",
     "balanceLabel": "Saldo de hoje",
-    "dailyLabel": "Disponível por dia"
+    "dailyLabel": "Gasto diário",
+    "monthBalance": "Saldo final"
   },
   "investments": {
     "total": "Total investido:",

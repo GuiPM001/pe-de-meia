@@ -26,7 +26,7 @@ export default function Header({
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-row gap-5 items-center">
+    <div className="flex flex-row gap-5 items-center px-2 md:px-0">
       <span className="capitalize font-black text-3xl">
         {getMonthNameByMonth(yearSelected, indexMonthSelected)}
       </span>

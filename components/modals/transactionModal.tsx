@@ -122,7 +122,7 @@ export default function TransactionModal({
         onClose={onClose}
       />
 
-      <div className="flex flex-row gap-6 mb-6">
+      <div className="flex flex-row gap-3 mb-4 lg:gap-6 lg:mb-6">
         <Input
           label={t('modal.transaction.description')}
           value={form.description}
@@ -136,7 +136,7 @@ export default function TransactionModal({
         />
       </div>
 
-      <div className="flex flex-row gap-6 mb-6">
+      <div className="flex flex-row gap-3 mb-4 lg:gap-6 lg:mb-6">
         <CurrencyInput
           label={t('modal.transaction.value')}
           value={form.value}
@@ -155,7 +155,7 @@ export default function TransactionModal({
         />
       </div>
 
-      <div className="flex flex-row gap-6 mb-6 w-1/3">
+      <div className="flex flex-row gap-3 mb-2 lg:gap-6 lg:mb-6 w-1/3">
         <Checkbox
           label={t('modal.transaction.recurrent')}
           checked={form.recurrent}

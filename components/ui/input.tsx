@@ -9,7 +9,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export default function Input(props: InputProps) {
   return (
-    <div className="w-full relative">
+    <div className="w-full relative flex flex-col">
       <Label error={props.error} htmlFor={props.label}>
         {props.label}
       </Label>

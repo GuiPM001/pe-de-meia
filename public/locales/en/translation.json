@@ -88,7 +88,8 @@
     "totalExpense": "Total fixed expenses",
     "totalDaily": "Total daily spending",
     "balanceLabel": "Today's balance",
-    "dailyLabel": "Available per day"
+    "dailyLabel": "Daily expense",
+    "monthBalance": "Final balance"
   },
   "investments": {
     "total": "Total invested:",
