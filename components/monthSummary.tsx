@@ -40,7 +40,9 @@ export default function MonthSummary({ monthlySummary }: MonthSummaryProps) {
     const today = new Date().getDate();
 
     monthlySummary.dayBalances.forEach((d) => {
-      if (d.day === today) dayBalance = d.total!;
+      if (d.day === today && d.total !== null) {
+        dayBalance = d.total!;
+      }
 
       income += sumValues(d.incomes ?? []);
       expense += sumValues(d.expenses ?? []);
