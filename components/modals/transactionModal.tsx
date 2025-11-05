@@ -71,6 +71,19 @@ export default function TransactionModal({
     });
   };
 
+  const handleDateChange = (value: string) => {
+    const originalDate = new Date(form.date);
+    const newDate = new Date(value);
+
+    const updatedDate = new Date(
+      originalDate.getUTCFullYear(),
+      originalDate.getUTCMonth(),
+      newDate.getUTCDate()
+    );
+
+    handleForm(updatedDate.toISODateString(), "date");
+  };
+
   const onSave = async () => {
     try {
       setLoading(true);
@@ -132,7 +145,7 @@ export default function TransactionModal({
           label={t('modal.transaction.date')}
           value={form.date}
           type="date"
-          onChange={(e) => handleForm(e.target.value, "date")}
+          onChange={(e) => handleDateChange(e.target.value)}
         />
       </div>
 
