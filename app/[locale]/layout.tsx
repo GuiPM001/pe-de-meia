@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Pé de Meia",
   icons: {
     icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
   },
 };
 
