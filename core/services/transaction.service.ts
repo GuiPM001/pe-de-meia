@@ -201,6 +201,7 @@ const registerRecurrentTransactionsNewMonth = async (newMonth: Month) => {
   });
 
   await Transactions.insertMany(recurrentTransactions);
+  return newMonth;
 };
 
 export const transactionService = {

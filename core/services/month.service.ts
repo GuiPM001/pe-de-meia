@@ -50,12 +50,10 @@ const saveMonth = async (month: Month, locale: SupportedLocale) => {
 
   if (monthRegistered) throw new Error(t(locale, "errors.month.alreadyExist"));
 
-  const [newMonth] = await Promise.all([
-    Months.create(month),
-    transactionService.registerRecurrentTransactionsNewMonth(month),
-  ]);
+  const updatedMonth = await transactionService.registerRecurrentTransactionsNewMonth(month);
+  await Months.create(updatedMonth);
 
-  return newMonth;
+  return updatedMonth;
 };
 
 const saveMonthsNewUser = async (idUser: string) => {
