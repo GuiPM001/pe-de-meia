@@ -1,4 +1,3 @@
-import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import { DayBalance } from "@/core/types/DayBalance";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -22,7 +21,7 @@ export default function DailyTransactionModal({
   open,
 }: DailyTransactionsModalProps) {
   // TODO: add delete and edit options
-  const { openModalFilled } = useTransactionModal();
+  // const { openModalFilled } = useTransactionModal();
   const { profile } = useProfile();
   const { t } = useTranslation();
 
