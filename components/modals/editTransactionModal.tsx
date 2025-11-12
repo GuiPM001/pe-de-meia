@@ -6,6 +6,7 @@ import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import "@/core/utils/date.extensions";
 import Button from "../ui/button";
 import { useTranslation } from "react-i18next";
+import { currencyNumber } from "@/core/utils/numberFormat";
 
 interface EditTransactionModalProps {
   transactions: Transaction[];
@@ -48,10 +49,7 @@ export default function EditTransactionModal({
             <span className="w-4/6 text-start">{t.description}</span>
 
             <span className="w-2/6 text-center">
-              R${" "}
-              {t.value.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}
+              {currencyNumber(t.value)}
             </span>
           </button>
         ))}

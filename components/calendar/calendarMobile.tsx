@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import MonthSummary from "../monthSummary";
 import DayBalanceFlag from "../dayBalanceFlag";
 import TransactionsContainer from "../transactionsContainer";
 import { CalendarComponentProps } from ".";
 import { getWeekDays } from "@/core/utils/date";
+import { DayBalance } from "@/core/types/DayBalance";
+import DailyTransactionModal from "../modals/dailyTransactionsModal";
 
 export default function CalendarMobile(props: CalendarComponentProps) {
   const { monthlySummary, indexMonth, loading } = props;
+
+  const [dailyModal, setDailyModal] = useState<DayBalance | null>(null);
 
   const today = new Date();
 
@@ -35,8 +39,9 @@ export default function CalendarMobile(props: CalendarComponentProps) {
               {x.day}
             </div>
           ) : (
-            <div
-              className={`group/day ${
+            <button
+              onClick={() => setDailyModal(x)}
+              className={`group/day h-full w-full flex flex-col cursor-pointer ${
                 x.day === today.getDate() && today.getMonth() === indexMonth
                   ? "rounded-md"
                   : ""
@@ -52,10 +57,16 @@ export default function CalendarMobile(props: CalendarComponentProps) {
               />
 
               <TransactionsContainer dayBalance={x} />
-            </div>
+            </button>
           )}
         </div>
       ))}
+
+      <DailyTransactionModal
+        dayBalance={dailyModal!}
+        onClose={() => setDailyModal(null)}
+        open={dailyModal !== null}
+      />
     </div>
   );
 }

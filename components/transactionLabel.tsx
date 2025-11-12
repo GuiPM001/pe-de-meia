@@ -5,7 +5,7 @@ import { TbTrash, TbPencil } from "react-icons/tb";
 import { Transaction } from "@/core/types/Transaction";
 import DeleteTransactionModal from "./modals/deleteTransactionModal";
 import IconButton from "./ui/iconButton";
-import EditTransactionModal from "./modals/selectTransactionModal";
+import EditTransactionModal from "./modals/editTransactionModal";
 import { sumValues } from "@/core/utils/sumValues";
 import Tooltip from "./ui/tooltip";
 
@@ -31,7 +31,7 @@ export default function TransactionLabel({
     [TransactionType.income]: "text-green-text",
     [TransactionType.expense]: "text-red-text",
     [TransactionType.daily]: "text-yellow-text",
-    [TransactionType.investment]: "bg-blue-default",
+    [TransactionType.investment]: "bg-blue-text",
   };
   const bgColorMap: Record<TransactionType, string> = {
     [TransactionType.income]: "bg-green-hover",
