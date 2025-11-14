@@ -100,7 +100,6 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
       investeds: null,
       total: null,
       totalInvested: null,
-      description: "",
       ...values,
     });
   };
