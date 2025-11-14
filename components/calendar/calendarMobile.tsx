@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MonthSummary from "../monthSummary";
 import DayBalanceFlag from "../dayBalanceFlag";
 import TransactionsContainer from "../transactionsContainer";
@@ -13,6 +13,13 @@ export default function CalendarMobile(props: CalendarComponentProps) {
   const [dailyModal, setDailyModal] = useState<DayBalance | null>(null);
 
   const today = new Date();
+
+  useEffect(() => {
+    if (dailyModal === null) return;
+    
+    const dayEdited = monthlySummary.dayBalances.find(x => x.day === dailyModal?.day) ?? null;
+    setDailyModal(dayEdited);
+  }, [monthlySummary, dailyModal])
 
   return (
     <div className="grid grid-cols-7 w-full mb-10">
