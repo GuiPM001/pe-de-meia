@@ -1,7 +1,6 @@
-import { t } from "i18next";
 import { connectMongo } from "../db/mongodb";
 import { RegisterRequest } from "../types/RegisterRequest";
-import { SupportedLocale } from "@/lib/errorHandler";
+import { SupportedLocale, t } from "@/lib/errorHandler";
 import { User } from "../models/user";
 import { monthService } from "./month.service";
 import bcrypt from "bcryptjs";
