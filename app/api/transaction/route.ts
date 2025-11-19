@@ -41,7 +41,9 @@ export async function PUT(request: NextRequest) {
   try {
     const jsonRequest = await request.json();
 
-    const updatedTransaction = await transactionService.updateTransaction(jsonRequest);
+    const updatedTransaction = await transactionService.updateTransaction(
+      jsonRequest, getRequestLocale(request)
+    );
 
     return NextResponse.json(updatedTransaction, { status: 200 });
   } catch (error: unknown) {

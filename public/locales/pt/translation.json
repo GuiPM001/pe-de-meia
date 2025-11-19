@@ -43,9 +43,6 @@
       "p2": "Com valor total de ",
       "recurrent": "Excluir recorrência",
       "saveButton": "Confirmar"
-    },
-    "dailyTransactions": {
-      "title": "Transações do dia"
     }
   },
   "login": {

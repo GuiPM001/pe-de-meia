@@ -43,9 +43,6 @@
       "p2": "With a total value of ",
       "recurrent": "Delete recurrence",
       "saveButton": "Confirm"
-    },
-    "dailyTransactions": {
-      "title": "Daily transactions"
     }
   },
   "login": {

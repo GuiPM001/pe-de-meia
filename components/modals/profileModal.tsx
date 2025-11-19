@@ -52,7 +52,7 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
   };
 
   return (
-    <ModalContainer open={open}>
+    <ModalContainer open={open} onClose={onClose}>
       <ModalTitle title={t('modal.profile.title')} onClose={onClose} />
 
       <div className="flex flex-col gap-6">

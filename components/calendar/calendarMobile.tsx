@@ -19,7 +19,7 @@ export default function CalendarMobile(props: CalendarComponentProps) {
     
     const dayEdited = monthlySummary.dayBalances.find(x => x.day === dailyModal?.day) ?? null;
     setDailyModal(dayEdited);
-  }, [monthlySummary, dailyModal])
+  }, [monthlySummary, dailyModal]);
 
   return (
     <div className="grid grid-cols-7 w-full mb-10">
@@ -69,11 +69,13 @@ export default function CalendarMobile(props: CalendarComponentProps) {
         </div>
       ))}
 
-      <DailyTransactionModal
-        dayBalance={dailyModal!}
-        onClose={() => setDailyModal(null)}
-        open={dailyModal !== null}
-      />
+      {dailyModal && (
+        <DailyTransactionModal
+          dayBalance={dailyModal}
+          onClose={() => setDailyModal(null)}
+          open={!!dailyModal}
+        />
+      )}
     </div>
   );
 }

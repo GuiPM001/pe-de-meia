@@ -4,7 +4,7 @@ export type Transaction = {
   _id?: string;
   date: string;
   description: string;
-  value: number;
+  value: number | undefined;
   recurrent: boolean;
   type: TransactionType;
   idUser: string;

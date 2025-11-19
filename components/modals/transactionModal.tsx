@@ -45,7 +45,7 @@ export default function TransactionModal({
       description: "",
       recurrent: false,
       type: TransactionType.expense,
-      value: 0,
+      value: undefined,
       idUser: "",
       idMonth,
       recurrenceId: null,
@@ -129,7 +129,7 @@ export default function TransactionModal({
   };
 
   return (
-    <ModalContainer open={open}>
+    <ModalContainer open={open} onClose={onClose}>
       <ModalTitle
         title={`${!!transaction ? t('modal.transaction.edit') : t('modal.transaction.register')}`}
         onClose={onClose}

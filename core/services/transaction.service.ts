@@ -109,12 +109,12 @@ const updateAccumulatedBalanceValue = async (
   months: Month[],
   isDelete: boolean
 ) => {
-  let accumulatedValue = transaction.value;
+  let accumulatedValue = transaction.value!;
 
   for (const month of months) {
     const updatedTransaction = { ...transaction, value: accumulatedValue };
     await monthService.updateMonthBalance(month, updatedTransaction, isDelete);
-    accumulatedValue += transaction.value;
+    accumulatedValue += transaction.value!;
   }
 };
 
@@ -145,7 +145,15 @@ const deleteTransaction = async (
   }
 };
 
-const updateTransaction = async (transaction: Transaction) => {
+const updateTransaction = async (
+  transaction: Transaction,
+  locale: SupportedLocale
+) => {
+  const { date, value, description, idUser, idMonth } = transaction;
+
+  if (!value || !date || !description || !idUser || !idMonth)
+    throw new Error(t(locale, "errors.transaction.fieldRequired"));
+
   await connectMongo();
 
   const originalTransaction = await Transactions.findById(transaction._id);
@@ -153,7 +161,7 @@ const updateTransaction = async (transaction: Transaction) => {
   await Transactions.updateOne({ _id: transaction._id }, { $set: transaction });
 
   await updateBalanceValue(
-    { ...transaction, value: -(originalTransaction.value - transaction.value) },
+    { ...transaction, value: -(originalTransaction.value - transaction.value!) },
     false
   );
 
@@ -196,8 +204,8 @@ const registerRecurrentTransactionsNewMonth = async (newMonth: Month) => {
     t.idMonth = newMonth.id;
     t.date = new Date(y, m, d).toISODateString();
 
-    if (t.type === TransactionType.income) newMonth.balance! += t.value;
-    else newMonth.balance! -= t.value;
+    if (t.type === TransactionType.income) newMonth.balance! += t.value!;
+    else newMonth.balance! -= t.value!;
   });
 
   await Transactions.insertMany(recurrentTransactions);

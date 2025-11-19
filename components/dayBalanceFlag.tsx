@@ -53,7 +53,9 @@ export default function DayBalanceFlag({
         {dayBalance.day}
       </span>
       {loading ? (
-        <LoadingSpinner />
+        <div className="mt-6 lg:mt-0">
+          <LoadingSpinner />
+        </div>
       ) : (
         <div className="group hidden lg:block">
           <span

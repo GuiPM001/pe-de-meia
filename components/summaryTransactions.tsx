@@ -25,7 +25,7 @@ export default function SummaryTransactions({
 }: SummaryTransactionsProps) {
   const ICON_SIZE = "20px";
 
-  const total = transactions?.reduce((acc, t) => t.value + acc, 0) ?? 0;
+  const total = transactions?.reduce((acc, t) => t.value ?? 0 + acc, 0) ?? 0;
 
   let textColor = "text-yellow-text";
   if (type === TransactionType.income) textColor = "text-green-text";
@@ -39,14 +39,14 @@ export default function SummaryTransactions({
       {transactions.map((t) => (
         <button
           key={t._id}
-          className="grid grid-cols-2"
+          className="grid grid-cols-5"
           onClick={() => onClickTransaction(t)}
         >
-          <span className="justify-self-start">{t.description}</span>
+          <span className="col-span-3 justify-self-start overflow-hidden whitespace-nowrap overflow-ellipsis max-w-full">{t.description}</span>
 
-          <div className="flex flex-row items-center justify-end">
+          <div className="col-span-2 flex flex-row items-center justify-end">
             <span className="transition-all duration-300 ease-out">
-              {decimalNumber(t.value)}
+              {decimalNumber(t.value ?? 0)}
             </span>
 
             <div className={

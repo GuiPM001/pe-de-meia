@@ -80,8 +80,8 @@ const updateMonthBalance = async (
 
   if (transaction.type === TransactionType.investment && transaction.idMonth === month.id) {
     totalInvested = isDelete
-      ? month.invested! - transaction.value
-      : month.invested! + transaction.value;
+      ? month.invested! - transaction.value!
+      : month.invested! + transaction.value!;
   }
 
   const totalBalance = getTotalBalance(transaction, month, isDelete);
@@ -103,9 +103,9 @@ const getTotalBalance = (
     (transaction.type === TransactionType.expense && !isDelete) || 
     (transaction.type === TransactionType.investment && !isDelete)
   )
-    return month.balance! - transaction.value;
+    return month.balance! - transaction.value!;
 
-  return month.balance! + transaction.value;
+  return month.balance! + transaction.value!;
 };
 
 const getMonthById = async (idUser: string, idMonth: string) => {

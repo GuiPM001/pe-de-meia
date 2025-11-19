@@ -15,7 +15,17 @@ export const getMonthNameByDate = (dateString: string) => {
   });
 };
 
-export const getWeekDays = (format: 'short' | 'narrow') => {
+export const getDateName = (day: number, dateString: string) => {
+  const [year, month] = dateString.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+
+  return new Date(date).toLocaleString(getLocale(), {
+    day: "2-digit",
+    month: "long",
+  });
+};
+
+export const getWeekDays = (format: "short" | "narrow") => {
   const locale = getLocale();
 
   return Array.from({ length: 7 }, (_, index) => {

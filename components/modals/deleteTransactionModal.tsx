@@ -63,7 +63,7 @@ export default function DeleteTransactionModal({
   };
 
   return (
-    <ModalContainer open={open}>
+    <ModalContainer open={open} onClose={onClose}>
       <ModalTitle title={t('modal.deleteTransaction.title')} onClose={onClose} />
 
       <div className="flex flex-col text-start mb-6">
@@ -79,7 +79,7 @@ export default function DeleteTransactionModal({
           <span className="font-bold">
             R$
             {transactionsToDelete
-              .reduce((acc, t) => acc + t.value, 0)
+              .reduce((acc, t) => acc + (t.value ?? 0), 0)
               .toLocaleString("pt-BR", {
                 minimumFractionDigits: 2,
               })}
@@ -88,7 +88,7 @@ export default function DeleteTransactionModal({
       </div>
 
       {transactionsToDelete.every((t) => t.recurrent) && (
-        <div className="flex flex-row gap-6 mb-6 w-1/3">
+        <div className="flex flex-row gap-6 mb-6 w-2/3">
           <Checkbox
             label={t('modal.deleteTransaction.recurrent')}
             checked={deleteRecurrent}

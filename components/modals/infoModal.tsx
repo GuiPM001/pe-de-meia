@@ -13,7 +13,7 @@ export default function InfoModal({ onClose, open }: InfoModalProps) {
   const { t } = useTranslation();
   
   return (
-    <ModalContainer open={open}>
+    <ModalContainer open={open} onClose={onClose}>
       <ModalTitle title={t('modal.info.title')} onClose={onClose} />
 
       <div className="flex flex-col gap-6">

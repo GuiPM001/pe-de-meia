@@ -11,9 +11,11 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { Transaction } from "@/core/types/Transaction";
 import DeleteTransactionModal from "./deleteTransactionModal";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
+import { getDateName } from "@/core/utils/date";
+import Button from "../ui/button";
 
 interface DailyTransactionsModalProps {
-  dayBalance: DayBalance | null;
+  dayBalance: DayBalance;
   onClose: () => void;
   open: boolean;
 }
@@ -23,7 +25,7 @@ export default function DailyTransactionModal({
   onClose,
   open,
 }: DailyTransactionsModalProps) {
-  const { openModalFilled } = useTransactionModal();
+  const { openModal, openModalFilled } = useTransactionModal();
   const { profile } = useProfile();
   const { t } = useTranslation();
 
@@ -36,15 +38,7 @@ export default function DailyTransactionModal({
     setTransactionClicked(null);
     setTransactionToDelete(null);
     onClose();
-  }
-
-  const modalOpen =
-    open &&
-    dayBalance !== null &&
-    ((dayBalance.dailies !== null && dayBalance.dailies.length > 0) ||
-      (dayBalance.incomes !== null && dayBalance.incomes.length > 0) ||
-      (dayBalance.expenses !== null && dayBalance.expenses.length > 0) ||
-      (dayBalance.investeds !== null && dayBalance.investeds.length > 0));
+  };
 
   const onEdit = (transaction: Transaction) => {
     openModalFilled(transaction);
@@ -60,12 +54,9 @@ export default function DailyTransactionModal({
 
   return (
     <>
-      <ModalContainer open={modalOpen}>
+      <ModalContainer open={open} onClose={onClose}>
         <ModalTitle
-          title={`
-          ${t("modal.dailyTransactions.title")} 
-          ${dayBalance?.day.toString().padStart(2, "0")}
-        `}
+          title={getDateName(dayBalance.day, dayBalance.idMonth)}
           onClose={closeModal}
         />
 
@@ -118,12 +109,19 @@ export default function DailyTransactionModal({
             />
           )}
 
-          <div className="flex flex-row justify-between font-bold">
+          <div className="flex flex-row justify-between font-bold mb-6">
             <span>{t("tooltips.balance")}</span>
             <span className={`${getColors(dayBalance?.total ?? 0, 0, profile.savingTarget, false, false)}`}>
               {currencyNumber(dayBalance?.total ?? 0)}
             </span>
           </div>
+
+          <Button
+            variant="contained"
+            onClick={() => openModal(dayBalance.idMonth, dayBalance.day)}
+          >
+            {t("tooltips.addTransaction")}
+          </Button>
         </div>
       </ModalContainer>
 

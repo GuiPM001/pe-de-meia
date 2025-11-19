@@ -23,6 +23,8 @@ export default function CurrencyInput(props: CurrencyInputProps) {
         <NumericFormat
           id={props.label}
           className={`${INPUT_CLASSNAME} rounded-l-none`}
+          inputMode="decimal"
+          type="text"
           decimalScale={2}
           fixedDecimalScale={true}
           decimalSeparator=","

@@ -23,7 +23,7 @@ export default function EditTransactionModal({
   const { t } = useTranslation();
 
   return (
-    <ModalContainer open={open}>
+    <ModalContainer open={open} onClose={onClose}>
       <ModalTitle
         title={t('modal.selectTransaction.title')}
         onClose={onClose}
@@ -49,7 +49,7 @@ export default function EditTransactionModal({
             <span className="w-4/6 text-start">{t.description}</span>
 
             <span className="w-2/6 text-center">
-              {currencyNumber(t.value)}
+              {currencyNumber(t.value ?? 0)}
             </span>
           </button>
         ))}
