@@ -15,11 +15,12 @@ export default function CalendarMobile(props: CalendarComponentProps) {
   const today = new Date();
 
   useEffect(() => {
-    if (dailyModal === null) return;
-    
-    const dayEdited = monthlySummary.dayBalances.find(x => x.day === dailyModal?.day) ?? null;
-    setDailyModal(dayEdited);
-  }, [monthlySummary, dailyModal]);
+    setDailyModal(prev => {
+      if (prev === null) return prev;
+      
+      return monthlySummary.dayBalances.find(x => x.day === prev.day && x.total !== null) ?? null;
+    });
+  }, [monthlySummary]);
 
   return (
     <div className="grid grid-cols-7 w-full mb-10">
@@ -36,7 +37,7 @@ export default function CalendarMobile(props: CalendarComponentProps) {
         ))}
       </div>
 
-      {monthlySummary.dayBalances.map((x) => (
+      {monthlySummary.dayBalances.map((x: DayBalance) => (
         <div
           className="border-b border-gray-200 h-30 relative"
           key={`${x.day}-${x.total}`}

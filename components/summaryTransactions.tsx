@@ -25,7 +25,7 @@ export default function SummaryTransactions({
 }: SummaryTransactionsProps) {
   const ICON_SIZE = "20px";
 
-  const total = transactions?.reduce((acc, t) => t.value ?? 0 + acc, 0) ?? 0;
+  const total = transactions?.reduce((acc, t) => (t.value ?? 0) + acc, 0) ?? 0;
 
   let textColor = "text-yellow-text";
   if (type === TransactionType.income) textColor = "text-green-text";
