@@ -48,6 +48,8 @@ export default function Home() {
                 yearSelected={yearSelected}
                 indexMonthSelected={indexMonth}
                 month={monthSelected}
+                setMonth={setMonthSelected}
+                setMonthSelected={setIndexMonth}
               />
 
               <Calendar
