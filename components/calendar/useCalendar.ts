@@ -142,7 +142,7 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
 
       balance += todayTotal;
 
-      if (currentDate.getUTCDate() >= today.getUTCDate())
+      if (currentDate >= today)
         balance += todayTotal - profile.dailyCost;
 
       addDay(currentDate, dayBalances, {
