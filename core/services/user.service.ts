@@ -30,16 +30,16 @@ const updateDailyCost = async () => {
   await connectMongo();
 
   const users = await User.find();
+  console.log(users)
 
   const today = new Date().toISODateString();
-  const [year, month] = today.split('-').map(Number);
-
-  const pastMonths = [
-    `${year}-${month - 1}-01`,
-    `${year}-${month - 2}-01`,
-    `${year}-${month - 3}-01`
-  ];
+  const pastMonths = Array.from({ length: 3 }, (_, i) => {
+    const d = new Date(today);
+    d.setMonth(d.getMonth() - (i + 1));
+    return d.toISOString().slice(0, 7) + "-01";
+  });
   
+  console.log('pastMonths', pastMonths)
   users.forEach(async (user) => {
     const idUser = (user as Profile)._id;
 
@@ -51,6 +51,8 @@ const updateDailyCost = async () => {
 
     const totalDailyCost = transactions.reduce((acc, t) => acc + t.value!, 0);
     
+    console.log(transactions.length);
+    console.log('tota', totalDailyCost);
     if (totalDailyCost <= 0) return;
     
     user.dailyCost = totalDailyCost / pastMonths.length;
