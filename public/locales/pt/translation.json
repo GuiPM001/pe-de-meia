@@ -63,6 +63,7 @@
     "emailPlaceholder": "seu@email.com",
     "password": "Senha",
     "savingTarget": "Meta de economia mensal",
+    "dailyCost": "Gasto diário",
     "button": "Cadastrar",
     "login": "Já possui conta? ",
     "loginLink": "Entrar",

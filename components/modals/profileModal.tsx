@@ -40,7 +40,7 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
     try {
       setLoading(true);
 
-      await api.put("/user/update", form);
+      await api.put("/user", form);
       setProfile(form);
 
       setLoading(false);
@@ -68,6 +68,12 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
           label={t('register.savingTarget')}
           value={form.savingTarget}
           onValueChange={(floatValue) => handleForm(floatValue, "savingTarget")}
+        />
+
+        <CurrencyInput
+          label={t('register.dailyCost')}
+          value={form.dailyCost}
+          onValueChange={(floatValue) => handleForm(floatValue, "dailyCost")}
         />
 
         <ModalActions

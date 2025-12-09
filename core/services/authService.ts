@@ -31,6 +31,7 @@ const login = async (
       email: user.email,
       name: user.name,
       savingTarget: user.savingTarget,
+      dailyCost: user.dailyCost
     },
     process.env.JWT_SECRET!,
     { expiresIn: "365d" }
@@ -40,7 +41,7 @@ const login = async (
 };
 
 const register = async (request: RegisterRequest, locale: SupportedLocale) => {
-  const { name, email, password, savingTarget } = request;
+  const { name, email, password, savingTarget, dailyCost } = request;
 
   if (!name || !email || !password)
     throw new Error(t(locale, "errors.user.registerRequest"));
@@ -59,9 +60,10 @@ const register = async (request: RegisterRequest, locale: SupportedLocale) => {
     email,
     password: hashedPassword,
     savingTarget,
+    dailyCost
   });
 
-  await monthService.saveMonthsNewUser(user._id);
+  await monthService.saveMonthsNewUser(user._id, dailyCost);
 };
 
 export const authService = {

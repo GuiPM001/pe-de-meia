@@ -1,10 +1,5 @@
 import { Transaction } from "./Transaction";
 
-export type MonthlySummary = {
-  dayBalances: DayBalance[];
-  remainingDailyExpenses: number;
-}
-
 export type DayBalance = {
   day: number;
   idMonth: string;

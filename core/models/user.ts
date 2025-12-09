@@ -16,6 +16,9 @@ const UserSchema = new Schema({
   },
   savingTarget: {
     type: Number,
+  },
+  dailyCost: {
+    type: Number,
   }
 }, { timestamps: true });
 

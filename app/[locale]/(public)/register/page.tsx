@@ -24,6 +24,7 @@ export default function Register() {
     email: "",
     password: "",
     savingTarget: 0,
+    dailyCost: 0
   });
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,6 +115,17 @@ export default function Register() {
                 setForm({
                   ...form,
                   savingTarget: floatValue,
+                })
+              }
+            />
+            <CurrencyInput
+              label={t('register.dailyCost')}
+              name="dailyCost"
+              value={form.dailyCost}
+              onValueChange={(floatValue) =>
+                setForm({
+                  ...form,
+                  dailyCost: floatValue,
                 })
               }
             />

@@ -1,6 +1,6 @@
 "use client";
 
-import { MonthlySummary } from "@/core/types/DayBalance";
+import { DayBalance } from "@/core/types/DayBalance";
 import React, { useEffect, useState } from "react";
 import BalanceLabel from "./balanceLabel";
 import { sumValues } from "@/core/utils/sumValues";
@@ -9,7 +9,7 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { getColors } from "@/core/utils/getColors";
 
 interface MonthSummaryProps {
-  monthlySummary: MonthlySummary;
+  dayBalances: DayBalance[];
 }
 
 type Totals = {
@@ -20,7 +20,7 @@ type Totals = {
   monthBalance: number;
 };
 
-export default function MonthSummary({ monthlySummary }: MonthSummaryProps) {
+export default function MonthSummary({ dayBalances }: MonthSummaryProps) {
   const { t } = useTranslation();
   const { profile } = useProfile();
 
@@ -39,7 +39,7 @@ export default function MonthSummary({ monthlySummary }: MonthSummaryProps) {
     let dayBalance = 0;
     const today = new Date().getDate();
 
-    monthlySummary.dayBalances.forEach((d) => {
+    dayBalances.forEach((d) => {
       if (d.day === today && d.total !== null) {
         dayBalance = d.total!;
       }
@@ -49,14 +49,14 @@ export default function MonthSummary({ monthlySummary }: MonthSummaryProps) {
       daily += sumValues(d.dailies ?? []);
     });
 
-    const lastIndexDay = monthlySummary.dayBalances.findLastIndex(
+    const lastIndexDay = dayBalances.findLastIndex(
       (v) => v.total !== null
     );
     const monthBalance =
-      monthlySummary.dayBalances.at(lastIndexDay)?.total ?? 0;
+      dayBalances.at(lastIndexDay)?.total ?? 0;
 
     setTotals({ income, expense, daily, dayBalance, monthBalance });
-  }, [monthlySummary]);
+  }, []);
 
   return (
     <>
@@ -74,7 +74,7 @@ export default function MonthSummary({ monthlySummary }: MonthSummaryProps) {
         />
         <BalanceLabel
           label={t("home.dailyLabel")}
-          value={monthlySummary.remainingDailyExpenses}
+          value={profile.dailyCost}
         />
         <BalanceLabel
           label={t("home.monthBalance")}

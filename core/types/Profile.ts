@@ -3,4 +3,5 @@ export type Profile = {
   name: string;
   email: string;
   savingTarget: number;
+  dailyCost: number;
 };

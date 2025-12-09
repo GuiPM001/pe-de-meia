@@ -212,10 +212,22 @@ const registerRecurrentTransactionsNewMonth = async (newMonth: Month) => {
   return newMonth;
 };
 
+const getTransactions = async (
+  idMonth: string,
+  idUser: string,
+  type: TransactionType,
+  recurrent: boolean
+): Promise<Transaction[]> => {
+  await connectMongo();
+
+  return await Transactions.find({ idMonth, idUser, type, recurrent });
+};
+
 export const transactionService = {
   registerTransaction,
   getTransactionsByMonthId,
   deleteTransaction,
   updateTransaction,
   registerRecurrentTransactionsNewMonth,
+  getTransactions
 };

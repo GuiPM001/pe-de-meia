@@ -8,7 +8,7 @@ import { DayBalance } from "@/core/types/DayBalance";
 import DailyTransactionModal from "../modals/dailyTransactionsModal";
 
 export default function CalendarMobile(props: CalendarComponentProps) {
-  const { monthlySummary, indexMonth, loading } = props;
+  const { dayBalances, indexMonth, loading } = props;
 
   const [dailyModal, setDailyModal] = useState<DayBalance | null>(null);
 
@@ -18,13 +18,13 @@ export default function CalendarMobile(props: CalendarComponentProps) {
     setDailyModal(prev => {
       if (prev === null) return prev;
       
-      return monthlySummary.dayBalances.find(x => x.day === prev.day && x.total !== null) ?? null;
+      return dayBalances.find(x => x.day === prev.day && x.total !== null) ?? null;
     });
-  }, [monthlySummary]);
+  }, [dayBalances]);
 
   return (
     <div className="grid grid-cols-7 w-full mb-10">
-      <MonthSummary monthlySummary={monthlySummary} />
+      <MonthSummary dayBalances={dayBalances} />
 
       <div className="contents">
         {getWeekDays("narrow").map((x, i) => (
@@ -37,7 +37,7 @@ export default function CalendarMobile(props: CalendarComponentProps) {
         ))}
       </div>
 
-      {monthlySummary.dayBalances.map((x: DayBalance) => (
+      {dayBalances.map((x: DayBalance) => (
         <div
           className="border-b border-gray-200 h-30 relative"
           key={`${x.day}-${x.total}`}

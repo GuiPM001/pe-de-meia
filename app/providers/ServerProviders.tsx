@@ -7,7 +7,7 @@ import { ClientProviders } from "./ClientProviders";
 export async function ServerProviders({ children }: { children: ReactNode }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("authToken")?.value;
-  let profile: Profile = { _id: "", name: "", savingTarget: 0, email: "" };
+  let profile: Profile = { _id: "", name: "", savingTarget: 0, email: "", dailyCost: 0 };
 
   if (token) {
     const tokenData: Profile = jwtDecode(token!);

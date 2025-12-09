@@ -1,7 +1,7 @@
 import { useMonth } from "@/app/context/MonthContext";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useTransaction } from "@/app/context/TransactionContext";
-import { DayBalance, MonthlySummary } from "@/core/types/DayBalance";
+import { DayBalance } from "@/core/types/DayBalance";
 import { useCallback, useEffect, useState } from "react";
 import { Transaction } from "@/core/types/Transaction";
 import { api } from "@/core/services/api";
@@ -11,10 +11,7 @@ import { CalendarProps } from ".";
 
 export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
   const [loading, setLoading] = useState<boolean>(true);
-  const [monthlySummary, setMonthlySummary] = useState<MonthlySummary>({
-    dayBalances: [],
-    remainingDailyExpenses: 0,
-  });
+  const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
 
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
@@ -44,14 +41,8 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
     addDaysBefore(currentDate, dayBalances);
     addMonthlyDays(currentDate, dayBalances, transactions);
 
-    const daysRemaining = dayBalances.at(-1)!.day - today.getDate() + 1;
-    const balanceRemaining = Math.max(0, month.balance! - profile.savingTarget);
-
     completeGrid(currentDate, dayBalances);
-    setMonthlySummary({
-      dayBalances,
-      remainingDailyExpenses: balanceRemaining / daysRemaining,
-    });
+    setDayBalances(dayBalances);
   }, [transactions, month.balance, profile.savingTarget]);
 
   const getTransactions = async () => {
@@ -151,6 +142,9 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
 
       balance += todayTotal;
 
+      if (currentDate.getUTCDate() >= today.getUTCDate())
+        balance += todayTotal - profile.dailyCost;
+
       addDay(currentDate, dayBalances, {
         incomes,
         expenses,
@@ -173,6 +167,6 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
 
   return {
     loading,
-    monthlySummary,
+    dayBalances,
   };
 };

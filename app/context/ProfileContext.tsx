@@ -13,6 +13,7 @@ const initialState: Profile = {
   name: "",
   savingTarget: 0,
   email: "",
+  dailyCost: 0
 };
 
 const ProfileContext = createContext<ProfileContextProps>({

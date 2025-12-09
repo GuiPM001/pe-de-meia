@@ -20,6 +20,12 @@ const getMonthsByIdUser = async (idUser: string, year: number) => {
   });
 };
 
+const getAllMonthsByIdUser = async (idUser: string): Promise<Month[]> => {
+  await connectMongo();
+  
+  return await Months.find({ idUser });
+};
+
 const getFutureMonthsByIdUser = async (
   idUser: string,
   idMonth: string
@@ -56,17 +62,26 @@ const saveMonth = async (month: Month, locale: SupportedLocale) => {
   return updatedMonth;
 };
 
-const saveMonthsNewUser = async (idUser: string) => {
+const saveMonthsNewUser = async (idUser: string, dailyCost: number) => {
   await connectMongo();
 
   const now = new Date();
   const actualYear = now.getFullYear();
   const actualMonth = now.getUTCMonth();
 
+  let actualBalance = 0;
+  
   for (let i = 0; i < 6; i++) {
-    const id = new Date(actualYear, actualMonth + i, 1).toISODateString();
+    let qtdDaysInMonth = new Date(actualYear, (actualMonth + 1 + i), 0).getDate();
+    
+    if (i === 0)
+      qtdDaysInMonth -= now.getUTCDate() - 1;
 
-    await Months.create({ idUser, id, balance: 0, invested: 0 });
+    actualBalance -= (dailyCost * qtdDaysInMonth);
+    
+    const id = new Date(actualYear, actualMonth + i, 1).toISODateString();
+    await Months.create({ idUser, id, balance: actualBalance, invested: 0 });
+
   }
 };
 
@@ -121,6 +136,7 @@ export const monthService = {
   saveMonth,
   saveMonthsNewUser,
   getMonthsByIdUser,
+  getAllMonthsByIdUser,
   getFutureMonthsByIdUser,
   updateMonthBalance,
   getMonthById,

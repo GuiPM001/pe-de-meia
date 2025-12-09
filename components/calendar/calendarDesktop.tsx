@@ -7,15 +7,17 @@ import { t } from "i18next";
 import { CalendarComponentProps } from ".";
 import MonthSummary from "../monthSummary";
 import { getWeekDays } from "@/core/utils/date";
+import { useProfile } from "@/app/context/ProfileContext";
 
 export default function CalendarDesktop(props: CalendarComponentProps) {
-  const { monthlySummary, indexMonth, loading } = props;
+  const { dayBalances, indexMonth, loading } = props;
+  const { profile } = useProfile();
 
   const today = new Date();
 
   return (
     <div className="grid grid-cols-7 w-full">
-      <MonthSummary monthlySummary={monthlySummary} />
+      <MonthSummary dayBalances={dayBalances} />
 
       <div className="contents ">
         {getWeekDays("short").map((x, i) => (
@@ -28,7 +30,7 @@ export default function CalendarDesktop(props: CalendarComponentProps) {
         ))}
       </div>
 
-      {monthlySummary.dayBalances.map((x) => (
+      {dayBalances.map((x) => (
         <div
           className="border border-gray-200 h-30 relative"
           key={`${x.day}-${x.total}`}
@@ -58,7 +60,7 @@ export default function CalendarDesktop(props: CalendarComponentProps) {
                 today && (
                 <div className="group absolute bottom-[4px] right-[8px] z-0">
                   <span className="text-sm font-bold text-gray-300">
-                    {currencyNumber(monthlySummary.remainingDailyExpenses)}
+                    {currencyNumber(profile.dailyCost)}
                   </span>
 
                   <Tooltip position="left" label={t("tooltips.remaining")} />

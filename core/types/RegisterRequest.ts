@@ -3,4 +3,5 @@ export type RegisterRequest = {
   name: string;
   password: string;
   savingTarget: number;
+  dailyCost: number;
 }

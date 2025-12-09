@@ -3,7 +3,7 @@ import { Month } from "@/core/types/Month";
 import { useCalendar } from "./useCalendar";
 import CalendarMobile from "./calendarMobile";
 import CalendarDesktop from "./calendarDesktop";
-import { MonthlySummary } from "@/core/types/DayBalance";
+import { DayBalance } from "@/core/types/DayBalance";
 
 export interface CalendarProps {
   month: Month;
@@ -12,19 +12,19 @@ export interface CalendarProps {
 }
 
 export interface CalendarComponentProps {
-  monthlySummary: MonthlySummary;
+  dayBalances: DayBalance[];
   loading: boolean;
   indexMonth: number;
 }
 
 export default function Calendar(props: CalendarProps) {
-  const { loading, monthlySummary } = useCalendar(props);
+  const { loading, dayBalances } = useCalendar(props);
 
   return (
     <>
       <div className="block lg:hidden">
         <CalendarMobile
-          monthlySummary={monthlySummary}
+          dayBalances={dayBalances}
           loading={loading}
           indexMonth={props.indexMonth}
         />
@@ -32,7 +32,7 @@ export default function Calendar(props: CalendarProps) {
 
       <div className="hidden lg:block">
         <CalendarDesktop
-          monthlySummary={monthlySummary}
+          dayBalances={dayBalances}
           loading={loading}
           indexMonth={props.indexMonth}
         />

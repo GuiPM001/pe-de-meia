@@ -63,6 +63,7 @@
     "emailPlaceholder": "your@email.com",
     "password": "Password",
     "savingTarget": "Monthly savings goal",
+    "dailyCost:": "Daily cost",
     "button": "Register",
     "login": "Already have an account? ",
     "loginLink": "Sign in",
