@@ -7,6 +7,7 @@ import { Transaction } from "../types/Transaction";
 import { transactionService } from "./transaction.service";
 import { SupportedLocale, t } from "@/lib/errorHandler";
 import "@/core/utils/date.extensions";
+import { Profile } from "../types/Profile";
 
 const getMonthsByIdUser = async (idUser: string, year: number) => {
   await connectMongo();
@@ -44,7 +45,7 @@ const saveMonth = async (month: Month, locale: SupportedLocale) => {
 
   await connectMongo();
 
-  const user = await User.findById({ _id: month.idUser });
+  const user: Profile | null = await User.findById({ _id: month.idUser });
 
   if (!user)
     throw new Error(t(locale, "errors.user.userNotFound"));
@@ -57,8 +58,15 @@ const saveMonth = async (month: Month, locale: SupportedLocale) => {
   if (monthRegistered) throw new Error(t(locale, "errors.month.alreadyExist"));
 
   const updatedMonth = await transactionService.registerRecurrentTransactionsNewMonth(month);
-  await Months.create(updatedMonth);
+  
+  if (!updatedMonth) return;
+  
+  const [year, actualMonth] = month.id.split('-').map(Number);
+  const qtdDaysInMonth = new Date(year, actualMonth, 0).getDate();
+  
+  updatedMonth.balance! -= (user.dailyCost * qtdDaysInMonth);
 
+  await Months.create(updatedMonth);
   return updatedMonth;
 };
 
