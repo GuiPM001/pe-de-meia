@@ -213,14 +213,14 @@ const registerRecurrentTransactionsNewMonth = async (newMonth: Month) => {
 };
 
 const getTransactions = async (
-  idMonth: string,
+  idMonths: string[],
   idUser: string,
   type: TransactionType,
   recurrent: boolean
 ): Promise<Transaction[]> => {
   await connectMongo();
 
-  return await Transactions.find({ idMonth, idUser, type, recurrent });
+  return await Transactions.find({ idMonth: { $in: idMonths }, idUser, type, recurrent });
 };
 
 export const transactionService = {

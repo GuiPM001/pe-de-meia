@@ -3,7 +3,6 @@ import { connectMongo } from "@/core/db/mongodb";
 import { User } from "@/core/models/user";
 import { transactionService } from "./transaction.service";
 import { TransactionType } from "../enums/transactionType";
-import { Transaction } from "../types/Transaction";
 import "@/core/utils/date.extensions";
 
 const update = async (request: Profile) => {
@@ -42,13 +41,12 @@ const updateDailyCost = async () => {
   for (const user of users) {
     const idUser = (user as Profile)._id;
 
-    const transactions: Transaction[] = [];
-
-    for (const m of pastMonths) {
-      const result = await transactionService.getTransactions(m, idUser, TransactionType.expense, false);
-
-      if (result?.length) transactions.push(...result);
-    }
+    const transactions = await transactionService.getTransactions(
+      pastMonths,
+      idUser,
+      TransactionType.expense,
+      false
+    );
 
     const totalDailyCost = transactions.reduce((acc, t) => acc + t.value!, 0);
 
