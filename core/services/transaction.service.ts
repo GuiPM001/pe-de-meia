@@ -185,7 +185,7 @@ const getPreviousRecurrentTransactions = async (
   });
 };
 
-const registerRecurrentTransactionsNewMonth = async (newMonth: Month) => {
+const registerRecurrentTransactionsNewMonth = async (newMonth: Month): Promise<Month> => {
   await connectMongo();
 
   const recurrentTransactions = await getPreviousRecurrentTransactions(
@@ -194,7 +194,7 @@ const registerRecurrentTransactionsNewMonth = async (newMonth: Month) => {
   );
 
   if (!recurrentTransactions.length) {
-    return;
+    return newMonth;
   }
 
   recurrentTransactions.forEach((t) => {

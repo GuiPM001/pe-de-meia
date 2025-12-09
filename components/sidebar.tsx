@@ -48,13 +48,11 @@ export default function Sidebar({
   const createMonth = async (idMonth: string) => {
     setMonthLoading(idMonth);
     const lastBalance = months.at(-2)?.balance ?? 0;
-    const [year, month] = idMonth.split('-').map(Number);
-    const qtdDays = new Date(year, month, 0).getDate();
 
     const newMonth: Month = {
       id: idMonth,
       idUser: profile._id,
-      balance: lastBalance - (qtdDays * profile.dailyCost),
+      balance: lastBalance,
       invested: 0
     };
 

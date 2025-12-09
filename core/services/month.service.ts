@@ -59,8 +59,6 @@ const saveMonth = async (month: Month, locale: SupportedLocale) => {
 
   const updatedMonth = await transactionService.registerRecurrentTransactionsNewMonth(month);
   
-  if (!updatedMonth) return;
-  
   const [year, actualMonth] = month.id.split('-').map(Number);
   const qtdDaysInMonth = new Date(year, actualMonth, 0).getDate();
   
