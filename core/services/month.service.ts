@@ -132,6 +132,13 @@ const getMonthById = async (idUser: string, idMonth: string) => {
   });
 };
 
+const updateMonthBalanceDailyCost = async (idMonth: string, idUser: string, newBalance: number) => {
+  await Months.updateOne(
+    { id: idMonth, idUser: idUser },
+    { $set: { balance: newBalance }}
+  )
+}
+
 export const monthService = {
   saveMonth,
   saveMonthsNewUser,
@@ -140,4 +147,5 @@ export const monthService = {
   getFutureMonthsByIdUser,
   updateMonthBalance,
   getMonthById,
+  updateMonthBalanceDailyCost
 };

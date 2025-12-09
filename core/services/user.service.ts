@@ -4,6 +4,7 @@ import { User } from "@/core/models/user";
 import { transactionService } from "./transaction.service";
 import { TransactionType } from "../enums/transactionType";
 import "@/core/utils/date.extensions";
+import { monthService } from "./month.service";
 
 const update = async (request: Profile) => {
   const { _id, name, savingTarget } = await request;
@@ -54,8 +55,16 @@ const updateDailyCost = async () => {
 
     if (totalDailyCost <= 0) continue;
 
+    const previousDailyCost = user.dailyCost;
+
     user.dailyCost = Math.floor(totalDailyCost / pastMonths.length / qtdDays);
     await user.save();
+    
+    const futureMonths = await monthService.getFutureMonthsByIdUser(idUser, today.toISOString().slice(0, 7) + "-01");
+    for (const month of futureMonths) {
+      const newBalance = (month.balance ?? 0) - ((user.dailyCost - previousDailyCost) * qtdDays);
+      await monthService.updateMonthBalanceDailyCost(month.id, idUser, newBalance);
+    }
   }
 };
 
