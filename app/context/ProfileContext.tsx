@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useState, ReactNode, useContext } from "react";
+import React, { createContext, useState, ReactNode, useContext, useEffect } from "react";
 import { Profile } from "@/core/types/Profile";
+import { api } from "@/core/services/api";
 
 interface ProfileContextProps {
   profile: Profile;
@@ -30,6 +31,15 @@ export const ProfileProvider = ({
 }) => {
   const [profile, setProfile] = useState<Profile>(initialProfile);
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const response: Profile = await api.get(`/user?id=${profile._id}`);
+      setProfile(response);
+    }
+
+    if (profile?._id) fetchProfile();
+  }, [profile?._id]);
+  
   return (
     <ProfileContext.Provider value={{ profile, setProfile }}>
       {children}
