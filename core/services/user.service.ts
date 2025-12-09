@@ -68,8 +68,13 @@ const updateDailyCost = async () => {
   }
 };
 
+const getAll = async () => {
+  return await User.find(); 
+}
+
 export const userService = {
   update,
   get,
   updateDailyCost,
+  getAll
 };

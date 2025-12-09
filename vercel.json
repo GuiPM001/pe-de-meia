@@ -3,6 +3,10 @@
     {
       "path": "/api/user/update-daily-cost",
       "schedule": "0 5 1 * *"
+    },
+    {
+      "path": "/api/month/remove-past-daily-cost",
+      "schedule": "0 5 * * *"
     }
   ]
 }

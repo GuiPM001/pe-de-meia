@@ -8,6 +8,7 @@ import { transactionService } from "./transaction.service";
 import { SupportedLocale, t } from "@/lib/errorHandler";
 import "@/core/utils/date.extensions";
 import { Profile } from "../types/Profile";
+import { userService } from "./user.service";
 
 const getMonthsByIdUser = async (idUser: string, year: number) => {
   await connectMongo();
@@ -145,6 +146,20 @@ const updateMonthBalanceDailyCost = async (idMonth: string, idUser: string, newB
   )
 }
 
+const removeDailyCost = async () => {
+  const users = await userService.getAll();
+  const actualIdMonth = new Date().toISOString().slice(0, 7) + "-01"
+
+  for (const user of users) {
+    const profile = (user as Profile);
+
+    await Months.updateMany(
+      { id: { $gte: actualIdMonth }, idUser: profile._id },
+      { $inc: { balance: profile.dailyCost }}
+    )
+  }
+}
+
 export const monthService = {
   saveMonth,
   saveMonthsNewUser,
@@ -153,5 +168,6 @@ export const monthService = {
   getFutureMonthsByIdUser,
   updateMonthBalance,
   getMonthById,
-  updateMonthBalanceDailyCost
+  updateMonthBalanceDailyCost,
+  removeDailyCost
 };

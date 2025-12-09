@@ -9,4 +9,5 @@ export type DayBalance = {
   investeds: Transaction[] | null;
   total: number | null;
   totalInvested: number | null;
+  hasEstimatedDailyExpense: boolean;
 };

@@ -109,10 +109,12 @@ export default function DailyTransactionModal({
             />
           )}
 
-          <div className="flex flex-row justify-between border-b border-gray-200 pb-3 mb-3">
-            <span>Gasto diário planejado</span>
-            <span>{currencyNumber(profile.dailyCost)}</span>
-          </div>
+          {dayBalance.hasEstimatedDailyExpense && (
+            <div className="flex flex-row justify-between border-b border-gray-200 pb-3 mb-3">
+              <span>Gasto diário planejado</span>
+              <span>{currencyNumber(profile.dailyCost)}</span>
+            </div>
+          )}
 
           <div className="flex flex-row justify-between font-bold mb-6">
             <span>{t("tooltips.balance")}</span>

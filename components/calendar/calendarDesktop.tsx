@@ -56,8 +56,7 @@ export default function CalendarDesktop(props: CalendarComponentProps) {
 
               <TransactionsContainer dayBalance={x} />
 
-              {new Date(today.getFullYear(), indexMonth, x.day, 23, 59, 59) >=
-                today && (
+              {x.hasEstimatedDailyExpense && (
                 <div className="group absolute bottom-[4px] right-[8px] z-0">
                   <span className="text-sm font-bold text-gray-300">
                     {currencyNumber(profile.dailyCost)}
