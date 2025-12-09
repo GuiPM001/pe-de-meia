@@ -27,11 +27,7 @@ const login = async (
 
   const token = jwt.sign(
     {
-      _id: user._id,
-      email: user.email,
-      name: user.name,
-      savingTarget: user.savingTarget,
-      dailyCost: user.dailyCost
+      _id: user._id
     },
     process.env.JWT_SECRET!,
     { expiresIn: "365d" }
