@@ -3,6 +3,7 @@ import { connectMongo } from "@/core/db/mongodb";
 import { User } from "@/core/models/user";
 import { transactionService } from "./transaction.service";
 import { TransactionType } from "../enums/transactionType";
+import { Transaction } from "../types/Transaction";
 import "@/core/utils/date.extensions";
 
 const update = async (request: Profile) => {
@@ -30,7 +31,6 @@ const updateDailyCost = async () => {
   await connectMongo();
 
   const users = await User.find();
-  console.log(users)
 
   const today = new Date().toISODateString();
   const pastMonths = Array.from({ length: 3 }, (_, i) => {
@@ -38,30 +38,29 @@ const updateDailyCost = async () => {
     d.setMonth(d.getMonth() - (i + 1));
     return d.toISOString().slice(0, 7) + "-01";
   });
-  
-  console.log('pastMonths', pastMonths)
-  users.forEach(async (user) => {
+
+  for (const user of users) {
     const idUser = (user as Profile)._id;
 
-    const transactions = (
-      await Promise.all(
-        pastMonths.map(m => transactionService.getTransactions(m, idUser, TransactionType.expense, false))
-      )
-    ).flat();
+    const transactions: Transaction[] = [];
+
+    for (const m of pastMonths) {
+      const result = await transactionService.getTransactions(m, idUser, TransactionType.expense, false);
+
+      if (result?.length) transactions.push(...result);
+    }
 
     const totalDailyCost = transactions.reduce((acc, t) => acc + t.value!, 0);
-    
-    console.log(transactions.length);
-    console.log('tota', totalDailyCost);
-    if (totalDailyCost <= 0) return;
-    
+
+    if (totalDailyCost <= 0) continue;
+
     user.dailyCost = totalDailyCost / pastMonths.length;
     await user.save();
-  });
-}
+  }
+};
 
 export const userService = {
   update,
   get,
-  updateDailyCost
+  updateDailyCost,
 };
