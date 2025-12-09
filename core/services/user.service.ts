@@ -31,9 +31,11 @@ const updateDailyCost = async () => {
 
   const users = await User.find();
 
-  const today = new Date().toISODateString();
+  const today = new Date();
+  const qtdDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+
   const pastMonths = Array.from({ length: 3 }, (_, i) => {
-    const d = new Date(today);
+    const d = new Date();
     d.setMonth(d.getMonth() - (i + 1));
     return d.toISOString().slice(0, 7) + "-01";
   });
@@ -52,7 +54,7 @@ const updateDailyCost = async () => {
 
     if (totalDailyCost <= 0) continue;
 
-    user.dailyCost = totalDailyCost / pastMonths.length;
+    user.dailyCost = Math.floor(totalDailyCost / pastMonths.length / qtdDays);
     await user.save();
   }
 };
