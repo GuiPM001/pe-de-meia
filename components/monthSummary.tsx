@@ -56,7 +56,7 @@ export default function MonthSummary({ dayBalances }: MonthSummaryProps) {
       dayBalances.at(lastIndexDay)?.total ?? 0;
 
     setTotals({ income, expense, daily, dayBalance, monthBalance });
-  }, []);
+  }, [dayBalances]);
 
   return (
     <>
