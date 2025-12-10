@@ -143,8 +143,10 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
 
       balance += todayTotal;
 
-      if (currentDate.getDate() >= today.getDate() && !dailies.length)
-        balance += todayTotal - profile.dailyCost;
+      const hasEstimatedDailyExpense = currentDate.getDate() >= today.getDate() && !dailies.length && currentDate.getUTCMonth() >= today.getUTCMonth();
+
+      if (hasEstimatedDailyExpense)
+        balance -= profile.dailyCost;
 
       addDay(currentDate, dayBalances, {
         incomes,
@@ -153,7 +155,7 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
         investeds,
         total: balance,
         totalInvested,
-        hasEstimatedDailyExpense: currentDate.getDate() >= today.getDate() && !dailies.length
+        hasEstimatedDailyExpense
       });
 
       currentDate.setDate(currentDate.getDate() + 1);
