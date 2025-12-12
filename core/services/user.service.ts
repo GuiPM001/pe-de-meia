@@ -69,6 +69,7 @@ const updateDailyCost = async () => {
 };
 
 const getAll = async () => {
+  await connectMongo();
   return await User.find(); 
 }
 

@@ -2,30 +2,21 @@
 
 import React, { useState } from "react";
 import IconButton from "./ui/iconButton";
-import { getMonthNameByMonth } from "@/core/utils/date";
+import { getMonthNameByDate } from "@/core/utils/date";
 import { TbCirclePlusFilled, TbInfoCircleFilled } from "react-icons/tb";
 import InfoModal from "./modals/infoModal";
-import { Month } from "@/core/types/Month";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import { useTranslation } from "react-i18next";
 import MonthsModal from "./modals/monthsModal";
+import { useMonth } from "@/app/context/MonthContext";
 
 interface HeaderProps {
   yearSelected: number;
-  indexMonthSelected: number;
-  month: Month;
-  setMonth: (month: Month) => void;
-  setMonthSelected: (month: number) => void;
 }
 
-export default function Header({
-  yearSelected,
-  indexMonthSelected,
-  month,
-  setMonth,
-  setMonthSelected,
-}: HeaderProps) {
+export default function Header({ yearSelected }: HeaderProps) {
   const { openModal } = useTransactionModal();
+  const { monthSelected } = useMonth();
   const { t } = useTranslation();
 
   const [infoModalOpen, setInfoModalInfoOpen] = useState(false);
@@ -34,18 +25,18 @@ export default function Header({
   return (
     <div className="flex flex-row gap-5 items-center px-2 md:px-0">
       <span className="hidden lg:block capitalize font-black text-3xl">
-        {getMonthNameByMonth(yearSelected, indexMonthSelected)}
+        {getMonthNameByDate(monthSelected.id)}
       </span>
 
       <button
         onClick={() => setMonthModalOpen(true)}
         className="lg:hidden block capitalize font-black text-3xl cursor-pointer"
       >
-        {getMonthNameByMonth(yearSelected, indexMonthSelected)}
+        {getMonthNameByDate(monthSelected.id)}
       </button>
 
       <IconButton
-        onClick={() => openModal(month.id)}
+        onClick={() => openModal(monthSelected.id)}
         label={t("tooltips.addTransaction")}
       >
         <TbCirclePlusFilled size="24px" />
@@ -67,9 +58,6 @@ export default function Header({
         onClose={() => setMonthModalOpen(false)}
         open={monthModalOpen}
         yearSelected={yearSelected}
-        actualMonth={month}
-        setMonth={setMonth}
-        setMonthSelected={setMonthSelected}
       />
     </div>
   );

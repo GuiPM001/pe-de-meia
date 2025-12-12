@@ -2,79 +2,35 @@ import { useMonth } from "@/app/context/MonthContext";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { DayBalance } from "@/core/types/DayBalance";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Transaction } from "@/core/types/Transaction";
-import { api } from "@/core/services/api";
 import { TransactionType } from "@/core/enums/transactionType";
 import { sumValues } from "@/core/utils/sumValues";
 import { CalendarProps } from ".";
 
-export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
-  const [loading, setLoading] = useState<boolean>(true);
+export const useCalendar = ({ month }: CalendarProps) => {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
 
   const { profile } = useProfile();
-  const { transactions, setTransactions } = useTransaction();
+  const { transactions } = useTransaction();
   const { months } = useMonth();
 
   const today = new Date();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!profile._id) return;
-
-      setLoading(true);
-
-      const transactions = await getTransactions();
-
-      setTransactions(transactions);
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [indexMonth, profile]);
+  const monthDate = useMemo(() => new Date(month.id), [month.id]);
 
   useEffect(() => {
     const dayBalances: DayBalance[] = [];
-    const currentDate = getStartDate();
+    const currentDate = new Date(monthDate.getUTCFullYear(), monthDate.getUTCMonth(), 1 - monthDate.getUTCDay());
 
     addDaysBefore(currentDate, dayBalances);
     addMonthlyDays(currentDate, dayBalances, transactions);
+    addDaysAfter(currentDate, dayBalances);
 
-    completeGrid(currentDate, dayBalances);
     setDayBalances(dayBalances);
-  }, [transactions, month.balance, profile.savingTarget]);
+  }, [transactions, month.id]);
 
-  const getTransactions = async () => {
-    const response: Transaction[] = await api.get(
-      `/transaction/get-by-id-month`,
-      {
-        params: {
-          idMonth: month.id,
-          idUser: profile._id,
-        },
-      }
-    );
-
-    return response;
-  };
-
-  const getStartDate = useCallback(() => {
-    const date = new Date(year, indexMonth, 1, 3, 0, 0);
-    return new Date(year, indexMonth, 1 - date.getDay(), 3, 0, 0);
-  }, [indexMonth, year]);
-
-  const getTotalByType = (
-    transactions: Transaction[],
-    type: TransactionType,
-    recurrent?: boolean
-  ): Transaction[] => {
-    let filtered = transactions.filter((x) => x.type === type);
-
-    if (recurrent !== undefined)
-      filtered = filtered.filter((x) => x.recurrent === recurrent);
-
-    return filtered;
+  const getTotalByType = (transactions: Transaction[], type: TransactionType, recurrent?: boolean): Transaction[] => {
+    return transactions.filter((x) => x.type === type && (recurrent === undefined || x.recurrent === recurrent));
   };
 
   const addDay = (
@@ -97,7 +53,7 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
   };
 
   const addDaysBefore = (currentDate: Date, dayBalances: DayBalance[]) => {
-    while (currentDate.getUTCMonth() !== indexMonth) {
+    while (currentDate.getUTCMonth() !== monthDate.getUTCMonth()) {
       addDay(currentDate, dayBalances);
       currentDate.setDate(currentDate.getDate() + 1);
     }
@@ -108,44 +64,30 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
     dayBalances: DayBalance[],
     transactions: Transaction[]
   ) => {
+    const indexMonth = monthDate.getUTCMonth();
     let balance = months[indexMonth - 1]?.balance ?? 0;
 
     while (currentDate.getUTCMonth() === indexMonth) {
-      const transactionsActual = transactions.filter(
+      const todayTransactions = transactions.filter(
         (x) => x.date === currentDate.toISODateString()
       );
 
-      const incomes = getTotalByType(
-        transactionsActual,
-        TransactionType.income
-      );
-      const expenses = getTotalByType(
-        transactionsActual,
-        TransactionType.expense,
-        true
-      );
-      const dailies = getTotalByType(
-        transactionsActual,
-        TransactionType.expense,
-        false
-      );
-      const investeds = getTotalByType(
-        transactionsActual,
-        TransactionType.investment
-      );
+      const incomes = getTotalByType(todayTransactions, TransactionType.income);
+      const expenses = getTotalByType(todayTransactions, TransactionType.expense, true);
+      const dailies = getTotalByType(todayTransactions, TransactionType.expense, false);
+      const investeds = getTotalByType(todayTransactions, TransactionType.investment);
 
       const totalInvested = sumValues(investeds);
-      const todayTotal =
-        sumValues(incomes) -
-        sumValues(expenses) -
-        sumValues(dailies) -
-        totalInvested;
+      const todayTotal = sumValues(incomes) - sumValues(expenses) - sumValues(dailies) - totalInvested;
 
       balance += todayTotal;
 
-      const hasEstimatedDailyExpense = currentDate.getDate() >= today.getDate() && !dailies.length && currentDate.getUTCMonth() >= today.getUTCMonth();
+      const hasEstimatedDailyExpense =
+        currentDate.getUTCDate() >= today.getDate() &&
+        currentDate.getUTCMonth() >= today.getUTCMonth() &&
+        !dailies.length;
 
-      if (hasEstimatedDailyExpense)
+      if (hasEstimatedDailyExpense) 
         balance -= profile.dailyCost;
 
       addDay(currentDate, dayBalances, {
@@ -155,22 +97,26 @@ export const useCalendar = ({ month, indexMonth, year }: CalendarProps) => {
         investeds,
         total: balance,
         totalInvested,
-        hasEstimatedDailyExpense
+        hasEstimatedDailyExpense,
       });
 
       currentDate.setDate(currentDate.getDate() + 1);
     }
   };
 
-  const completeGrid = (currentDate: Date, dayBalances: DayBalance[]) => {
+  const addDaysAfter = (currentDate: Date, dayBalances: DayBalance[]) => {
     while (dayBalances.length % 7 !== 0) {
       addDay(currentDate, dayBalances);
       currentDate.setDate(currentDate.getDate() + 1);
     }
   };
 
-  return {
-    loading,
-    dayBalances,
+  const isToday = (dayBalance: DayBalance) => {
+    return (
+      dayBalance.day === today.getDate() &&
+      today.getUTCMonth() === monthDate.getUTCMonth()
+    );
   };
+
+  return { dayBalances, isToday };
 };

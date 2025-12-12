@@ -147,6 +147,8 @@ const updateMonthBalanceDailyCost = async (idMonth: string, idUser: string, newB
 }
 
 const removeDailyCost = async () => {
+  await connectMongo();
+  
   const users = await userService.getAll();
   const actualIdMonth = new Date().toISOString().slice(0, 7) + "-01"
 

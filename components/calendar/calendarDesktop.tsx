@@ -4,16 +4,15 @@ import TransactionsContainer from "../transactionsContainer";
 import { currencyNumber } from "@/core/utils/numberFormat";
 import Tooltip from "../ui/tooltip";
 import { t } from "i18next";
-import { CalendarComponentProps } from ".";
+import { CalendarProps } from ".";
 import MonthSummary from "../monthSummary";
 import { getWeekDays } from "@/core/utils/date";
 import { useProfile } from "@/app/context/ProfileContext";
+import { useCalendar } from "./useCalendar";
 
-export default function CalendarDesktop(props: CalendarComponentProps) {
-  const { dayBalances, indexMonth, loading } = props;
+export default function CalendarDesktop(props: CalendarProps) {
+  const { dayBalances, isToday } = useCalendar(props);
   const { profile } = useProfile();
-
-  const today = new Date();
 
   return (
     <div className="grid grid-cols-7 w-full">
@@ -40,30 +39,32 @@ export default function CalendarDesktop(props: CalendarComponentProps) {
           ) : (
             <div
               className={`h-full group/day ${
-                x.day === today.getDate() && today.getMonth() === indexMonth
-                  ? "border-3 border-gray-600 rounded-md"
-                  : ""
+                isToday(x) ? "border-3 border-gray-600 rounded-md" : ""
               }`}
             >
               <DayBalanceFlag
-                loading={loading}
                 dayBalance={x}
                 totalInvested={x.totalInvested || 0}
-                isToday={
-                  x.day === today.getDate() && today.getMonth() === indexMonth
-                }
+                isToday={isToday(x)}
+                loading={props.loading}
               />
+              {!props.loading && (
+                <>
+                  <TransactionsContainer dayBalance={x} />
 
-              <TransactionsContainer dayBalance={x} />
+                  {x.hasEstimatedDailyExpense && (
+                    <div className="group absolute bottom-[4px] right-[8px] z-0">
+                      <span className="text-sm font-bold text-gray-300">
+                        {currencyNumber(profile.dailyCost)}
+                      </span>
 
-              {x.hasEstimatedDailyExpense && (
-                <div className="group absolute bottom-[4px] right-[8px] z-0">
-                  <span className="text-sm font-bold text-gray-300">
-                    {currencyNumber(profile.dailyCost)}
-                  </span>
-
-                  <Tooltip position="left" label={t("tooltips.remaining")} />
-                </div>
+                      <Tooltip
+                        position="left"
+                        label={t("tooltips.remaining")}
+                      />
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}

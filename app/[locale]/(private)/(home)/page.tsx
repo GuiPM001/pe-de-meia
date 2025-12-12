@@ -1,66 +1,55 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTransaction } from "@/app/context/TransactionContext";
+import { useMonth } from "@/app/context/MonthContext";
+import { useProfile } from "@/app/context/ProfileContext";
 import Calendar from "@/components/calendar";
 import Sidebar from "@/components/sidebar";
-import { Month } from "@/core/types/Month";
-import { TransactionProvider } from "@/app/context/TransactionContext";
 import Header from "@/components/header";
-import { TransactionModalProvider } from "@/app/context/TransactionModalContext";
-import "@/core/utils/date.extensions";
 import Wrapper from "@/components/ui/wrapper";
-import { useMonth } from "@/app/context/MonthContext";
+import "@/core/utils/date.extensions";
 
 export default function Home() {
   const today = new Date();
-  
-  const { months } = useMonth();
 
-  const [indexMonth, setIndexMonth] = useState<number>(today.getUTCMonth());
+  const { monthSelected, getMonths } = useMonth();
+  const { getTransactions } = useTransaction();
+  const { profile } = useProfile();
+
+  const [loading, setLoading] = useState<boolean>(false);
+
   const [yearSelected, setYearSelected] = useState<number>(today.getFullYear());
-  const [monthSelected, setMonthSelected] = useState<Month>({
-    balance: 0,
-    invested: 0,
-    id: new Date(yearSelected, indexMonth, 1).toISODateString(),
-    idUser: "",
-  });
 
   useEffect(() => {
-    const month = months.find((x) => x.id === monthSelected.id);
-    if (month) setMonthSelected(month);
-  }, [months, monthSelected.id]);
+    fetchData();
+  }, [monthSelected.id, yearSelected]);
+
+  const fetchData = async () => {
+    setLoading(true);
+
+    await Promise.all([
+      getMonths(yearSelected, profile._id),
+      getTransactions(monthSelected.id, profile._id),
+    ]);
+
+    setLoading(false);
+  };
 
   return (
-    <TransactionProvider>
-      <TransactionModalProvider>
-        <Wrapper>
-          <div className="flex flex-row gap-8">
-            <Sidebar
-              monthSelected={indexMonth}
-              setMonthSelected={setIndexMonth}
-              yearSelected={yearSelected}
-              setYearSelected={setYearSelected}
-              setMonth={setMonthSelected}
-            />
+    <Wrapper>
+      <div className="flex flex-row gap-8">
+        <Sidebar
+          yearSelected={yearSelected}
+          setYearSelected={setYearSelected}
+        />
 
-            <div className="flex flex-col w-full h-full">
-              <Header
-                yearSelected={yearSelected}
-                indexMonthSelected={indexMonth}
-                month={monthSelected}
-                setMonth={setMonthSelected}
-                setMonthSelected={setIndexMonth}
-              />
+        <div className="flex flex-col w-full h-full">
+          <Header yearSelected={yearSelected} />
 
-              <Calendar
-                month={monthSelected}
-                indexMonth={indexMonth}
-                year={yearSelected}
-              />
-            </div>
-          </div>
-        </Wrapper>
-      </TransactionModalProvider>
-    </TransactionProvider>
+          <Calendar month={monthSelected} loading={loading} />
+        </div>
+      </div>
+    </Wrapper>
   );
 }

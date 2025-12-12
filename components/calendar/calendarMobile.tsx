@@ -2,23 +2,25 @@ import React, { useEffect, useState } from "react";
 import MonthSummary from "../monthSummary";
 import DayBalanceFlag from "../dayBalanceFlag";
 import TransactionsContainer from "../transactionsContainer";
-import { CalendarComponentProps } from ".";
+import { CalendarProps } from ".";
 import { getWeekDays } from "@/core/utils/date";
 import { DayBalance } from "@/core/types/DayBalance";
 import DailyTransactionModal from "../modals/dailyTransactionsModal";
+import { useCalendar } from "./useCalendar";
+import "@/core/utils/date.extensions";
 
-export default function CalendarMobile(props: CalendarComponentProps) {
-  const { dayBalances, indexMonth, loading } = props;
+export default function CalendarMobile(props: CalendarProps) {
+  const { dayBalances, isToday } = useCalendar(props);
 
   const [dailyModal, setDailyModal] = useState<DayBalance | null>(null);
 
-  const today = new Date();
-
   useEffect(() => {
-    setDailyModal(prev => {
+    setDailyModal((prev) => {
       if (prev === null) return prev;
-      
-      return dayBalances.find(x => x.day === prev.day && x.total !== null) ?? null;
+
+      return (
+        dayBalances.find((x) => x.day === prev.day && x.total !== null) ?? null
+      );
     });
   }, [dayBalances]);
 
@@ -50,21 +52,17 @@ export default function CalendarMobile(props: CalendarComponentProps) {
             <button
               onClick={() => setDailyModal(x)}
               className={`group/day h-full w-full flex flex-col cursor-pointer ${
-                x.day === today.getDate() && today.getMonth() === indexMonth
-                  ? "rounded-md"
-                  : ""
+                isToday(x) ? "rounded-md" : ""
               }`}
             >
               <DayBalanceFlag
-                loading={loading}
                 dayBalance={x}
                 totalInvested={x.totalInvested || 0}
-                isToday={
-                  x.day === today.getDate() && today.getMonth() === indexMonth
-                }
+                isToday={isToday(x)}
+                loading={props.loading}
               />
 
-              <TransactionsContainer dayBalance={x} />
+              {!props.loading && <TransactionsContainer dayBalance={x} />}
             </button>
           )}
         </div>

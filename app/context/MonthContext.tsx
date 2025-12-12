@@ -9,16 +9,32 @@ interface MonthContextProps {
   months: Month[];
   setMonths: (Months: Month[]) => void;
   getMonths: (yearSelected: number, userId: string) => Promise<void>;
+  monthSelected: Month;
+  selectMonth: (month: Month) => void;
 }
+
+const initialState: Month = {
+  idUser: "",
+  balance: 0,
+  invested: 0,
+  id: new Date(
+    new Date().getFullYear(),
+    new Date().getUTCMonth(),
+    1
+  ).toISODateString(),
+};
 
 const MonthContext = createContext<MonthContextProps>({
   months: [],
   setMonths: () => {},
   getMonths: () => Promise.resolve(),
+  monthSelected: initialState,
+  selectMonth: () => {},
 });
 
 export const MonthProvider = ({ children }: { children: ReactNode }) => {
   const [months, setMonths] = useState<Month[]>([]);
+  const [monthSelected, setMonthSelected] = useState<Month>(initialState);
 
   const generateEmptyMonth = (
     indexMonth: number,
@@ -77,8 +93,13 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
     getMonthList(userMonths, yearSelected, userId);
   };
 
+  const selectMonth = (newMonth: Month) => {
+    const month = months.find((x) => x.id === newMonth.id);
+    if (month) setMonthSelected(month);
+  }
+
   return (
-    <MonthContext.Provider value={{ months, setMonths, getMonths }}>
+    <MonthContext.Provider value={{ months, setMonths, getMonths, monthSelected, selectMonth }}>
       {children}
     </MonthContext.Provider>
   );

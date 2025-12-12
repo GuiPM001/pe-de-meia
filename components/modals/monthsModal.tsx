@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ModalContainer from "./modalContainer";
 import ModalTitle from "./modalTitle";
 import { useMonth } from "@/app/context/MonthContext";
@@ -12,29 +12,18 @@ interface MonthsModalProps {
   onClose: () => void;
   open: boolean;
   yearSelected: number;
-  actualMonth: Month;
-  setMonth: (month: Month) => void;
-  setMonthSelected: (month: number) => void;
 }
 
 export default function MonthsModal({
   onClose,
   open,
-  yearSelected,
-  actualMonth,
-  setMonth,
-  setMonthSelected
+  yearSelected
 }: MonthsModalProps) {
-  const { months, getMonths } = useMonth();
+  const { months, monthSelected, selectMonth } = useMonth();
   const { profile } = useProfile();
 
-  useEffect(() => {
-    getMonths(yearSelected, profile._id);
-  }, [yearSelected]);
-
-  const selectMonth = (month: Month) => {
-    setMonthSelected(new Date(month.id).getUTCMonth())
-    setMonth(month);
+  const handleClick = (month: Month) => {
+    selectMonth(month);
     onClose();
   };
 
@@ -45,7 +34,7 @@ export default function MonthsModal({
       <div className="grid grid-cols-3 gap-2">
         {months.map((month) => (
           <button
-            onClick={() => selectMonth(month)}
+            onClick={() => handleClick(month)}
             key={month.id}
             className={`relative flex flex-col items-center p-6 rounded-lg ${
               month.balance
@@ -53,7 +42,7 @@ export default function MonthsModal({
                     month.balance!,
                     month.invested!,
                     profile.savingTarget,
-                    actualMonth.id === month.id
+                    monthSelected.id === month.id
                   )
                 : "bg-gray-100 text-gray-400"
             }`}

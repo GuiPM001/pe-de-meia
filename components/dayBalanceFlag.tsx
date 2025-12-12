@@ -5,12 +5,12 @@ import { DayBalance } from "@/core/types/DayBalance";
 import { getColors } from "@/core/utils/getColors";
 import { useProfile } from "@/app/context/ProfileContext";
 import { TbPlus } from "react-icons/tb";
-import LoadingSpinner from "./ui/loadingSpinner";
 import IconButton from "./ui/iconButton";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import { currencyNumber } from "@/core/utils/numberFormat";
 import { useTranslation } from "react-i18next";
 import Tooltip from "./ui/tooltip";
+import LoadingSpinner from "./ui/loadingSpinner";
 
 interface DayBalanceFlagProps {
   dayBalance: DayBalance;
@@ -47,7 +47,16 @@ export default function DayBalanceFlag({
 
       <span
         className={`block lg:hidden text-center font-bold h-8 w-8 content-center
-          ${getColors(dayBalance.total!, totalInvested, profile.savingTarget, isToday)} rounded-full
+         ${
+           loading
+             ? "text-gray-400"
+             : getColors(
+                 dayBalance.total!,
+                 totalInvested,
+                 profile.savingTarget,
+                 isToday
+               )
+         } rounded-full
         `}
       >
         {dayBalance.day}

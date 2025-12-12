@@ -8,7 +8,6 @@ interface MonthButtonProps {
   month: Month;
   selected: boolean;
   savingTarget: number;
-  setMonthSelected: (indexMonth: number) => void;
   addMonth: (idMonth: string) => void;
   monthLoading: string;
   setMonth: (month: Month) => void;
@@ -18,7 +17,6 @@ export default function MonthButton({
   month,
   savingTarget,
   selected,
-  setMonthSelected,
   addMonth,
   monthLoading,
   setMonth,
@@ -52,10 +50,7 @@ export default function MonthButton({
         </button>
       ) : (
         <button
-          onClick={() => {
-            setMonthSelected(dateMonth.getUTCMonth());
-            setMonth(month);
-          }}
+          onClick={() => setMonth(month)}
           disabled={month.balance === null && dateMonth < now}
           className={`capitalize w-24 h-[32px] py-1 px-2 mb-2 rounded-md flex justify-center cursor-pointer
                     disabled:bg-gray-200 disabled:cursor-default disabled:text-gray-400

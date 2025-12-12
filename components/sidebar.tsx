@@ -7,42 +7,26 @@ import { api } from "@/core/services/api";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
 import MonthButton from "./monthButton";
-import LoadingSpinner from "./ui/loadingSpinner";
 import YearSelect from "./yearSelect";
 
 interface SidebarProps {
-  monthSelected: number;
-  setMonthSelected: (month: number) => void;
   yearSelected: number;
   setYearSelected: (year: number) => void;
-  setMonth: (month: Month) => void;
 }
 
 export default function Sidebar({
-  monthSelected,
-  setMonthSelected,
   yearSelected,
   setYearSelected,
-  setMonth,
 }: SidebarProps) {
   const { profile } = useProfile();
 
   const [monthLoading, setMonthLoading] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
 
   const { transactions } = useTransaction();
-  const { months, getMonths } = useMonth();
+  const { months, getMonths, monthSelected, selectMonth } = useMonth();
 
   useEffect(() => {
-    if (!profile._id) return;
-
-    const fetchMonths = async () => {
-      setLoading(true);
-      await getMonths(yearSelected, profile._id);
-      setLoading(false);
-    };
-
-    fetchMonths();
+    getMonths(yearSelected, profile._id);
   }, [profile._id, yearSelected, transactions]);
 
   const createMonth = async (idMonth: string) => {
@@ -53,7 +37,7 @@ export default function Sidebar({
       id: idMonth,
       idUser: profile._id,
       balance: lastBalance,
-      invested: 0
+      invested: 0,
     };
 
     await api.post("/month", newMonth);
@@ -69,15 +53,13 @@ export default function Sidebar({
       <YearSelect value={yearSelected} onChange={setYearSelected} />
 
       <div>
-        {loading && <LoadingSpinner />}
-        {months.map((x, index) => (
+        {months.map((x) => (
           <MonthButton
             key={x.id}
             month={x}
-            selected={monthSelected === index}
+            selected={monthSelected.id === x.id}
             savingTarget={profile.savingTarget}
-            setMonthSelected={setMonthSelected}
-            setMonth={setMonth}
+            setMonth={selectMonth}
             addMonth={createMonth}
             monthLoading={monthLoading}
           />
