@@ -1,0 +1,17 @@
+name: Remove Past Daily Cost (Daily)
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  remove-past-daily-cost:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call remove-past-daily-cost API
+        run: |
+          curl -X POST \
+            https://pe-de-meia.vercel.app/api/month/remove-past-daily-cost

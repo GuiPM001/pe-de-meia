@@ -1,0 +1,17 @@
+name: Update Daily Cost (Monthly)
+
+on:
+  schedule:
+    - cron: '0 3 1 * *'
+
+  workflow_dispatch:
+
+jobs:
+  update-daily-cost:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call update-daily-cost API
+        run: |
+          curl -X POST \
+            https://pe-de-meia.vercel.app/api/user/update-daily-cost
