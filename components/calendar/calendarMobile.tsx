@@ -26,7 +26,7 @@ export default function CalendarMobile(props: CalendarProps) {
 
   return (
     <div className="grid grid-cols-7 w-full mb-10">
-      <MonthSummary dayBalances={dayBalances} />
+      <MonthSummary dayBalances={dayBalances} loading={props.loading} />
 
       <div className="contents">
         {getWeekDays("narrow").map((x, i) => (

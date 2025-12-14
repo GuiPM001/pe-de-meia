@@ -17,7 +17,7 @@ export default function Home() {
   const { getTransactions } = useTransaction();
   const { profile } = useProfile();
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const [yearSelected, setYearSelected] = useState<number>(today.getFullYear());
 
@@ -28,10 +28,8 @@ export default function Home() {
   const fetchData = async () => {
     setLoading(true);
 
-    await Promise.all([
-      getMonths(yearSelected, profile._id),
-      getTransactions(monthSelected.id, profile._id),
-    ]);
+    await getMonths(yearSelected, profile._id);
+    await getTransactions(monthSelected.id, profile._id);
 
     setLoading(false);
   };

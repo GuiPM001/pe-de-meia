@@ -16,7 +16,7 @@ export default function CalendarDesktop(props: CalendarProps) {
 
   return (
     <div className="grid grid-cols-7 w-full">
-      <MonthSummary dayBalances={dayBalances} />
+      <MonthSummary dayBalances={dayBalances} loading={props.loading} />
 
       <div className="contents ">
         {getWeekDays("short").map((x, i) => (

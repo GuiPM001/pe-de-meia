@@ -10,6 +10,7 @@ import { getColors } from "@/core/utils/getColors";
 
 interface MonthSummaryProps {
   dayBalances: DayBalance[];
+  loading: boolean;
 }
 
 type Totals = {
@@ -20,7 +21,7 @@ type Totals = {
   monthBalance: number;
 };
 
-export default function MonthSummary({ dayBalances }: MonthSummaryProps) {
+export default function MonthSummary({ dayBalances, loading }: MonthSummaryProps) {
   const { t } = useTranslation();
   const { profile } = useProfile();
 
@@ -61,22 +62,25 @@ export default function MonthSummary({ dayBalances }: MonthSummaryProps) {
   return (
     <>
       <div className="col-span-7 lg:flex justify-between mt-8 mb-4 hidden">
-        <BalanceLabel label={t("home.totalIncome")} value={totals.income} />
-        <BalanceLabel label={t("home.totalExpense")} value={totals.expense} />
-        <BalanceLabel label={t("home.totalDaily")} value={totals.daily} />
+        <BalanceLabel loading={loading} label={t("home.totalIncome")} value={totals.income} />
+        <BalanceLabel loading={loading} label={t("home.totalExpense")} value={totals.expense} />
+        <BalanceLabel loading={loading} label={t("home.totalDaily")} value={totals.daily} />
       </div>
 
       <div className="col-span-7 flex flex-row justify-between mt-6 px-2 lg:hidden">
-        <BalanceLabel
+        <BalanceLabel 
+          loading={loading}
           label={t("home.balanceLabel")}
           value={totals.dayBalance}
           colorValue={getColors(totals.dayBalance, 0, profile.savingTarget, false, false)}
         />
-        <BalanceLabel
+        <BalanceLabel 
+          loading={loading}
           label={t("home.dailyLabel")}
           value={profile.dailyCost}
         />
         <BalanceLabel
+          loading={loading}
           label={t("home.monthBalance")}
           value={totals.monthBalance}
           colorValue={getColors(totals.monthBalance, 0, profile.savingTarget, false, false)}
