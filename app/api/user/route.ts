@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { userService } from "@/core/services/user.service";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
-
-    const user = await userService.get(id!);
+    const user = await userService.getAll();
 
     return NextResponse.json(user, { status: 200 });
   } catch (error: unknown) {
