@@ -12,7 +12,9 @@ export async function ServerProviders({ children }: { children: ReactNode }) {
 
   if (userId) {
     const response = await userService.get(userId);
-    profile = response;
+
+    if (response)
+      profile = response;
   }
 
   return <ClientProviders initialProfile={profile}>{children}</ClientProviders>;

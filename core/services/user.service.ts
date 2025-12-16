@@ -19,12 +19,17 @@ const update = async (request: Profile) => {
   await user.save();
 };
 
-const get = async (idUser: string): Promise<Profile> => {
+const get = async (idUser: string): Promise<Profile | null> => {
   await connectMongo();
 
-  const user = await User.findById(idUser).select("-password");
+  const user = await User.findById(idUser).select("-password").lean<Profile>();;
 
-  return user;
+  if (!user) return null;
+
+  return {
+    ...user,
+    _id: user._id.toString(),
+  };
 };
 
 const updateDailyCost = async () => {
