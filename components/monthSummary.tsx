@@ -61,7 +61,7 @@ export default function MonthSummary({ dayBalances, loading }: MonthSummaryProps
 
   return (
     <>
-      <div className="col-span-7 lg:flex justify-between mt-8 mb-4 hidden">
+      <div className="col-span-7 lg:flex justify-between mb-4 hidden">
         <BalanceLabel loading={loading} label={t("home.totalIncome")} value={totals.income} />
         <BalanceLabel loading={loading} label={t("home.totalExpense")} value={totals.expense} />
         <BalanceLabel loading={loading} label={t("home.totalDaily")} value={totals.daily} />

@@ -1,7 +1,7 @@
 import React from "react";
 import DayBalanceFlag from "../dayBalanceFlag";
 import TransactionsContainer from "../transactionsContainer";
-import { currencyNumber } from "@/core/utils/numberFormat";
+import { decimalNumber } from "@/core/utils/numberFormat";
 import Tooltip from "../ui/tooltip";
 import { t } from "i18next";
 import { CalendarProps } from ".";
@@ -15,14 +15,14 @@ export default function CalendarDesktop(props: CalendarProps) {
   const { profile } = useProfile();
 
   return (
-    <div className="grid grid-cols-7 w-full">
+    <div className="grid grid-cols-7 w-full bg-white rounded-2xl shadow-sm p-6">
       <MonthSummary dayBalances={dayBalances} loading={props.loading} />
 
       <div className="contents ">
         {getWeekDays("short").map((x, i) => (
           <div
             key={`${x}-${i}`}
-            className="border border-t-0 border-gray-200 text-center font-black py-1 self-end mt-4 uppercase"
+            className="border-b border-gray-100 text-center font-bold text-xs text-gray-400 py-3 tracking-wider uppercase"
           >
             {x}
           </div>
@@ -31,15 +31,15 @@ export default function CalendarDesktop(props: CalendarProps) {
 
       {dayBalances.map((x) => (
         <div
-          className="border border-gray-200 h-30 relative"
+          className="border border-gray-100 h-32 relative -ml-[1px] -mt-[1px] hover:z-10 transition-all duration-200"
           key={`${x.day}-${x.total}`}
         >
           {x.total === null ? (
-            <div className="bg-gray-100 h-full w-full"></div>
+            <div className="bg-gray-50 h-full w-full"></div>
           ) : (
             <div
-              className={`h-full group/day ${
-                isToday(x) ? "border-3 border-gray-600 rounded-md" : ""
+              className={`h-full group/day p-2 hover:bg-gray-50 flex flex-col ${
+                isToday(x) ? "bg-gray-100" : ""
               }`}
             >
               <DayBalanceFlag
@@ -55,7 +55,7 @@ export default function CalendarDesktop(props: CalendarProps) {
                   {x.hasEstimatedDailyExpense && (
                     <div className="group absolute bottom-[4px] right-[8px] z-0">
                       <span className="text-sm font-bold text-gray-300">
-                        {currencyNumber(profile.dailyCost)}
+                        {decimalNumber(profile.dailyCost)}
                       </span>
 
                       <Tooltip

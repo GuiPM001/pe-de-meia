@@ -23,8 +23,8 @@ export default function Header({ yearSelected }: HeaderProps) {
   const [monthModalOpen, setMonthModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-row gap-5 items-center px-2 md:px-0">
-      <span className="hidden lg:block capitalize font-black text-3xl">
+    <div className="flex flex-row gap-6 items-center px-2 md:px-0 mb-6">
+      <span className="hidden lg:block capitalize font-nunito font-bold text-2xl text-gray-800 tracking-tight">
         {getMonthNameByDate(monthSelected.id)}
       </span>
 

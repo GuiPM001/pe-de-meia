@@ -45,7 +45,7 @@ export default function Sidebar({
   };
 
   return (
-    <div className="h-full hidden lg:flex flex-col items-center">
+    <div className="h-full hidden lg:flex flex-col items-center bg-white shadow-sm rounded-2xl p-6 min-w-50">
       <YearSelect value={yearSelected} onChange={handleChangeYear} />
 
       {loading ? (

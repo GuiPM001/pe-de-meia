@@ -7,7 +7,7 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { TbPlus } from "react-icons/tb";
 import IconButton from "./ui/iconButton";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
-import { currencyNumber } from "@/core/utils/numberFormat";
+import { decimalNumber } from "@/core/utils/numberFormat";
 import { useTranslation } from "react-i18next";
 import Tooltip from "./ui/tooltip";
 import { Skeleton } from "./ui/skeleton";
@@ -32,13 +32,13 @@ export default function DayBalanceFlag({
   const [currencyValue, setCurrencyValue] = useState<string>();
 
   useEffect(() => {
-    setCurrencyValue(currencyNumber(dayBalance.total!));
+    setCurrencyValue(decimalNumber(dayBalance.total!));
   }, [dayBalance]);
 
   return (
-    <div className="flex lg:flex-row flex-col justify-between items-center m-2 relative">
+    <div className="flex lg:flex-row flex-col justify-between items-center relative m-2 lg:m-0 gap-2">
       <span
-        className={`hidden lg:block w-7 text-center font-bold  
+        className={`hidden lg:block w-7 text-center font-bold text-sm  
           ${isToday ? "bg-gray-600 rounded-md text-white" : ""}
         `}
       >
@@ -66,7 +66,7 @@ export default function DayBalanceFlag({
           <Skeleton className="h-6 w-16" />
         </div>
       ) : (
-        <div className="group hidden lg:block">
+        <div className="group hidden lg:block text-nowrap overflow-hidden text-sm">
           <span
             className={`${getColors(
               dayBalance.total!,

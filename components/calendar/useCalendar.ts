@@ -82,8 +82,7 @@ export const useCalendar = () => {
       balance += todayTotal;
 
       const hasEstimatedDailyExpense =
-        currentDate.getUTCDate() >= today.getDate() &&
-        currentDate.getUTCMonth() >= today.getUTCMonth() &&
+        currentDate.toISODateString() >= today.toISODateString() &&
         !dailies.length;
 
       if (hasEstimatedDailyExpense) 

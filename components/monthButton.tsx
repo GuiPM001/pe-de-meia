@@ -31,20 +31,23 @@ export default function MonthButton({
         <button
           onClick={() => addMonth(month.id)}
           disabled={monthLoading === month.id}
-          className={`group capitalize w-24 h-[32px] py-1 px-2 mb-2 rounded-md flex justify-center 
-                      items-center cursor-pointer font-semibold bg-gray-300 text-gray-700
-                      disabled:bg-gray-200 disabled:cursor-default disabled:text-gray-400`}
+          className={`group capitalize w-full h-[40px] px-4 mb-3 rounded-xl flex justify-center 
+                      items-center cursor-pointer font-semibold bg-gray-100 text-gray-400
+                      hover:bg-gray-200 transition-all duration-200
+                      disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-300`}
         >
           {monthLoading === month.id ? (
-            <LoadingSpinner />
+            <div className="scale-75">
+              <LoadingSpinner />
+            </div>
           ) : (
             <>
-              <span className="hidden group-hover:block">
+              <span className="hidden group-hover:block text-sm">
                 {getMonthNameByDate(month.id)}
               </span>
               <TbCirclePlusFilled
                 size="20px"
-                className="block group-hover:hidden"
+                className="block group-hover:hidden text-gray-400"
               />
             </>
           )}
@@ -53,9 +56,10 @@ export default function MonthButton({
         <button
           onClick={() => setMonth(month)}
           disabled={month.balance === null && dateMonth < now}
-          className={`capitalize w-24 h-[32px] py-1 px-2 mb-2 rounded-md flex justify-center cursor-pointer
-                    disabled:bg-gray-200 disabled:cursor-default disabled:text-gray-400
-                      ${selected ? "font-bold" : "font-semibold"}
+          className={`capitalize w-full h-[40px] px-4 mb-3 rounded-xl flex justify-center items-center cursor-pointer
+                    transition-all duration-200 text-sm
+                    disabled:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-400
+                      ${selected ? "font-bold shadow-sm scale-105" : "font-medium hover:bg-gray-100"}
                       ${getColors(
                         month.balance!,
                         month.invested!,
