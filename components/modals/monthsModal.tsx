@@ -37,7 +37,7 @@ export default function MonthsModal({
             onClick={() => handleClick(month)}
             key={month.id}
             className={`relative flex flex-col items-center p-6 rounded-lg ${
-              month.balance
+              month.balance !== null
                 ? getColors(
                     month.balance!,
                     month.invested!,
@@ -52,7 +52,7 @@ export default function MonthsModal({
             </span>
 
             <span className="font-bold mt-4">
-              {month.balance ? currencyNumber(month.balance) : "-"}
+              {month.balance !== null ? currencyNumber(month.balance) : "-"}
             </span>
           </button>
         ))}

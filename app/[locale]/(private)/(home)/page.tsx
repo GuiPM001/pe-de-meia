@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
 import { useProfile } from "@/app/context/ProfileContext";
@@ -15,39 +15,44 @@ import "@/core/utils/date.extensions";
 export default function Home() {
   const today = new Date();
 
-  const { monthSelected, getMonths, months } = useMonth();
+  const { monthSelected, getMonths } = useMonth();
   const { getTransactions } = useTransaction();
   const { profile } = useProfile();
 
+  const [yearSelected, setYearSelected] = useState<number>(today.getFullYear());
   const [loading, setLoading] = useState({
     sidebar: true,
     calendar: true,
   });
 
-  const [yearSelected, setYearSelected] = useState<number>(today.getFullYear());
-
-  const loadMonths = async () => {
-    setLoading((prev) => ({ ...prev, sidebar: true }));
-    await getMonths(yearSelected, profile._id);
-    setLoading((prev) => ({ ...prev, sidebar: false }));
-  };
-
-  const loadTransactions = async () => {
-    setLoading((prev) => ({ ...prev, calendar: true }));
-    await getTransactions(monthSelected.id, profile._id);
-    setLoading((prev) => ({ ...prev, calendar: false }));
-  };
+  const lastLoadedMonthRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!profile?._id) return;
+
+    const loadMonths = async () => {
+      setLoading((prev) => ({ ...prev, sidebar: true }));
+      await getMonths(yearSelected, profile._id);
+      setLoading((prev) => ({ ...prev, sidebar: false }));
+    };
 
     loadMonths();
   }, [yearSelected, profile?._id]);
 
   useEffect(() => {
-    if (!months.length || !profile?._id || !monthSelected?.id) return;
+    if (loading.sidebar || !profile?._id || !monthSelected?.id) return;
+
+    if (monthSelected.id === lastLoadedMonthRef.current) return;
+
+    const loadTransactions = async () => {
+      lastLoadedMonthRef.current = monthSelected.id;
+      setLoading((prev) => ({ ...prev, calendar: true }));
+      await getTransactions(monthSelected.id, profile._id);
+      setLoading((prev) => ({ ...prev, calendar: false }));
+    };
+
     loadTransactions();
-  }, [monthSelected?.id, profile?._id]);
+  }, [monthSelected?.id, profile?._id, loading.sidebar]);
 
   const handleChangeYear = (newYear: number) => {
     setYearSelected(newYear);

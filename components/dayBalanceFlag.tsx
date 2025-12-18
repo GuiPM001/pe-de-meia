@@ -10,7 +10,7 @@ import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import { currencyNumber } from "@/core/utils/numberFormat";
 import { useTranslation } from "react-i18next";
 import Tooltip from "./ui/tooltip";
-import LoadingSpinner from "./ui/loadingSpinner";
+import { Skeleton } from "./ui/skeleton";
 
 interface DayBalanceFlagProps {
   dayBalance: DayBalance;
@@ -62,8 +62,8 @@ export default function DayBalanceFlag({
         {dayBalance.day}
       </span>
       {loading ? (
-        <div className="mt-6 lg:mt-0">
-          <LoadingSpinner />
+        <div className="mt-0 lg:mt-0">
+          <Skeleton className="h-6 w-16" />
         </div>
       ) : (
         <div className="group hidden lg:block">
