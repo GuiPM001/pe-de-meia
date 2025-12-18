@@ -6,17 +6,16 @@ import { useEffect, useMemo, useState } from "react";
 import { Transaction } from "@/core/types/Transaction";
 import { TransactionType } from "@/core/enums/transactionType";
 import { sumValues } from "@/core/utils/sumValues";
-import { CalendarProps } from ".";
 
-export const useCalendar = ({ month }: CalendarProps) => {
+export const useCalendar = () => {
   const [dayBalances, setDayBalances] = useState<DayBalance[]>([]);
 
   const { profile } = useProfile();
   const { transactions } = useTransaction();
-  const { months } = useMonth();
+  const { months, monthSelected } = useMonth();
 
   const today = new Date();
-  const monthDate = useMemo(() => new Date(month.id), [month.id]);
+  const monthDate = useMemo(() => new Date(monthSelected.id), [monthSelected.id]);
 
   useEffect(() => {
     const dayBalances: DayBalance[] = [];
@@ -27,7 +26,7 @@ export const useCalendar = ({ month }: CalendarProps) => {
     addDaysAfter(currentDate, dayBalances);
 
     setDayBalances(dayBalances);
-  }, [transactions, month.id]);
+  }, [transactions, monthDate]);
 
   const getTotalByType = (transactions: Transaction[], type: TransactionType, recurrent?: boolean): Transaction[] => {
     return transactions.filter((x) => x.type === type && (recurrent === undefined || x.recurrent === recurrent));
@@ -40,7 +39,7 @@ export const useCalendar = ({ month }: CalendarProps) => {
   ) => {
     balances.push({
       day: date.getDate(),
-      idMonth: month.id,
+      idMonth: monthSelected.id,
       incomes: null,
       expenses: null,
       dailies: null,

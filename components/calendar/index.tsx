@@ -1,10 +1,8 @@
 import React from "react";
-import { Month } from "@/core/types/Month";
 import CalendarMobile from "./calendarMobile";
 import CalendarDesktop from "./calendarDesktop";
 
 export interface CalendarProps {
-  month: Month;
   loading: boolean;
 }
 

@@ -11,7 +11,7 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { useCalendar } from "./useCalendar";
 
 export default function CalendarDesktop(props: CalendarProps) {
-  const { dayBalances, isToday } = useCalendar(props);
+  const { dayBalances, isToday } = useCalendar();
   const { profile } = useProfile();
 
   return (

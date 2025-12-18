@@ -10,7 +10,7 @@ import { useCalendar } from "./useCalendar";
 import "@/core/utils/date.extensions";
 
 export default function CalendarMobile(props: CalendarProps) {
-  const { dayBalances, isToday } = useCalendar(props);
+  const { dayBalances, isToday } = useCalendar();
 
   const [dailyModal, setDailyModal] = useState<DayBalance | null>(null);
 

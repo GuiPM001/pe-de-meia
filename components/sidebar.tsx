@@ -1,33 +1,29 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useProfile } from "@/app/context/ProfileContext";
 import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
-import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
 import MonthButton from "./monthButton";
 import YearSelect from "./yearSelect";
+import LoadingSpinner from "./ui/loadingSpinner";
 
 interface SidebarProps {
   yearSelected: number;
-  setYearSelected: (year: number) => void;
+  handleChangeYear: (year: number) => void;
+  loading: boolean;
 }
 
 export default function Sidebar({
   yearSelected,
-  setYearSelected,
+  handleChangeYear,
+  loading,
 }: SidebarProps) {
   const { profile } = useProfile();
 
   const [monthLoading, setMonthLoading] = useState<string>("");
-
-  const { transactions } = useTransaction();
   const { months, getMonths, monthSelected, selectMonth } = useMonth();
-
-  useEffect(() => {
-    getMonths(yearSelected, profile._id);
-  }, [profile._id, yearSelected, transactions]);
 
   const createMonth = async (idMonth: string) => {
     setMonthLoading(idMonth);
@@ -50,21 +46,25 @@ export default function Sidebar({
 
   return (
     <div className="h-full hidden lg:flex flex-col items-center">
-      <YearSelect value={yearSelected} onChange={setYearSelected} />
+      <YearSelect value={yearSelected} onChange={handleChangeYear} />
 
-      <div>
-        {months.map((x) => (
-          <MonthButton
-            key={x.id}
-            month={x}
-            selected={monthSelected.id === x.id}
-            savingTarget={profile.savingTarget}
-            setMonth={selectMonth}
-            addMonth={createMonth}
-            monthLoading={monthLoading}
-          />
-        ))}
-      </div>
+      {loading ? (
+        <LoadingSpinner />
+      ) : (
+        <div>
+          {months.map((x) => (
+            <MonthButton
+              key={x.id}
+              month={x}
+              selected={monthSelected.id === x.id}
+              savingTarget={profile.savingTarget}
+              setMonth={selectMonth}
+              addMonth={createMonth}
+              monthLoading={monthLoading}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

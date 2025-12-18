@@ -2,7 +2,8 @@ import React from "react";
 import { Month } from "@/core/types/Month";
 import { getMonthNameByDate } from "@/core/utils/date";
 import { getColors } from "@/core/utils/getColors";
-import { TbCirclePlusFilled, TbCirclesFilled } from "react-icons/tb";
+import { TbCirclePlusFilled } from "react-icons/tb";
+import LoadingSpinner from "./ui/loadingSpinner";
 
 interface MonthButtonProps {
   month: Month;
@@ -35,7 +36,7 @@ export default function MonthButton({
                       disabled:bg-gray-200 disabled:cursor-default disabled:text-gray-400`}
         >
           {monthLoading === month.id ? (
-            <TbCirclesFilled size="20px" className="animate-spin" />
+            <LoadingSpinner />
           ) : (
             <>
               <span className="hidden group-hover:block">

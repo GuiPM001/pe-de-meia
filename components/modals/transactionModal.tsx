@@ -14,6 +14,7 @@ import { api } from "@/core/services/api";
 import { useTransaction } from "@/app/context/TransactionContext";
 import "@/core/utils/date.extensions";
 import { useTranslation } from "react-i18next";
+import { useMonth } from "@/app/context/MonthContext";
 
 export interface TransactionModalProps {
   onClose: () => void;
@@ -32,6 +33,7 @@ export default function TransactionModal({
 }: TransactionModalProps) {
   const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
+  const { getMonths } = useMonth();
   const { t } = useTranslation();
 
   const initialState = useMemo(() => {
@@ -41,6 +43,7 @@ export default function TransactionModal({
     const [year, month] = actualDate.split("-").map(Number);
 
     return {
+      year,
       date: new Date(year, month - 1, initialDay).toISODateString(),
       description: "",
       recurrent: false,
@@ -49,7 +52,7 @@ export default function TransactionModal({
       idUser: "",
       idMonth,
       recurrenceId: null,
-      _id: undefined
+      _id: undefined,
     };
   }, [idMonth, day]);
 
@@ -95,11 +98,13 @@ export default function TransactionModal({
       };
 
       const response: Transaction = await api.post("/transaction", newTransaction);
+      
+      await getMonths(initialState.year, profile._id);
       setTransactions([...transactions, response]);
 
       setLoading(false);
       setForm(initialState);
-      onClose();
+      closeModal();
     } catch (e: unknown) {
       setError(e as ErrorResponse);
       setLoading(false);
@@ -112,11 +117,13 @@ export default function TransactionModal({
       
       const response: Transaction = await api.put("/transaction", form);
       const newTransactions = transactions.filter(t => t._id !== response._id);
-
+      
+      await getMonths(initialState.year, profile._id);
       setTransactions([...newTransactions, response]);
 
       setLoading(false);
-      onClose();
+      setForm(initialState);
+      closeModal();
     } catch (e: unknown) {
       setError(e as ErrorResponse);
       setLoading(false);
@@ -124,7 +131,7 @@ export default function TransactionModal({
   };
 
   const closeModal = () => {
-    setForm(transaction ?? initialState);
+    setForm(initialState);
     onClose();
   };
 
