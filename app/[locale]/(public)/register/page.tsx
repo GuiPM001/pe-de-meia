@@ -71,21 +71,30 @@ export default function Register() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-green-100 to-primary">
-      <div className="flex flex-col w-1/2 bg-white items-center justify-center p-8">
-        <Image alt="Pé de meia logo" src={logo} width={384} height={188} />
-        <p className="text-gray-600 mt-4 max-w-72 text-wrap text-center">
-          {t('slogan')}
-        </p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-green-hover p-4 relative overflow-hidden">
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-8 sm:p-12 w-full max-w-lg relative z-10 border border-white/50">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-48 mb-6">
+            <Image
+              alt="Pé de meia logo"
+              src={logo}
+              width={384}
+              height={188}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+          <p className="text-gray-500 font-medium text-center text-sm sm:text-base">
+            {t('slogan')}
+          </p>
+        </div>
 
-      <div className="flex w-1/2 items-center justify-center p-8">
-        <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md">
-          <h2 className="text-2xl font-bold text-primary-dark text-center mb-8">
+        <div className="space-y-6">
+          <h2 className="text-3xl font-nunito font-bold text-gray-800 text-center mb-2">
             {t('register.title')}
           </h2>
 
-          <form onKeyDown={handleKeyDown} className="space-y-6">
+          <form onKeyDown={handleKeyDown} className="space-y-5">
             <Input
               label={t('register.name')}
               placeholder={t('register.namePlaceholder')}
@@ -134,23 +143,29 @@ export default function Register() {
               type="button"
               onClick={submitRegister}
               disabled={loading || !form.name || !form.email || !form.password}
+              className="w-full py-3 text-lg mt-4 shadow-lg shadow-green-200 hover:shadow-green-300 transition-all"
             >
               {loading ? t('loading') : t('register.button')}
             </Button>
           </form>
+
           {error && (
-            <span className="text-red-600 text-sm">{error.message}</span>
+            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm font-medium text-center">
+              {error.message}
+            </div>
           )}
 
-          <p className="text-center text-gray-500 text-sm mt-2">
-            {t('register.login')}
-            <a
-              href="login"
-              className="text-primary hover:underline font-semibold"
-            >
-              {t('register.loginLink')}
-            </a>
-          </p>
+          <div className="pt-4 text-center">
+            <p className="text-gray-500 text-sm">
+              {t('register.login')}
+              <a
+                href="login"
+                className="text-primary hover:text-green-600 font-bold hover:underline transition-colors"
+              >
+                {t('register.loginLink')}
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

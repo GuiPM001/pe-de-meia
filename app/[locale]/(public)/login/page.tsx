@@ -55,19 +55,32 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-green-100 to-primary">
-      <div className="flex flex-col items-center justify-center p-8 bg-white lg:w-1/2">
-        <Image alt="Pé de meia logo" src={logo} width={384} height={188} />
-        <p className="text-gray-600 mt-4 max-w-xs text-center">{t("slogan")}</p>
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-green-hover p-4 relative overflow-hidden">
 
-      <div className="flex flex-1 items-center justify-center p-6 sm:p-10">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-10 w-full max-w-md">
-          <h2 className="text-2xl font-bold text-primary-dark text-center mb-8">
+
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-8 sm:p-12 w-full max-w-lg relative z-10 border border-white/50">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-48 mb-6">
+            <Image
+              alt="Pé de meia logo"
+              src={logo}
+              width={384}
+              height={188}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+          <p className="text-gray-500 font-medium text-center text-sm sm:text-base">
+            {t("slogan")}
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <h2 className="text-3xl font-nunito font-bold text-gray-800 text-center mb-2">
             {t("login.title")}
           </h2>
 
-          <form onKeyDown={handleKeyDown} className="space-y-6">
+          <form onKeyDown={handleKeyDown} className="space-y-5">
             <Input
               label={t("login.email")}
               placeholder={t("login.emailPlaceholder")}
@@ -78,40 +91,42 @@ export default function Login() {
               onChange={handleForm}
             />
 
-            <div className="flex flex-col gap-3">
-              <PasswordInput
-                label={t("login.password")}
-                placeholder="********"
-                name="password"
-                error={!!error}
-                value={form.password}
-                onChange={handleForm}
-              />
-            </div>
+            <PasswordInput
+              label={t("login.password")}
+              placeholder="********"
+              name="password"
+              error={!!error}
+              value={form.password}
+              onChange={handleForm}
+            />
 
             <Button
               type="button"
               onClick={submitLogin}
               disabled={loading || !form.email || !form.password}
-              className="w-full"
+              className="w-full py-3 text-lg mt-4 shadow-lg shadow-green-200 hover:shadow-green-300"
             >
               {loading ? t("loading") : t("login.button")}
             </Button>
           </form>
 
           {error && (
-            <span className="text-red-600 text-sm">{error.message}</span>
+            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm font-medium text-center">
+              {error.message}
+            </div>
           )}
 
-          <p className="text-center text-gray-500 text-sm mt-4">
-            {t("login.register")}{" "}
-            <a
-              href="register"
-              className="text-primary hover:underline font-semibold"
-            >
-              {t("login.registerLink")}
-            </a>
-          </p>
+          <div className="pt-4 text-center">
+            <p className="text-gray-500 text-sm">
+              {t("login.register")}{" "}
+              <a
+                href="register"
+                className="text-primary hover:text-green-600 font-bold hover:underline"
+              >
+                {t("login.registerLink")}
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
