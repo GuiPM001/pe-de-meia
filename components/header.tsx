@@ -12,9 +12,11 @@ import { useMonth } from "@/app/context/MonthContext";
 
 interface HeaderProps {
   yearSelected: number;
+  handleChangeYear: (year: number) => void;
+  loading: boolean;
 }
 
-export default function Header({ yearSelected }: HeaderProps) {
+export default function Header({ yearSelected, handleChangeYear, loading }: HeaderProps) {
   const { openModal } = useTransactionModal();
   const { monthSelected } = useMonth();
   const { t } = useTranslation();
@@ -23,7 +25,7 @@ export default function Header({ yearSelected }: HeaderProps) {
   const [monthModalOpen, setMonthModalOpen] = useState(false);
 
   return (
-    <div className="flex flex-row gap-6 items-center px-2 md:px-0 mb-6">
+    <div className="flex flex-row gap-6 items-center px-2 lg:px-0 mt-4 mb-6 lg:mt-0 lg:mb-6">
       <span className="hidden lg:block capitalize font-nunito font-bold text-2xl text-gray-800 tracking-tight">
         {getMonthNameByDate(monthSelected.id)}
       </span>
@@ -58,6 +60,8 @@ export default function Header({ yearSelected }: HeaderProps) {
         onClose={() => setMonthModalOpen(false)}
         open={monthModalOpen}
         yearSelected={yearSelected}
+        handleChangeYear={handleChangeYear}
+        loading={loading}
       />
     </div>
   );

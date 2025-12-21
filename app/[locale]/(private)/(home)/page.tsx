@@ -67,8 +67,12 @@ export default function Home() {
           loading={loading.sidebar}
         />
 
-        <div className="flex flex-col w-full h-full">
-          <Header yearSelected={yearSelected} />
+        <div className="flex flex-col w-full h-full bg-white lg:rounded-2xl lg:shadow-sm lg:px-6 lg:py-4">
+          <Header
+            yearSelected={yearSelected}
+            handleChangeYear={handleChangeYear}
+            loading={loading.sidebar}
+          />
 
           <Calendar loading={loading.calendar} />
         </div>

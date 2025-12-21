@@ -15,7 +15,7 @@ export default function CalendarDesktop(props: CalendarProps) {
   const { profile } = useProfile();
 
   return (
-    <div className="grid grid-cols-7 w-full bg-white rounded-2xl shadow-sm p-6">
+    <div className="grid grid-cols-7 w-full">
       <MonthSummary dayBalances={dayBalances} loading={props.loading} />
 
       <div className="contents ">

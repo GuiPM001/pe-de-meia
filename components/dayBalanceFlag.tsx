@@ -63,7 +63,7 @@ export default function DayBalanceFlag({
       </span>
       {loading ? (
         <div className="mt-0 lg:mt-0">
-          <Skeleton className="h-6 w-16" />
+          <Skeleton className="w-11 h-2.5 lg:h-6 lg:w-16" />
         </div>
       ) : (
         <div className="group hidden lg:block text-nowrap overflow-hidden text-sm">

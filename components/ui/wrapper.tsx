@@ -7,7 +7,7 @@ export default function Wrapper({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-screen h-screen flex flex-col overflow-x-hidden bg-gray-100">
+    <div className="w-screen h-screen flex flex-col overflow-x-hidden lg:bg-gray-100">
       <NavBar />
       <div className="p-2 lg:p-8 flex-1">{children}</div>
     </div>

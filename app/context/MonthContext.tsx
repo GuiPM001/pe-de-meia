@@ -7,10 +7,12 @@ import "@/core/utils/date.extensions";
 
 interface MonthContextProps {
   months: Month[];
+  monthLoading: string;
   setMonths: (Months: Month[]) => void;
   getMonths: (yearSelected: number, userId: string) => Promise<void>;
   monthSelected: Month;
   selectMonth: (month: Month) => void;
+  createMonth: (idMonth: string, userId: string, yearSelected: number) => Promise<void>;
 }
 
 const initialState: Month = {
@@ -26,15 +28,18 @@ const initialState: Month = {
 
 const MonthContext = createContext<MonthContextProps>({
   months: [],
-  setMonths: () => {},
+  monthLoading: "",
+  setMonths: () => { },
   getMonths: () => Promise.resolve(),
   monthSelected: initialState,
-  selectMonth: () => {},
+  selectMonth: () => { },
+  createMonth: () => Promise.resolve(),
 });
 
 export const MonthProvider = ({ children }: { children: ReactNode }) => {
   const [months, setMonths] = useState<Month[]>([]);
   const [monthSelected, setMonthSelected] = useState<Month>(initialState);
+  const [monthLoading, setMonthLoading] = useState<string>("");
 
   const generateEmptyMonth = (
     indexMonth: number,
@@ -98,8 +103,27 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
     if (month) setMonthSelected(month);
   }
 
+  const createMonth = async (idMonth: string, userId: string, yearSelected: number) => {
+    setMonthLoading(idMonth);
+
+    const realMonths = months.filter(m => m.balance !== null);
+    const lastBalance = realMonths.length > 0 ? realMonths.at(-1)?.balance ?? 0 : 0;
+
+    const newMonth: Month = {
+      id: idMonth,
+      idUser: userId,
+      balance: lastBalance,
+      invested: 0,
+    };
+
+    await api.post("/month", newMonth);
+
+    await getMonths(yearSelected, userId);
+    setMonthLoading("");
+  };
+
   return (
-    <MonthContext.Provider value={{ months, setMonths, getMonths, monthSelected, selectMonth }}>
+    <MonthContext.Provider value={{ months, monthLoading, setMonths, getMonths, monthSelected, selectMonth, createMonth }}>
       {children}
     </MonthContext.Provider>
   );

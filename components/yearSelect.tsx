@@ -8,7 +8,7 @@ interface YearSelectProps {
 }
 export default function YearSelect({ value, onChange }: YearSelectProps) {
   return (
-    <div className="flex flex-row items-center gap-1 mb-8">
+    <div className="flex flex-row items-center gap-1">
       <IconButton onClick={() => onChange(value - 1)}>
         <TbChevronLeft size="18px" />
       </IconButton>

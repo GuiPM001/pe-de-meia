@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useProfile } from "@/app/context/ProfileContext";
-import { Month } from "@/core/types/Month";
-import { api } from "@/core/services/api";
 import { useMonth } from "@/app/context/MonthContext";
 import MonthButton from "./monthButton";
 import YearSelect from "./yearSelect";
@@ -22,36 +20,20 @@ export default function Sidebar({
 }: SidebarProps) {
   const { profile } = useProfile();
 
-  const [monthLoading, setMonthLoading] = useState<string>("");
-  const { months, getMonths, monthSelected, selectMonth } = useMonth();
+  const { months, monthSelected, selectMonth, createMonth, monthLoading } = useMonth();
 
-  const createMonth = async (idMonth: string) => {
-    setMonthLoading(idMonth);
-    const lastBalance = months.at(-2)?.balance ?? 0;
-
-    const newMonth: Month = {
-      id: idMonth,
-      idUser: profile._id,
-      balance: lastBalance,
-      invested: 0,
-    };
-
-    await api.post("/month", newMonth);
-
-    months.pop();
-
-    await getMonths(yearSelected, profile._id);
-    setMonthLoading("");
-  };
+  const handleCreateMonth = async (idMonth: string) => {
+    await createMonth(idMonth, profile._id, yearSelected);
+  }
 
   return (
-    <div className="h-full hidden lg:flex flex-col items-center bg-white shadow-sm rounded-2xl p-6 min-w-50">
+    <div className="hidden lg:flex flex-col items-center bg-white shadow-sm rounded-2xl p-6 min-w-50">
       <YearSelect value={yearSelected} onChange={handleChangeYear} />
 
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <div>
+        <div className="mt-8">
           {months.map((x) => (
             <MonthButton
               key={x.id}
@@ -59,7 +41,7 @@ export default function Sidebar({
               selected={monthSelected.id === x.id}
               savingTarget={profile.savingTarget}
               setMonth={selectMonth}
-              addMonth={createMonth}
+              addMonth={handleCreateMonth}
               monthLoading={monthLoading}
             />
           ))}
