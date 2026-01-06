@@ -13,5 +13,5 @@ jobs:
     steps:
       - name: Call update-daily-cost API
         run: |
-          curl -X POST \
+          curl -X PUT \
             https://pe-de-meia.vercel.app/api/user/update-daily-cost

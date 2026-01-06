@@ -59,7 +59,7 @@ export default function TransactionLabel({
       <div className={`block lg:hidden w-full h-2.5 rounded-lg ${bgColorMap[type]}`}></div>
 
       <div
-        className={`relative group lg:flex hidden flex-row items-center justify-between text-xs hover:${bgColorMap[type]} py-0.5 rounded-md z-10`}
+        className={`relative group lg:flex hidden flex-row items-center justify-between text-xs hover:${bgColorMap[type]} py-0.5 rounded-md`}
       >
         <div className="flex flex-row items-center">
           {renderIcon()}

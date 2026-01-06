@@ -174,9 +174,12 @@ const getPreviousRecurrentTransactions = async (
 ): Promise<Transaction[]> => {
   const [year, month] = idMonth.split("-").map(Number);
 
-  const previousIdMonth = `${year}-${(month - 1)
-    .toString()
-    .padStart(2, "0")}-01`;
+  let previousIdMonth = '';
+  if (month === 1) {
+    previousIdMonth = `${year - 1}-12-01`;
+  } else {
+    previousIdMonth = `${year}-${(month - 1).toString().padStart(2, "0")}-01`;
+  }
 
   return Transactions.find({
     idUser,

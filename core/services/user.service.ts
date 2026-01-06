@@ -65,6 +65,7 @@ const updateDailyCost = async () => {
     user.dailyCost = Math.floor(totalDailyCost / pastMonths.length / qtdDays);
     await user.save();
     
+    // TODO: não precisa listar os mesmes, só fazer o update idMonth > data
     const futureMonths = await monthService.getFutureMonthsByIdUser(idUser, today.toISOString().slice(0, 7) + "-01");
     for (const month of futureMonths) {
       const newBalance = (month.balance ?? 0) - ((user.dailyCost - previousDailyCost) * qtdDays);

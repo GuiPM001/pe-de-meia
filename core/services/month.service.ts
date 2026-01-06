@@ -162,6 +162,14 @@ const removeDailyCost = async () => {
   }
 }
 
+const getLastMonth = async (actualIdMonth: string, idUser: string) => {
+  await connectMongo();
+
+  const months = await Months.findOne({ id: { $lt: actualIdMonth }, idUser }, {}, { sort: { id: -1 } });
+
+  return months;
+}
+
 export const monthService = {
   saveMonth,
   saveMonthsNewUser,
@@ -171,5 +179,6 @@ export const monthService = {
   updateMonthBalance,
   getMonthById,
   updateMonthBalanceDailyCost,
-  removeDailyCost
+  removeDailyCost,
+  getLastMonth
 };

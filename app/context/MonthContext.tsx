@@ -9,10 +9,11 @@ interface MonthContextProps {
   months: Month[];
   monthLoading: string;
   setMonths: (Months: Month[]) => void;
-  getMonths: (yearSelected: number, userId: string) => Promise<void>;
+  getMonths: (yearSelected: number, idUser: string) => Promise<void>;
   monthSelected: Month;
   selectMonth: (month: Month) => void;
-  createMonth: (idMonth: string, userId: string, yearSelected: number) => Promise<void>;
+  createMonth: (idMonth: string, idUser: string, yearSelected: number) => Promise<void>;
+  getLastMonth: (actualIdMonth: string, idUser: string) => Promise<Month | null>;
 }
 
 const initialState: Month = {
@@ -34,6 +35,7 @@ const MonthContext = createContext<MonthContextProps>({
   monthSelected: initialState,
   selectMonth: () => { },
   createMonth: () => Promise.resolve(),
+  getLastMonth: () => Promise.resolve(null)
 });
 
 export const MonthProvider = ({ children }: { children: ReactNode }) => {
@@ -44,25 +46,25 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
   const generateEmptyMonth = (
     indexMonth: number,
     yearSelected: number,
-    userId: string
+    idUser: string
   ) => {
     return {
       id: new Date(yearSelected, indexMonth, 1).toISODateString(),
       balance: null,
       invested: null,
-      idUser: userId,
+      idUser: idUser,
     };
   };
 
   const getMonthList = (
     months: Month[],
     yearSelected: number,
-    userId: string
+    idUser: string
   ) => {
     const allMonths: Month[] = [];
 
     if (!months.length) {
-      allMonths.push(generateEmptyMonth(0, yearSelected, userId));
+      allMonths.push(generateEmptyMonth(0, yearSelected, idUser));
       setMonths(allMonths);
       return;
     }
@@ -79,23 +81,23 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
         continue;
       }
 
-      allMonths.push(generateEmptyMonth(i, yearSelected, userId));
+      allMonths.push(generateEmptyMonth(i, yearSelected, idUser));
     }
 
     setMonths(allMonths);
   };
 
-  const getMonths = async (yearSelected: number, userId: string) => {
+  const getMonths = async (yearSelected: number, idUser: string) => {
     setMonths([]);
 
     const userMonths: Month[] = await api.get(`/month/get-by-id-user`, {
       params: {
         year: yearSelected,
-        idUser: userId,
+        idUser: idUser,
       },
     });
 
-    getMonthList(userMonths, yearSelected, userId);
+    getMonthList(userMonths, yearSelected, idUser);
   };
 
   const selectMonth = (newMonth: Month) => {
@@ -103,27 +105,31 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
     if (month) setMonthSelected(month);
   }
 
-  const createMonth = async (idMonth: string, userId: string, yearSelected: number) => {
+  const getLastMonth = async (actualIdMonth: string, idUser: string) => {
+    const month: Month = await api.get(`/month/get-last-month?actualIdMonth=${actualIdMonth}&idUser=${idUser}`);
+    return month;
+  }
+
+  const createMonth = async (idMonth: string, idUser: string, yearSelected: number) => {
     setMonthLoading(idMonth);
 
-    const realMonths = months.filter(m => m.balance !== null);
-    const lastBalance = realMonths.length > 0 ? realMonths.at(-1)?.balance ?? 0 : 0;
+    const lastMonth = await getLastMonth(idMonth, idUser);
 
     const newMonth: Month = {
       id: idMonth,
-      idUser: userId,
-      balance: lastBalance,
+      idUser: idUser,
+      balance: lastMonth.balance,
       invested: 0,
     };
 
     await api.post("/month", newMonth);
 
-    await getMonths(yearSelected, userId);
+    await getMonths(yearSelected, idUser);
     setMonthLoading("");
   };
 
   return (
-    <MonthContext.Provider value={{ months, monthLoading, setMonths, getMonths, monthSelected, selectMonth, createMonth }}>
+    <MonthContext.Provider value={{ months, monthLoading, setMonths, getMonths, monthSelected, selectMonth, createMonth, getLastMonth }}>
       {children}
     </MonthContext.Provider>
   );

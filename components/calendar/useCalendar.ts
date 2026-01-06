@@ -12,21 +12,25 @@ export const useCalendar = () => {
 
   const { profile } = useProfile();
   const { transactions } = useTransaction();
-  const { months, monthSelected } = useMonth();
+  const { monthSelected, getLastMonth } = useMonth();
 
   const today = new Date();
   const monthDate = useMemo(() => new Date(monthSelected.id), [monthSelected.id]);
 
   useEffect(() => {
+    createCalendar();
+  }, [transactions, monthDate]);
+
+  const createCalendar = async () => {
     const dayBalances: DayBalance[] = [];
     const currentDate = new Date(monthDate.getUTCFullYear(), monthDate.getUTCMonth(), 1 - monthDate.getUTCDay());
 
     addDaysBefore(currentDate, dayBalances);
-    addMonthlyDays(currentDate, dayBalances, transactions);
+    await addMonthlyDays(currentDate, dayBalances, transactions);
     addDaysAfter(currentDate, dayBalances);
 
     setDayBalances(dayBalances);
-  }, [transactions, monthDate]);
+  }
 
   const getTotalByType = (transactions: Transaction[], type: TransactionType, recurrent?: boolean): Transaction[] => {
     return transactions.filter((x) => x.type === type && (recurrent === undefined || x.recurrent === recurrent));
@@ -58,13 +62,15 @@ export const useCalendar = () => {
     }
   };
 
-  const addMonthlyDays = (
+  const addMonthlyDays = async (
     currentDate: Date,
     dayBalances: DayBalance[],
     transactions: Transaction[]
   ) => {
     const indexMonth = monthDate.getUTCMonth();
-    let balance = months[indexMonth - 1]?.balance ?? 0;
+    const lastMonth = await getLastMonth(monthSelected.id, profile._id);
+
+    let balance = lastMonth?.balance ?? 0;
 
     while (currentDate.getUTCMonth() === indexMonth) {
       const todayTransactions = transactions.filter(
