@@ -57,8 +57,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-hover p-4 relative overflow-hidden">
 
-
-      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-8 sm:p-12 w-full max-w-lg relative z-10 border border-white/50">
+      <div className="bg-white backdrop-blur-xl rounded-3xl shadow-xl p-8 sm:p-12 w-full max-w-lg relative z-10 border border-white/50">
         <div className="flex flex-col items-center mb-8">
           <div className="w-48 mb-6">
             <Image
