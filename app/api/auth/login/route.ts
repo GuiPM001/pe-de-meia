@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     const cookieStore = await cookies();
     await saveCookie(cookieStore, "authToken", loginResponse.token);
-    await saveCookie(cookieStore, "userId", loginResponse.user._id.toString());
+    await saveCookie(cookieStore, "profile", JSON.stringify(loginResponse.user));
 
     return NextResponse.json(loginResponse, { status: 200 });
   } catch (error: unknown) {
@@ -32,7 +32,9 @@ const saveCookie = async (
   cookieValue: string
 ) => {
   const maxAge = 365 * 24 * 60 * 60; // 365 days
-  cookieStore.set(cookieName, cookieValue, {
+  cookieStore.set({
+    name: cookieName,
+    value: cookieValue,
     httpOnly: true,
     secure: false,
     path: "/",
