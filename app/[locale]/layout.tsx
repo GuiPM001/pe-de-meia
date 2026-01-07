@@ -1,8 +1,7 @@
 import "../globals.css";
 import type { Metadata } from "next";
-import { ReactNode, Suspense } from "react";
+import { ReactNode } from "react";
 import { ServerProviders } from "../providers/ServerProviders";
-import Loading from "./loading";
 
 export const metadata: Metadata = {
   title: "Pé de Meia",
@@ -12,13 +11,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
       <body className="font-nunito">
-        <Suspense fallback={<Loading />}>
-          <ServerProviders>{children}</ServerProviders>
-        </Suspense>
+        <ServerProviders>{children}</ServerProviders>
       </body>
     </html>
   );
