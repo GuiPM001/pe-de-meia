@@ -74,6 +74,7 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
           label={t('register.dailyCost')}
           value={form.dailyCost}
           onValueChange={(floatValue) => handleForm(floatValue, "dailyCost")}
+          disabled
         />
 
         <ModalActions

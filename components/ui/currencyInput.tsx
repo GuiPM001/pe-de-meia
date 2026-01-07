@@ -32,6 +32,7 @@ export default function CurrencyInput(props: CurrencyInputProps) {
           allowNegative={false}
           value={props.value as number}
           onValueChange={(values) => props.onValueChange(values.floatValue ?? 0)}
+          disabled={props.disabled}
         />
       </div>
     </div>
