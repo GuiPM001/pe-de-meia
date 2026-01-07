@@ -29,7 +29,6 @@ export default function NavBar() {
 
   const NAV_ITEMS = [
     { href: `/${locale}`, label: t("navBar.monthlySummary") },
-    { href: `/${locale}/investments`, label: t("navBar.investments") },
   ];
 
   const logout = async () => {
