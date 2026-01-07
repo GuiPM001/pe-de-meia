@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import IconButton from "./ui/iconButton";
 import { getMonthNameByDate } from "@/core/utils/date";
-import { TbCirclePlusFilled, TbInfoCircleFilled } from "react-icons/tb";
+import { TbCalendar, TbCirclePlusFilled, TbInfoCircleFilled } from "react-icons/tb";
 import InfoModal from "./modals/infoModal";
 import { useTransactionModal } from "@/app/context/TransactionModalContext";
 import { useTranslation } from "react-i18next";
@@ -26,15 +26,15 @@ export default function Header({ yearSelected, handleChangeYear, loading }: Head
 
   return (
     <div className="flex flex-row gap-6 items-center px-2 lg:px-0 mt-4 mb-6 lg:mt-0 lg:mb-6">
-      <span className="hidden lg:block capitalize font-nunito font-bold text-2xl text-gray-800 tracking-tight">
-        {getMonthNameByDate(monthSelected.id)}
+      <span className="hidden lg:flex flex-row items-center gap-1 capitalize font-nunito font-bold text-2xl text-gray-800 tracking-tight">
+        <TbCalendar /> {getMonthNameByDate(monthSelected.id)}
       </span>
 
       <button
         onClick={() => setMonthModalOpen(true)}
-        className="lg:hidden block capitalize font-black text-3xl cursor-pointer"
+        className="lg:hidden flex flex-row items-center gap-1 capitalize font-black text-3xl cursor-pointer"
       >
-        {getMonthNameByDate(monthSelected.id)}
+         <TbCalendar /> {getMonthNameByDate(monthSelected.id)}
       </button>
 
       <IconButton
