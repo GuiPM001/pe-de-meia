@@ -3,52 +3,14 @@ import logo from "@/app/assets/logo.png";
 
 export default function Loading() {
   return (
-    <div style={styles.container}>
-      <Image
-        src={logo}
-        alt="Logo"
-        width={240}
-        height={240}
-        priority
-      />
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-4 bg-white">
+      <Image src={logo} alt="Logo" width={240} height={240} priority />
 
-      <div style={styles.dots}>
-        <span style={{ ...styles.dot, animationDelay: "0ms" }}>.</span>
-        <span style={{ ...styles.dot, animationDelay: "400ms" }}>.</span>
-        <span style={{ ...styles.dot, animationDelay: "800ms" }}>.</span>
+      <div className="flex items-center text-8xl -mt-20 gap-1 text-gray-800">
+        <span className="animate-pulse [animation-delay:0ms]">.</span>
+        <span className="animate-pulse [animation-delay:400ms]">.</span>
+        <span className="animate-pulse [animation-delay:800ms]">.</span>
       </div>
-
-      <style>{`
-        @keyframes pulse {
-          0% { opacity: 0.2; }
-          50% { opacity: 1; }
-          100% { opacity: 0.2; }
-        }
-      `}</style>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    position: "fixed" as const,
-    inset: 0,
-    display: "flex",
-    flexDirection: "column" as const,
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 16,
-    backgroundColor: "#ffffff",
-  },
-  dots: {
-    display: "flex",
-    alignItems: "center",
-    marginTop: -80,
-    fontSize: 96,
-    color: "#1f2937",
-    lineHeight: 1,
-  },
-  dot: {
-    animation: "pulse 1.2s infinite ease-in-out",
-  },
-};

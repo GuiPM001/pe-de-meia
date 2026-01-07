@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body>
+      <body className="font-nunito">
         <ServerProviders>{children}</ServerProviders>
       </body>
     </html>
