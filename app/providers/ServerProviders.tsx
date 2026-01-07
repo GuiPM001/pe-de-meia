@@ -6,7 +6,7 @@ import { ClientProviders } from "./ClientProviders";
 export async function ServerProviders({ children }: { children: ReactNode }) {
   const cookieStore = await cookies();
   const profileCookie = cookieStore.get("profile")?.value;
-  
+
   let profile: Profile = { _id: "", name: "", savingTarget: 0, email: "", dailyCost: 0 };
 
   if (profileCookie) {
