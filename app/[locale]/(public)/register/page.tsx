@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
 import { useTranslation } from "react-i18next";
+import { TbHelp } from "react-icons/tb";
+import Tooltip from "@/components/ui/tooltip";
 
 export default function Register() {
   const router = useRouter();
@@ -71,7 +73,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-green-hover p-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center green-gradient p-4 relative overflow-hidden">
       <div className="bg-white backdrop-blur-xl rounded-3xl shadow-xl p-8 sm:p-12 w-full max-w-lg relative z-10 border border-white/50">
         <div className="flex flex-col items-center mb-8">
           <div className="w-48 mb-6">
@@ -127,6 +129,7 @@ export default function Register() {
                 })
               }
             />
+            <div className="relative">
             <CurrencyInput
               label={t('register.dailyCost')}
               name="dailyCost"
@@ -138,6 +141,19 @@ export default function Register() {
                 })
               }
             />
+
+              <div
+                className="group absolute top-0 left-24 text-gray-400"
+                tabIndex={0}
+              >
+                <TbHelp size="20px" />
+
+                <Tooltip
+                  position="top"
+                  label={t("register.dailyCostHint")}
+                />
+              </div>
+            </div>
 
             <Button
               type="button"

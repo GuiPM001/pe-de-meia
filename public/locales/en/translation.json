@@ -67,6 +67,7 @@
     "button": "Register",
     "login": "Already have an account? ",
     "loginLink": "Sign in",
+    "dailyCostHint": "Expense calculated based on the \naverage of the last three months. \nTo get started, enter \nan estimated value",
     "error": {
       "email": "The email provided is invalid.",
       "password": "Password must be at least 8 characters long."
@@ -82,7 +83,7 @@
     "profile": "Profile",
     "logout": "Log out",
     "balance": "Day balance",
-    "remaining": "Daily spending to avoid impacting the monthly target"
+    "dailyCost": "Daily spending calculated based on previous months"
   },
   "home": {
     "totalIncome": "Total income",

@@ -60,7 +60,7 @@ export default function CalendarDesktop(props: CalendarProps) {
 
                       <Tooltip
                         position="left"
-                        label={t("tooltips.remaining")}
+                        label={t("tooltips.dailyCost")}
                       />
                     </div>
                   )}

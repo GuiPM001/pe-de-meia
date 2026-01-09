@@ -67,6 +67,7 @@
     "button": "Cadastrar",
     "login": "Já possui conta? ",
     "loginLink": "Entrar",
+    "dailyCostHint": "Gasto calculado com base na \nmédia dos últimos três meses. \nPara começar, informe um \nvalor previsto",
     "error": {
       "email": "E-mail informado é inválido.",
       "password": "A senha deve ter pelo menos 8 caracteres."
@@ -82,7 +83,7 @@
     "profile": "Perfil",
     "logout": "Sair",
     "balance": "Saldo do dia",
-    "remaining": "Gasto diário para não impactar a meta mensal"
+    "dailyCost": "Gasto diário calculado com base nos meses anteriores"
   },
   "home": {
     "totalIncome": "Total de entradas",
