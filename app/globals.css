@@ -4,6 +4,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --gradient-green: linear-gradient(135deg, hsl(152 69% 31%) 0%, hsl(152 50% 22%) 100%);
 }
 
 @theme {
@@ -26,8 +28,10 @@
   --color-blue-hover: #B5E9FF;
   --color-blue-text: #29A4d9;
   
-  --color-primary: #1CA249;
+  --color-primary: #198050;
   --color-primary-dark: #0C863C;
+
+  --bg-green-gradient: linear-gradient(135deg, hsl(152 69% 31%) 0%, hsl(152 50% 22%) 100%);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -53,4 +57,8 @@ input[type="number"] {
 input[type="date"] {
   appearance: none;
   -webkit-appearance: none;
+}
+
+.green-gradient {
+  background: var(--gradient-green);
 }
