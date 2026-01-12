@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "@/app/assets/logo.png";
 import Image from "next/image";
 import Input from "@/components/ui/input";
@@ -13,11 +13,13 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { api } from "@/core/services/api";
 import { LoginResponse } from "@/core/types/LoginResponse";
 import { useTranslation } from "react-i18next";
+import { signIn, useSession } from "next-auth/react";
 
 export default function Login() {
   const router = useRouter();
   const { t } = useTranslation();
   const { setProfile } = useProfile();
+  const { data: session, status } = useSession();
 
   const [loading, setLoading] = useState<boolean>();
   const [error, setError] = useState<ErrorResponse | null>(null);
@@ -25,6 +27,15 @@ export default function Login() {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      // Here you should check if the user exists in your database
+      // and if they have completed the initial setup.
+      // For now, we'll just redirect to a welcome page.
+      router.push("/welcome");
+    }
+  }, [session, status, router]);
 
   const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
@@ -105,6 +116,14 @@ export default function Login() {
               className="w-full py-3 text-lg mt-4 shadow-lg shadow-green-200 hover:shadow-green-300"
             >
               {loading ? t("loading") : t("login.button")}
+            </Button>
+
+            <Button
+              type="button"
+              onClick={() => signIn("google")}
+              className="w-full py-3 text-lg mt-4 bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-200 hover:shadow-blue-300"
+            >
+              {t("login.google")}
             </Button>
           </form>
 
