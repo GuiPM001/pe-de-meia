@@ -46,32 +46,17 @@
     }
   },
   "login": {
-    "title": "Bem vindo de volta!",
-    "email": "E-mail",
-    "emailPlaceholder": "seu@email.com",
-    "password": "Senha",
-    "rememberMe": "Me mantenha conectado",
-    "button": "Entrar",
-    "register": "Não tem uma conta? ",
-    "registerLink": "Cadastre-se"
+    "title": "Entrar no Pé de Meia",
+    "button": "Entrar com o Google"
   },
-  "register": {
-    "title": "Criar uma conta",
+  "welcome": {
+    "title": "Complete seu cadastro",
     "name": "Nome",
-    "namePlaceholder": "Seu nome",
     "email": "E-mail",
-    "emailPlaceholder": "seu@email.com",
-    "password": "Senha",
     "savingTarget": "Meta de economia mensal",
     "dailyCost": "Gasto diário",
-    "button": "Cadastrar",
-    "login": "Já possui conta? ",
-    "loginLink": "Entrar",
-    "dailyCostHint": "Gasto calculado com base na \nmédia dos últimos três meses. \nPara começar, informe um \nvalor previsto",
-    "error": {
-      "email": "E-mail informado é inválido.",
-      "password": "A senha deve ter pelo menos 8 caracteres."
-    }
+    "button": "Concluir cadastro",
+    "dailyCostHint": "Gasto calculado com base na \nmédia dos últimos três meses. \nPara começar, informe um \nvalor previsto"
   },
   "navBar": {
     "monthlySummary": "Resumo mensal",

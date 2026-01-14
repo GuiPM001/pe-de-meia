@@ -46,32 +46,17 @@
     }
   },
   "login": {
-    "title": "Welcome back!",
-    "email": "E-mail",
-    "emailPlaceholder": "your@email.com",
-    "password": "Password",
-    "rememberMe": "Remember me",
-    "button": "Sign in",
-    "register": "Don't have an account? ",
-    "registerLink": "Register"
+    "title": "Log in to Pé de Meia",
+    "button": "Sign in with Google"
   },
-  "register": {
-    "title": "Create an account",
+  "welcome": {
+    "title": "Complete your registration",
     "name": "Name",
-    "namePlaceholder": "Your name",
     "email": "E-mail",
-    "emailPlaceholder": "your@email.com",
-    "password": "Password",
     "savingTarget": "Monthly savings goal",
     "dailyCost:": "Daily cost",
-    "button": "Register",
-    "login": "Already have an account? ",
-    "loginLink": "Sign in",
-    "dailyCostHint": "Expense calculated based on the \naverage of the last three months. \nTo get started, enter \nan estimated value",
-    "error": {
-      "email": "The email provided is invalid.",
-      "password": "Password must be at least 8 characters long."
-    }
+    "button": "Complete registration",
+    "dailyCostHint": "Expense calculated based on the \naverage of the last three months. \nTo get started, enter \nan estimated value"
   },
   "navBar": {
     "monthlySummary": "Monthly summary",
