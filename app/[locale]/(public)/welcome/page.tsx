@@ -4,81 +4,136 @@ import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
-import Input from "@/components/ui/input";
-import Button from "@/components/ui/button";
 import { api } from "@/core/services/api";
-import { Profile } from "@/core/types/Profile";
+import { RegisterRequest } from "@/core/types/RegisterRequest";
+import { TbHelp } from "react-icons/tb";
+import { ErrorResponse } from "@/core/types/ErrorResponse";
+import Button from "@/components/ui/button";
+import CurrencyInput from "@/components/ui/currencyInput";
+import Tooltip from "@/components/ui/tooltip";
+import logo from "@/app/assets/logo.png";
+import Image from "next/image";
+
+type WelcomeForm = Pick<RegisterRequest, "dailyCost" | "savingTarget">;
 
 export default function Welcome() {
-  const { data: session } = useSession();
-  const router = useRouter();
+  const { data: session, update } = useSession();
   const { t } = useTranslation();
+  const router = useRouter();
 
-  const [form, setForm] = useState({
-    monthlySavingsGoal: "",
-    dailySpending: "",
+  const [loading, setLoading] = useState<boolean>();
+  const [error, setError] = useState<ErrorResponse | null>(null);
+  const [form, setForm] = useState<WelcomeForm>({
+    savingTarget: undefined,
+    dailyCost: undefined,
   });
 
-  const handleForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleForm = (name: string, value: number) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   const handleSubmit = async () => {
-    if (!session?.user) return;
+    if (!session?.user || !session.user.email) return;
 
     try {
-      // Assuming you have an API endpoint to create/update the user profile
-      const profile: Profile = await api.post("/user", {
+      const request: RegisterRequest = {
         email: session.user.email,
-        name: session.user.name,
-        image: session.user.image,
-        ...form,
+        name: session.user.name ?? "",
+        savingTarget: form.savingTarget,
+        dailyCost: form.dailyCost,
+      };
+
+      const newUserId = await api.post("/user", request);
+
+      await update({
+        userId: newUserId,
+        savingTarget: form.savingTarget,
+        dailyCost: form.dailyCost,
+        exists: true,
       });
 
-      // Maybe do something with the profile, like setting it in a context
-      
-      router.replace("/");
-    } catch (error) {
-      console.error("Error updating profile", error);
+      router.push("/");
+
+      setLoading(false);
+    } catch (e: unknown) {
+      setError(e as ErrorResponse);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center green-gradient p-4">
-      <div className="bg-white rounded-3xl shadow-xl p-8 sm:p-12 w-full max-w-lg">
-        <h2 className="text-3xl font-nunito font-bold text-gray-800 text-center mb-8">
-          {t("welcome.title")}
-        </h2>
+    <div className="min-h-screen flex items-center justify-center green-gradient p-4 relative overflow-hidden">
+      <div className="bg-white backdrop-blur-xl rounded-3xl shadow-xl p-8 sm:p-12 w-full max-w-lg relative z-10 border border-white/50">
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-48">
+            <Image
+              alt="Pé de meia logo"
+              src={logo}
+              width={384}
+              height={188}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+        </div>
 
         <div className="space-y-6">
-          <Input
-            label={t("welcome.monthlySavingsGoal")}
-            placeholder="e.g., 500"
-            name="monthlySavingsGoal"
-            type="number"
-            value={form.monthlySavingsGoal}
-            onChange={handleForm}
-          />
+          <h2 className="text-3xl font-nunito font-bold text-gray-800 text-center mb-10">
+            {t("welcome.title")}
+          </h2>
 
-          <Input
-            label={t("welcome.dailySpending")}
-            placeholder="e.g., 50"
-            name="dailySpending"
-            type="number"
-            value={form.dailySpending}
-            onChange={handleForm}
-          />
+          <form onKeyDown={handleKeyDown} className="space-y-5">
+            <CurrencyInput
+              label={t("welcome.savingTarget")}
+              value={form.savingTarget}
+              onValueChange={(floatValue) =>
+                handleForm("savingTarget", floatValue)
+              }
+            />
 
-          <Button
-            onClick={handleSubmit}
-            disabled={!form.monthlySavingsGoal || !form.dailySpending}
-            className="w-full py-3 text-lg mt-4"
-          >
-            {t("welcome.button")}
-          </Button>
+            <div className="relative">
+              <CurrencyInput
+                label={t("welcome.dailyCost")}
+                value={form.dailyCost}
+                onValueChange={(floatValue) =>
+                  handleForm("dailyCost", floatValue)
+                }
+              />
+
+              <div
+                className="group absolute top-0 left-24 text-gray-400"
+                tabIndex={0}
+              >
+                <TbHelp size="20px" />
+
+                <Tooltip position="top" label={t("welcome.dailyCostHint")} />
+              </div>
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              type="button"
+              disabled={loading || !form.savingTarget || !form.dailyCost}
+            >
+              {loading ? t("loading") : t("welcome.button")}
+            </Button>
+          </form>
+
+          {error && (
+            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm font-medium text-center">
+              {error.message}
+            </div>
+          )}
         </div>
       </div>
     </div>

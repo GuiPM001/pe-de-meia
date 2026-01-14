@@ -28,7 +28,7 @@ export default function Home() {
   const lastLoadedMonthRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!profile?._id) return;
+    if (!profile._id) return;
 
     const loadMonths = async () => {
       setLoading((prev) => ({ ...prev, sidebar: true }));
@@ -37,10 +37,10 @@ export default function Home() {
     };
 
     loadMonths();
-  }, [yearSelected, profile?._id]);
+  }, [yearSelected, profile._id]);
 
   useEffect(() => {
-    if (loading.sidebar || !profile?._id || !monthSelected?.id) return;
+    if (loading.sidebar || !profile._id || !monthSelected?.id) return;
 
     if (monthSelected.id === lastLoadedMonthRef.current) return;
 
@@ -52,7 +52,7 @@ export default function Home() {
     };
 
     loadTransactions();
-  }, [monthSelected?.id, profile?._id, loading.sidebar]);
+  }, [monthSelected?.id, profile._id, loading.sidebar]);
 
   const handleChangeYear = (newYear: number) => {
     setYearSelected(newYear);

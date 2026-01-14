@@ -10,10 +10,6 @@ const UserSchema = new Schema({
     required: [true, 'Email é obrigatório'],
     unique: true
   },
-  password: {
-    type: String,
-    required: [true, 'Senha é obrigatória']
-  },
   savingTarget: {
     type: Number,
   },

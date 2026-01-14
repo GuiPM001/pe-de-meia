@@ -11,6 +11,7 @@ import CurrencyInput from "../ui/currencyInput";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
 import { useTranslation } from "react-i18next";
+import { useSession } from "next-auth/react";
 
 interface ProfileModalProps {
   onClose: () => void;
@@ -19,6 +20,7 @@ interface ProfileModalProps {
 
 export default function ProfileModal({ onClose, open }: ProfileModalProps) {
   const { profile, setProfile } = useProfile();
+  const { update } = useSession();
   const { t } = useTranslation();
 
   const [form, setForm] = useState<Profile>(profile);
@@ -41,8 +43,14 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
       setLoading(true);
 
       await api.put("/user", form);
-      setProfile(form);
+      await update({
+        userId: form._id,
+        savingTarget: form.savingTarget,
+        dailyCost: form.dailyCost,
+        exists: true,
+      });
 
+      setProfile(form);
       setLoading(false);
       onClose();
     } catch (e: unknown) {
@@ -57,21 +65,21 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
 
       <div className="flex flex-col gap-6">
         <Input
-          label={t('register.name')}
+          label={t('welcome.name')}
           value={form.name}
           onChange={(e) => handleForm(e.target.value, "name")}
         />
 
-        <Input label={t('register.email')} value={form.email} disabled />
+        <Input label={t('welcome.email')} value={form.email} disabled />
 
         <CurrencyInput
-          label={t('register.savingTarget')}
+          label={t('welcome.savingTarget')}
           value={form.savingTarget}
           onValueChange={(floatValue) => handleForm(floatValue, "savingTarget")}
         />
 
         <CurrencyInput
-          label={t('register.dailyCost')}
+          label={t('welcome.dailyCost')}
           value={form.dailyCost}
           onValueChange={(floatValue) => handleForm(floatValue, "dailyCost")}
           disabled

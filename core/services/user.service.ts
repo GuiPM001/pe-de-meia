@@ -3,8 +3,32 @@ import { connectMongo } from "@/core/db/mongodb";
 import { User } from "@/core/models/user";
 import { transactionService } from "./transaction.service";
 import { TransactionType } from "../enums/transactionType";
-import "@/core/utils/date.extensions";
 import { monthService } from "./month.service";
+import { RegisterRequest } from "../types/RegisterRequest";
+import { SupportedLocale, t } from "@/lib/errorHandler";
+import "@/core/utils/date.extensions";
+
+const create = async (request: RegisterRequest, locale: SupportedLocale) => {
+  const { name, email, savingTarget, dailyCost } = request;
+
+  console.log(request)
+  if (!savingTarget || !dailyCost) {
+    throw new Error(t(locale, "errors.user.insuficientData"));
+  }
+
+  await connectMongo();
+
+  const user = await User.create({
+    name,
+    email,
+    savingTarget,
+    dailyCost,
+  });
+
+  await monthService.saveMonthsNewUser(user._id, dailyCost);
+
+  return user._id.toString();
+};
 
 const update = async (request: Profile) => {
   const { _id, name, savingTarget } = await request;
@@ -19,10 +43,10 @@ const update = async (request: Profile) => {
   await user.save();
 };
 
-const get = async (idUser: string): Promise<Profile | null> => {
+const getByEmail = async (email: string): Promise<Profile | null> => {
   await connectMongo();
 
-  const user = await User.findById(idUser).select("-password").lean<Profile>();;
+  const user = await User.findOne({ email }).lean<Profile>();
 
   if (!user) return null;
 
@@ -38,7 +62,11 @@ const updateDailyCost = async () => {
   const users = await User.find();
 
   const today = new Date();
-  const qtdDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const qtdDays = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  ).getDate();
 
   const pastMonths = Array.from({ length: 3 }, (_, i) => {
     const d = new Date();
@@ -64,24 +92,33 @@ const updateDailyCost = async () => {
 
     user.dailyCost = Math.floor(totalDailyCost / pastMonths.length / qtdDays);
     await user.save();
-    
+
     // TODO: não precisa listar os mesmes, só fazer o update idMonth > data
-    const futureMonths = await monthService.getFutureMonthsByIdUser(idUser, today.toISOString().slice(0, 7) + "-01");
+    const futureMonths = await monthService.getFutureMonthsByIdUser(
+      idUser,
+      today.toISOString().slice(0, 7) + "-01"
+    );
     for (const month of futureMonths) {
-      const newBalance = (month.balance ?? 0) - ((user.dailyCost - previousDailyCost) * qtdDays);
-      await monthService.updateMonthBalanceDailyCost(month.id, idUser, newBalance);
+      const newBalance =
+        (month.balance ?? 0) - (user.dailyCost - previousDailyCost) * qtdDays;
+      await monthService.updateMonthBalanceDailyCost(
+        month.id,
+        idUser,
+        newBalance
+      );
     }
   }
 };
 
 const getAll = async () => {
   await connectMongo();
-  return await User.find(); 
-}
+  return await User.find();
+};
 
 export const userService = {
+  create,
   update,
-  get,
+  getByEmail,
   updateDailyCost,
-  getAll
+  getAll,
 };

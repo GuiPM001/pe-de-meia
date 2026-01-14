@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { TFunction } from "i18next";
 import ProfileModal from "../modals/profileModal";
 import Logo from "./logo";
 import MobileMenu from "./mobileMenu";
 import DesktopMenu from "./desktopMenu";
-import { api } from "@/core/services/api";
+import { signOut } from "next-auth/react";
 
 export interface MenuProps {
   navItens: { href: string; label: string }[];
@@ -22,7 +22,6 @@ export default function NavBar() {
   const { t } = useTranslation();
   const { locale } = useParams();
   const pathname = usePathname();
-  const router = useRouter();
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -32,8 +31,7 @@ export default function NavBar() {
   ];
 
   const logout = async () => {
-    await api.post("/auth/logout");
-    router.replace("/login");
+    signOut({ callbackUrl: "/login" });
   };
 
   return (
