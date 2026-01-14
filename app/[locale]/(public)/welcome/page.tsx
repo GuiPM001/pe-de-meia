@@ -46,6 +46,7 @@ export default function Welcome() {
     if (!session?.user || !session.user.email) return;
 
     try {
+      setLoading(true);
       const request: RegisterRequest = {
         email: session.user.email,
         name: session.user.name ?? "",

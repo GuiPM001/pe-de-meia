@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "@/app/assets/logo.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,8 @@ export default function Login() {
   const { t } = useTranslation();
   const { data: session, status } = useSession();
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   useEffect(() => {
     if (!session?.user || status !== "authenticated") return;
 
@@ -27,6 +29,11 @@ export default function Login() {
       router.push("/");
     }
   }, [status, session, router]);
+
+  const signIn = () => {
+    setLoading(true);
+    handleSignIn();
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center green-gradient p-4 relative overflow-hidden">
@@ -53,10 +60,11 @@ export default function Login() {
           </h2>
 
           <Button
-            onClick={handleSignIn}
+            onClick={signIn}
+            disabled={loading}
           >
             <TbBrandGoogleFilled size='20px' />
-            {t("login.button")}
+            {loading ? t("loading") : t("login.button")}
           </Button>
         </div>
       </div>
