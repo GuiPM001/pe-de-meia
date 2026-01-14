@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { getToken, JWT } from "next-auth/jwt";
 
 const PUBLIC_ROUTES = ["/login", "/welcome"] as const;
 const REDIRECT_LOGIN = "/login";
@@ -27,14 +27,7 @@ function isPublicRoute(pathname: string): boolean {
   return PUBLIC_ROUTES.includes(cleanedPath as (typeof PUBLIC_ROUTES)[number]);
 }
 
-async function isInvalidSession(request: NextRequest): Promise<boolean> {
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
-
-  if (!token) return true;
-
+function isTokenExpired(token: JWT): boolean {
   const now = Math.floor(Date.now() / 1000);
 
   if (token.exp && Number(token.exp) < now) {
@@ -46,7 +39,11 @@ async function isInvalidSession(request: NextRequest): Promise<boolean> {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("next-auth.session-token");
+
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
   const currentLocale = getCurrentLocale(pathname);
 
@@ -63,20 +60,10 @@ export async function middleware(request: NextRequest) {
 
   if (!token && !isPublic) return redirectToLogin(request);
 
-  if (token && (await isInvalidSession(request))) {
-    const response = redirectToLogin(request);
-
-    response.cookies.set("next-auth.session-token", "", {
-      path: "/",
-      maxAge: 0,
-    });
-
-    response.cookies.set("next-auth.csrf-token", "", {
-      path: "/",
-      maxAge: 0,
-    });
-
-    return response;
+  if (token && isTokenExpired(token)) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/force-logout";
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
