@@ -33,8 +33,6 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    console.log(session)
-
     if (status === "loading") {
       return;
     }

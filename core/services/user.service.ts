@@ -11,7 +11,6 @@ import "@/core/utils/date.extensions";
 const create = async (request: RegisterRequest, locale: SupportedLocale) => {
   const { name, email, savingTarget, dailyCost } = request;
 
-  console.log(request)
   if (!savingTarget || !dailyCost) {
     throw new Error(t(locale, "errors.user.insuficientData"));
   }

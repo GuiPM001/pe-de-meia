@@ -68,9 +68,12 @@ export const useCalendar = () => {
     transactions: Transaction[]
   ) => {
     const indexMonth = monthDate.getUTCMonth();
-    const lastMonth = await getLastMonth(monthSelected.id, profile._id);
-
-    let balance = lastMonth?.balance ?? 0;
+    let balance = 0;
+    
+    if (transactions.length > 0) {
+      const lastMonth = await getLastMonth(monthSelected.id, profile._id);
+      balance = lastMonth?.balance ?? 0;
+    }
 
     while (currentDate.getUTCMonth() === indexMonth) {
       const todayTransactions = transactions.filter(
@@ -88,8 +91,7 @@ export const useCalendar = () => {
       balance += todayTotal;
 
       const hasEstimatedDailyExpense =
-        currentDate.toISODateString() >= today.toISODateString() &&
-        !dailies.length;
+        currentDate.toISODateString() >= today.toISODateString();
 
       if (hasEstimatedDailyExpense) 
         balance -= profile.dailyCost;
