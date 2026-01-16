@@ -5,7 +5,7 @@ import { Transaction } from "@/core/types/Transaction";
 import { api } from "@/core/services/api";
 
 interface TransactionContextProps {
-  transactions: Transaction[];
+  transactions: Transaction[] | null;
   setTransactions: (transactions: Transaction[]) => void;
   getTransactions: (idMonth: string, idUser: string) => void;
 }
@@ -17,10 +17,10 @@ const TransactionContext = createContext<TransactionContextProps>({
 });
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[] | null>(null);
 
   const getTransactions = async (idMonth: string, idUser: string) => {
-    setTransactions([]);
+    setTransactions(null);
     const response: Transaction[] = await api.get(
       `/transaction/get-by-id-month`,
       {

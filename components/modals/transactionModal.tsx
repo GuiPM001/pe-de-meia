@@ -100,7 +100,7 @@ export default function TransactionModal({
       const response: Transaction = await api.post("/transaction", newTransaction);
       
       await getMonths(initialState.year, profile._id);
-      setTransactions([...transactions, response]);
+      setTransactions([...transactions ?? [], response]);
 
       setLoading(false);
       setForm(initialState);
@@ -116,7 +116,7 @@ export default function TransactionModal({
       setLoading(true); 
       
       const response: Transaction = await api.put("/transaction", form);
-      const newTransactions = transactions.filter(t => t._id !== response._id);
+      const newTransactions = transactions?.filter(t => t._id !== response._id) ?? [];
       
       await getMonths(initialState.year, profile._id);
       setTransactions([...newTransactions, response]);

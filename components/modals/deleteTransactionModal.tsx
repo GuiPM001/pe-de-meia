@@ -52,12 +52,12 @@ export default function DeleteTransactionModal({
     if (deleteRecurrent) {
       const idsTransactions = transactionsToDelete.map((t) => t.recurrenceId);
       setTransactions(
-        transactions.filter((x) => !idsTransactions.includes(x.recurrenceId))
+        transactions?.filter((x) => !idsTransactions.includes(x.recurrenceId)) ?? []
       );
     } else {
       const idsTransactions = transactionsToDelete.map((t) => t._id);
       setTransactions(
-        transactions.filter((x) => !idsTransactions.includes(x._id))
+        transactions?.filter((x) => !idsTransactions.includes(x._id)) ?? []
       );
     }
   };

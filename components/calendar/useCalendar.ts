@@ -29,7 +29,7 @@ export const useCalendar = () => {
   }, [monthDate]);
 
   useEffect(() => {
-    if (transactions.length === 0) return;
+    if (transactions === null) return;
     createCalendar();
   }, [transactions]);
 
@@ -130,9 +130,9 @@ export const useCalendar = () => {
     let balance = lastMonth?.balance ?? 0;
 
     while (currentDate.getUTCMonth() === indexMonth) {
-      const dailyTransactions = transactions.filter(
+      const dailyTransactions = transactions?.filter(
         (x) => x.date === currentDate.toISODateString()
-      );
+      ) ?? [];
 
       const { incomes, expenses, dailies, investeds } = groupTransactions(dailyTransactions);
 
