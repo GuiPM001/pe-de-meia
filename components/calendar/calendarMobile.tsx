@@ -1,17 +1,20 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import MonthSummary from "../monthSummary";
 import DayBalanceFlag from "../dayBalanceFlag";
 import TransactionsContainer from "../transactionsContainer";
-import { CalendarProps } from ".";
+import { CalendarComponentProps } from ".";
 import { getWeekDays } from "@/core/utils/date";
 import { DayBalance } from "@/core/types/DayBalance";
 import DailyTransactionModal from "../modals/dailyTransactionsModal";
-import { useCalendar } from "./useCalendar";
 import "@/core/utils/date.extensions";
 
-export default function CalendarMobile(props: CalendarProps) {
-  const { dayBalances, isToday } = useCalendar();
-
+export default function CalendarMobile({
+  dayBalances,
+  isLoading,
+  isToday,
+}: CalendarComponentProps) {
   const [dailyModal, setDailyModal] = useState<DayBalance | null>(null);
 
   useEffect(() => {
@@ -26,7 +29,7 @@ export default function CalendarMobile(props: CalendarProps) {
 
   return (
     <div className="grid grid-cols-7 w-full mb-10">
-      <MonthSummary dayBalances={dayBalances} loading={props.loading} />
+      <MonthSummary dayBalances={dayBalances} loading={isLoading} />
 
       <div className="contents">
         {getWeekDays("narrow").map((x, i) => (
@@ -39,17 +42,17 @@ export default function CalendarMobile(props: CalendarProps) {
         ))}
       </div>
 
-      {dayBalances.map((x: DayBalance) => (
+      {dayBalances.map((x: DayBalance, index) => (
         <div
           className="border-b border-gray-200 h-30 relative"
-          key={`${x.day}-${x.total}`}
+          key={`day-${index}`}
         >
           {x.total === null ? (
             <div className="flex flex-col justify-between items-center m-3 text-gray-300 font-semibold">
               {x.day}
             </div>
           ) : (
-            <button
+            <div
               onClick={() => setDailyModal(x)}
               className={`group/day h-full w-full flex flex-col cursor-pointer ${
                 isToday(x) ? "rounded-md" : ""
@@ -59,11 +62,11 @@ export default function CalendarMobile(props: CalendarProps) {
                 dayBalance={x}
                 totalInvested={x.totalInvested || 0}
                 isToday={isToday(x)}
-                loading={props.loading}
+                loading={isLoading}
               />
 
-              {!props.loading && <TransactionsContainer dayBalance={x} />}
-            </button>
+              {!isLoading && <TransactionsContainer dayBalance={x} />}
+            </div>
           )}
         </div>
       ))}

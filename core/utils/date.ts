@@ -34,3 +34,13 @@ export const getWeekDays = (format: "short" | "narrow") => {
     return new Intl.DateTimeFormat(locale, { weekday: format }).format(day);
   });
 };
+
+export function getFirstDayOfMonth(date: Date) {
+  return new Date(date.getUTCFullYear(), date.getUTCMonth(), 1);
+}
+
+export function getFirstCalendarDate(date: Date) {
+  const firstDayOfMonth = getFirstDayOfMonth(date);
+  firstDayOfMonth.setDate(1 - firstDayOfMonth.getUTCDay());
+  return firstDayOfMonth;
+}

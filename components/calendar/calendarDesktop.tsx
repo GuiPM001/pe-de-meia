@@ -1,22 +1,26 @@
+"use client";
+
 import React from "react";
 import DayBalanceFlag from "../dayBalanceFlag";
 import TransactionsContainer from "../transactionsContainer";
 import { decimalNumber } from "@/core/utils/numberFormat";
 import Tooltip from "../ui/tooltip";
 import { t } from "i18next";
-import { CalendarProps } from ".";
+import { CalendarComponentProps } from ".";
 import MonthSummary from "../monthSummary";
 import { getWeekDays } from "@/core/utils/date";
 import { useProfile } from "@/app/context/ProfileContext";
-import { useCalendar } from "./useCalendar";
 
-export default function CalendarDesktop(props: CalendarProps) {
-  const { dayBalances, isToday } = useCalendar();
+export default function CalendarDesktop({
+  dayBalances,
+  isLoading,
+  isToday,
+}: CalendarComponentProps) {
   const { profile } = useProfile();
 
   return (
     <div className="grid grid-cols-7 w-full">
-      <MonthSummary dayBalances={dayBalances} loading={props.loading} />
+      <MonthSummary dayBalances={dayBalances} loading={isLoading} />
 
       <div className="contents ">
         {getWeekDays("short").map((x, i) => (
@@ -29,10 +33,10 @@ export default function CalendarDesktop(props: CalendarProps) {
         ))}
       </div>
 
-      {dayBalances.map((x) => (
+      {dayBalances.map((x, index) => (
         <div
           className="border border-gray-100 h-32 relative -ml-[1px] -mt-[1px] hover:z-10 transition-all duration-200"
-          key={`${x.day}-${x.total}`}
+          key={`day-${index}`}
         >
           {x.total === null ? (
             <div className="bg-gray-50 h-full w-full"></div>
@@ -46,9 +50,9 @@ export default function CalendarDesktop(props: CalendarProps) {
                 dayBalance={x}
                 totalInvested={x.totalInvested || 0}
                 isToday={isToday(x)}
-                loading={props.loading}
+                loading={isLoading}
               />
-              {!props.loading && (
+              {!isLoading && (
                 <>
                   <TransactionsContainer dayBalance={x} />
 
