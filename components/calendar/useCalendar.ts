@@ -31,7 +31,7 @@ export const useCalendar = () => {
   useEffect(() => {
     if (transactions.length === 0) return;
     createCalendar();
-  }, [transactions, monthSelected.id]);
+  }, [transactions]);
 
   function addDay(date: Date, balances: DayBalance[], values?: Partial<DayBalance>) {
     balances.push({
