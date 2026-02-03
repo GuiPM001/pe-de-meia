@@ -21,8 +21,6 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user, account, trigger, session }) {
       if (trigger === "update" && session) {
         token.userId = session.userId;
-        token.savingTarget = session.savingTarget;
-        token.dailyCost = session.dailyCost;
         token.exists = session.exists;
 
         return token;
@@ -37,8 +35,6 @@ export const authOptions: AuthOptions = {
           token.userId = dbUser._id.toString();
           token.name = dbUser.name;
           token.email = dbUser.email;
-          token.savingTarget = dbUser.savingTarget;
-          token.dailyCost = dbUser.dailyCost;
           token.exists = true;
         } else {
           token.exists = false;
@@ -52,8 +48,6 @@ export const authOptions: AuthOptions = {
         session.user.id = token.userId as string;
         session.user.name = token.name;
         session.user.email = token.email;
-        session.user.savingTarget = token.savingTarget;
-        session.user.dailyCost = token.dailyCost;
         session.user.exists = token.exists as boolean;
       }
 

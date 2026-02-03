@@ -58,8 +58,6 @@ export default function Welcome() {
 
       await update({
         userId: newUserId,
-        savingTarget: form.savingTarget,
-        dailyCost: form.dailyCost,
         exists: true,
       });
 

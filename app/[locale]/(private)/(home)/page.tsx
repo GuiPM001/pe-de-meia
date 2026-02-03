@@ -17,7 +17,7 @@ export default function Home() {
 
   const { monthSelected, getMonths } = useMonth();
   const { getTransactions } = useTransaction();
-  const { profile } = useProfile();
+  const { profile, fetchProfile } = useProfile();
 
   const [yearSelected, setYearSelected] = useState<number>(today.getFullYear());
   const [loading, setLoading] = useState({
@@ -32,7 +32,12 @@ export default function Home() {
 
     const loadMonths = async () => {
       setLoading((prev) => ({ ...prev, sidebar: true }));
-      await getMonths(yearSelected, profile._id);
+      
+      Promise.all([
+        getMonths(yearSelected, profile._id),
+        fetchProfile(profile.email),
+      ]);
+
       setLoading((prev) => ({ ...prev, sidebar: false }));
     };
 

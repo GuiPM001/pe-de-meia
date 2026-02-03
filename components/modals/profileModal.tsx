@@ -9,9 +9,7 @@ import ModalTitle from "./modalTitle";
 import Input from "../ui/input";
 import CurrencyInput from "../ui/currencyInput";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
-import { api } from "@/core/services/api";
 import { useTranslation } from "react-i18next";
-import { useSession } from "next-auth/react";
 
 interface ProfileModalProps {
   onClose: () => void;
@@ -19,8 +17,7 @@ interface ProfileModalProps {
 }
 
 export default function ProfileModal({ onClose, open }: ProfileModalProps) {
-  const { profile, setProfile } = useProfile();
-  const { update } = useSession();
+  const { profile, updateProfile } = useProfile();
   const { t } = useTranslation();
 
   const [form, setForm] = useState<Profile>(profile);
@@ -42,15 +39,8 @@ export default function ProfileModal({ onClose, open }: ProfileModalProps) {
     try {
       setLoading(true);
 
-      await api.put("/user", form);
-      await update({
-        userId: form._id,
-        savingTarget: form.savingTarget,
-        dailyCost: form.dailyCost,
-        exists: true,
-      });
-
-      setProfile(form);
+      await updateProfile(form);
+      
       setLoading(false);
       onClose();
     } catch (e: unknown) {

@@ -9,10 +9,12 @@ import React, {
 } from "react";
 import { useSession } from "next-auth/react";
 import { Profile } from "@/core/types/Profile";
+import { api } from "@/core/services/api";
 
 interface ProfileContextProps {
   profile: Profile;
-  setProfile: (profile: Profile) => void;
+  fetchProfile: (email: string) => Promise<void>;
+  updateProfile: (profile: Profile) => Promise<void>;
 }
 
 const initialProfile: Profile = {
@@ -25,7 +27,8 @@ const initialProfile: Profile = {
 
 const ProfileContext = createContext<ProfileContextProps>({
   profile: initialProfile,
-  setProfile: () => {},
+  fetchProfile: () => Promise.resolve(),
+  updateProfile: () => Promise.resolve()
 });
 
 export const ProfileProvider = ({ children }: { children: ReactNode }) => {
@@ -41,17 +44,25 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
       const userProfile = session.user;
 
       setProfile({
+        ...profile,
         _id: userProfile.id ?? "",
-        dailyCost: userProfile.dailyCost ?? 0,
         email: userProfile.email ?? "",
-        name: userProfile.name ?? "",
-        savingTarget: userProfile.savingTarget ?? 0,
       });
     }
   }, [status, session]);
 
+  const fetchProfile = async (email: string) => {
+    const response: Profile = await api.get(`/user?email=${email}`)
+    setProfile(response);
+  }
+
+  const updateProfile = async (profile: Profile) => {
+    await api.put("/user", profile);
+    setProfile(profile);
+  };
+
   return (
-    <ProfileContext.Provider value={{ profile, setProfile }}>
+    <ProfileContext.Provider value={{ profile, fetchProfile, updateProfile }}>
       {children}
     </ProfileContext.Provider>
   );
