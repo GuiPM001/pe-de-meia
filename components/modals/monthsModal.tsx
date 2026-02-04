@@ -47,7 +47,7 @@ export default function MonthsModal({
         </IconButton>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 min-h-60">
+      <div className="grid grid-cols-3 gap-2">
         {loading ? (
           <div className="flex justify-center items-center col-span-3">
             <LoadingSpinner />

@@ -27,13 +27,13 @@ export default function Sidebar({
   }
 
   return (
-    <div className="hidden lg:flex flex-col items-center bg-white shadow-sm rounded-2xl p-6 min-w-50">
+    <div className="hidden lg:flex flex-col items-center bg-white rounded-2xl border border-gray-200 p-6 min-w-50 shadow-sm">
       <YearSelect value={yearSelected} onChange={handleChangeYear} />
 
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <div className="mt-8">
+        <div className="mt-8 flex flex-col gap-3">
           {months.map((x) => (
             <MonthButton
               key={x.id}
