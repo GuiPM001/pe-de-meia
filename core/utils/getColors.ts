@@ -26,3 +26,14 @@ export const getColors = (
             ${bg ? "bg-yellow-default hover:bg-yellow-hover" : ""} 
             ${border ? "ring-2 ring-inset ring-yellow-text" : ""}`;
 };
+
+export const getAccentBackground = (balance: number, target: number) => {
+  if (balance <= 0 || Number(balance.toFixed(2)) <= 0) 
+    return "bg-red-text";
+
+  if (balance >= target) 
+    return "bg-green-text";
+
+  return "bg-yellow-text";
+};
+

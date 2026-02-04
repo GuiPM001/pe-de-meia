@@ -13,7 +13,7 @@ export default function Header(props: CalendarHeaderProps) {
   const { openModal } = useTransactionModal();
 
   return (
-    <div className="flex items-center gap-3 mb-4">
+    <div className="flex items-center gap-3 mb-4 relative">
       <h2 className="flex flex-row items-center gap-1 text-2xl font-bold capitalize">
         {getMonthNameByDate(props.month)}
       </h2>
@@ -22,7 +22,7 @@ export default function Header(props: CalendarHeaderProps) {
 
       <IconButton
         onClick={() => openModal(props.month)}
-        className="h-8 w-8 rounded-xl bg-gray-100 border border-gray-300 ml-2 text-gray-500 hover:bg-green-text hover:text-white transition-all duration-200"
+        className="h-8 w-8 absolute right-0 rounded-xl bg-gray-100 border border-gray-300 ml-2 text-gray-500 hover:bg-primary hover:text-white transition-all duration-200"
       >
         <TbPlus size="18px" />
       </IconButton>

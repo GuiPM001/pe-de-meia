@@ -22,19 +22,19 @@ export default function Legend() {
       </div>
       <div className="flex flex-col lg:flex-row items-start gap-1 lg:gap-4">
         <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-green-text" />
+          <div className="w-1.5 h-1.5 lg:w-2.5 lg:h-2.5 rounded-full bg-green-text" />
           <span className="text-xs text-gray-500">{t("transactionType.income")}</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-red-text" />
+          <div className="w-1.5 h-1.5 lg:w-2.5 lg:h-2.5 rounded-full bg-red-text" />
           <span className="text-xs text-gray-500">{t("transactionType.fixedExpense")}</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-yellow-text" />
+          <div className="w-1.5 h-1.5 lg:w-2.5 lg:h-2.5 rounded-full bg-yellow-text" />
           <span className="text-xs text-gray-500">{t("transactionType.daily")}</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2.5 h-2.5 rounded-full bg-blue-text" />
+          <div className="w-1.5 h-1.5 lg:w-2.5 lg:h-2.5 rounded-full bg-blue-text" />
           <span className="text-xs text-gray-500">{t("transactionType.investment")}</span>
         </div>
       </div>
