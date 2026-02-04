@@ -8,6 +8,7 @@ import { useProfile } from "@/app/context/ProfileContext";
 import Calendar from "@/components/calendar/calendar";
 import Sidebar from "@/components/sidebar";
 import Wrapper from "@/components/ui/wrapper";
+import MobileMonthSelector from "@/components/mobileMonthSelector";
 
 import "@/core/utils/date.extensions";
 
@@ -64,9 +65,17 @@ export default function Home() {
 
   return (
     <Wrapper>
-      <div className="flex flex-row gap-8">
+      <div className="flex flex-col lg:flex-row gap-8">
         <Sidebar
           yearSelected={yearSelected}
+          handleChangeYear={handleChangeYear}
+          loading={loading.sidebar}
+        />
+
+        <MobileMonthSelector
+          month={monthSelected}
+          year={yearSelected}
+          savingTarget={profile.savingTarget}
           handleChangeYear={handleChangeYear}
           loading={loading.sidebar}
         />

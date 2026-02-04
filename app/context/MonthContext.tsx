@@ -85,6 +85,9 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     setMonths(allMonths);
+
+    const actualMonth = allMonths.find(m => m.id === monthSelected.id);
+    if (actualMonth) setMonthSelected(actualMonth);
   };
 
   const getMonths = async (yearSelected: number, idUser: string) => {
