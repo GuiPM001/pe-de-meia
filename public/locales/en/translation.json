@@ -14,6 +14,11 @@
     "yellow": "Below target",
     "red": "Negative balance"
   },
+  "monthSummary": {
+    "dailyBalance": "Daily balance",
+    "dailyCost": "Planned/day",
+    "report": "View monthly analysis"
+  },
   "modal": {
     "actions": {
       "save": "Save",
@@ -75,14 +80,6 @@
     "logout": "Log out",
     "balance": "Day balance",
     "dailyCost": "Daily spending calculated based on previous months"
-  },
-  "home": {
-    "totalIncome": "Total income",
-    "totalExpense": "Total fixed expenses",
-    "totalDaily": "Total daily spending",
-    "balanceLabel": "Today's balance",
-    "dailyLabel": "Daily expense",
-    "monthBalance": "Final balance"
   },
   "investments": {
     "total": "Total invested:",

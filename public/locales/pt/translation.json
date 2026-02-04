@@ -14,6 +14,11 @@
     "yellow": "Abaixo da meta",
     "red": "Saldo negativo"
   },
+  "monthSummary": {
+    "dailyBalance": "Saldo do dia",
+    "dailyCost": "Planejado/dia",
+    "report": "Ver análise mensal"
+  },
   "modal": {
     "actions": {
       "save": "Salvar",
@@ -75,14 +80,6 @@
     "logout": "Sair",
     "balance": "Saldo do dia",
     "dailyCost": "Gasto diário calculado com base nos meses anteriores"
-  },
-  "home": {
-    "totalIncome": "Total de entradas",
-    "totalExpense": "Total de despesas fixas",
-    "totalDaily": "Total de gasto diário",
-    "balanceLabel": "Saldo de hoje",
-    "dailyLabel": "Gasto diário",
-    "monthBalance": "Saldo final"
   },
   "investments": {
     "total": "Total investido:",
