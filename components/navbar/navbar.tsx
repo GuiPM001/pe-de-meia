@@ -1,69 +1,34 @@
 "use client";
 
 import React, { useState } from "react";
-import { useParams, usePathname } from "next/navigation";
-import { useTranslation } from "react-i18next";
-import { TFunction } from "i18next";
 import ProfileModal from "../modals/profileModal";
 import Logo from "./logo";
-import MobileMenu from "./mobileMenu";
-import DesktopMenu from "./desktopMenu";
+import IconButton from "../ui/iconButton";
 import { signOut } from "next-auth/react";
-
-export interface MenuProps {
-  navItens: { href: string; label: string }[];
-  pathname: string;
-  t: TFunction<"translation", undefined>;
-  setModalOpen: (modalOpen: boolean) => void;
-  logout: () => void;
-}
+import { TbLogout, TbUser } from "react-icons/tb";
 
 export default function NavBar() {
-  const { t } = useTranslation();
-  const { locale } = useParams();
-  const pathname = usePathname();
-
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [menuOpen, setMenuOpen] = useState<boolean>(false);
-
-  const NAV_ITEMS = [
-    { href: `/${locale}`, label: t("navBar.monthlySummary") },
-  ];
 
   const logout = async () => {
     signOut({ callbackUrl: "/login" });
   };
 
   return (
-    <div className="w-full bg-white border-b border-green-default">
+    <div className="w-full bg-white">
       <nav className="flex items-center justify-between gap-8 h-16 px-8 lg:px-20 py-4">
         <Logo />
 
-        <DesktopMenu
-          navItens={NAV_ITEMS}
-          pathname={pathname}
-          setModalOpen={setModalOpen}
-          logout={logout}
-          t={t}
-        />
+        <div className="flex flex-row gap-8 text-gray-500">
+          <IconButton className="text-2xl" onClick={() => setModalOpen(true)}>
+            <TbUser size="22px" />
+          </IconButton>
 
-        <MobileMenu
-          menuOpen={menuOpen}
-          setMenuOpen={setMenuOpen}
-          navItens={NAV_ITEMS}
-          pathname={pathname}
-          setModalOpen={setModalOpen}
-          logout={logout}
-          t={t}
-        />
+          <IconButton className="text-2xl" onClick={() => logout()}>
+            <TbLogout size="22px" />
+          </IconButton>
+        </div>
       </nav>
-
-      {menuOpen && (
-        <div
-          className="fixed inset-0 bg-black/75 z-40"
-          onClick={() => setMenuOpen(false)}
-        />
-      )}
 
       <ProfileModal onClose={() => setModalOpen(false)} open={modalOpen} />
     </div>

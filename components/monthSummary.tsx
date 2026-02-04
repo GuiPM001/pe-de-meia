@@ -51,7 +51,7 @@ export default function MonthSummary({
 
       <button
         disabled={loading}
-        className="col-span-2 rounded-lg px-3 lg:px-4 py-3 flex flex-row justify-between items-center text-white/90 bg-primary border border-gray-300 shadow-sm hover:bg-primary-dark hover:text-white transition-all duration-200 cursor-pointer disabled:bg-gray-100 disabled:text-gray-500"
+        className="col-span-2 rounded-lg px-3 lg:px-4 py-3 flex flex-row justify-between items-center text-white/90 bg-primary border border-gray-300 shadow-sm hover:bg-primary-dark hover:text-white transition-all duration-200 cursor-pointer disabled:bg-gray-50 disabled:text-gray-500"
       >
         <span className="lg:text-lg font-semibold">
           {t("monthSummary.report")}

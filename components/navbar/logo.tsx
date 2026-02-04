@@ -6,7 +6,7 @@ export default function Logo() {
   return (
     <div className="flex flex-row items-center">
       <Image alt="Pé de meia logo" src={logo} width={28} />
-      <span className="ml-1 font-extrabold text-xl/5 text-green-800 max-w-20">
+      <span className="ml-1 font-extrabold text-xl/5 text-primary max-w-20">
         Pé de Meia
       </span>
     </div>
