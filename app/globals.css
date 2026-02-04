@@ -76,3 +76,19 @@ input[type="date"] {
 .green-gradient {
   background: var(--gradient-green);
 }
+
+.skeleton {
+  background: linear-gradient(
+  90deg,
+  #e5e7eb 25%,
+  #d1d5db 50%,
+  #e5e7eb 75%
+);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

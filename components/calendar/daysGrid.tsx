@@ -34,6 +34,7 @@ export default function DaysGrid({
         <button
           key={index}
           onClick={() => setDailyModal(dayData)}
+          disabled={isLoading}
           className={`
               relative flex flex-col items-center justify-start pt-2 pb-3 gap-1 rounded-xl min-h-[54px] cursor-pointer
               ${getColors(
@@ -42,6 +43,7 @@ export default function DaysGrid({
                 profile.savingTarget,
                 isToday(dayData) && !isLoading,
               )}
+              ${isLoading ? 'skeleton' : ''}
             `}
         >
           <span
@@ -60,7 +62,7 @@ export default function DaysGrid({
             {dayData.day}
           </span>
 
-          <TransactionsContainer dayBalance={dayData} loading={isLoading} />
+          <TransactionsContainer dayBalance={dayData} />
         </button>
       ))}
 
