@@ -1,37 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap");
+
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 
-  --gradient-green: linear-gradient(135deg, hsl(152 69% 31%) 0%, hsl(152 50% 22%) 100%);
+  --gradient-green: linear-gradient(
+    135deg,
+    hsl(152 69% 31%) 0%,
+    hsl(152 50% 22%) 100%
+  );
 }
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  --color-green-default: #DDF1E3;
-  --color-green-hover: #B4E9C4;
-  --color-green-text: #00833B;
-  
-  --color-red-default: #FBDED7;
-  --color-red-hover: #FFCBC1;
-  --color-red-text: #B8000F;
+  --color-green-default: #ddf1e3;
+  --color-green-hover: #b4e9c4;
+  --color-green-text: #00833b;
 
-  --color-yellow-default: #FEF4D8;
-  --color-yellow-hover: #FFEDBC;
-  --color-yellow-text: #FFBB00;
-  
-  --color-blue-default: #29A4d9;
-  --color-blue-hover: #B5E9FF;
-  --color-blue-text: #29A4d9;
-  
+  --color-red-default: #fbded7;
+  --color-red-hover: #ffcbc1;
+  --color-red-text: #b8000f;
+
+  --color-yellow-default: #fef4d8;
+  --color-yellow-hover: #ffedbc;
+  --color-yellow-text: #ff9900;
+
+  --color-blue-default: #29a4d9;
+  --color-blue-hover: #b5e9ff;
+  --color-blue-text: #29a4d9;
+
   --color-primary: #198050;
-  --color-primary-dark: #0C863C;
+  --color-primary-dark: #0c863c;
 
-  --bg-green-gradient: linear-gradient(135deg, hsl(152 69% 31%) 0%, hsl(152 50% 22%) 100%);
+  --bg-green-gradient: linear-gradient(
+    135deg,
+    hsl(152 69% 31%) 0%,
+    hsl(152 50% 22%) 100%
+  );
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
@@ -41,6 +50,11 @@
 body {
   background: var(--background);
   color: black;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Space Grotesk", system-ui, sans-serif;
 }
 
 input[type="number"]::-webkit-outer-spin-button,

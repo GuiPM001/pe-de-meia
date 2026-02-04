@@ -5,9 +5,8 @@ import { useTransaction } from "@/app/context/TransactionContext";
 import { useMonth } from "@/app/context/MonthContext";
 import { useProfile } from "@/app/context/ProfileContext";
 
-import Calendar from "@/components/calendar";
+import Calendar from "@/components/calendar/calendar";
 import Sidebar from "@/components/sidebar";
-import Header from "@/components/header";
 import Wrapper from "@/components/ui/wrapper";
 
 import "@/core/utils/date.extensions";
@@ -32,7 +31,7 @@ export default function Home() {
 
     const loadMonths = async () => {
       setLoading((prev) => ({ ...prev, sidebar: true }));
-      
+
       Promise.all([
         getMonths(yearSelected, profile._id),
         fetchProfile(profile.email),
@@ -72,15 +71,7 @@ export default function Home() {
           loading={loading.sidebar}
         />
 
-        <div className="flex flex-col w-full h-full bg-white lg:rounded-2xl lg:shadow-sm lg:px-6 lg:py-4">
-          <Header
-            yearSelected={yearSelected}
-            handleChangeYear={handleChangeYear}
-            loading={loading.sidebar}
-          />
-
-          <Calendar loading={loading.calendar} />
-        </div>
+        <Calendar loading={loading.calendar} yearSelected={yearSelected} />
       </div>
     </Wrapper>
   );

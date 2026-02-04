@@ -100,7 +100,7 @@ export const useCalendar = () => {
     addDaysBeforeMonth(currentDate, skeleton);
 
     while (currentDate.getUTCMonth() === actualMonth.getUTCMonth()) {
-      addDay(currentDate, skeleton, { total: 0 });
+      addDay(currentDate, skeleton);
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
