@@ -58,8 +58,8 @@ const handleRecurrentTransaction = async (
     return {
       ...transaction,
       _id: index === 0 ? transaction.recurrenceId : undefined,
-      idMonth: new Date(Date.UTC(year, indexMonth, 1)).toISODateString(),
-      date: new Date(Date.UTC(year, indexMonth, day)).toISODateString(),
+      idMonth: new Date(Date.UTC(year, indexMonth, 1, 3, 0, 0)).toISODateString(),
+      date: new Date(Date.UTC(year, indexMonth, day, 3, 0, 0)).toISODateString(),
     };
   });
 
