@@ -75,7 +75,7 @@ export default function DailyTransactionModal({
 
           {dayBalance?.expenses && dayBalance?.expenses?.length > 0 && (
             <SummaryTransactions
-              title={t("transactionType.expense")}
+              title={t("transactionType.fixedExpense")}
               type={TransactionType.expense}
               transactions={dayBalance.expenses}
               transactionClicked={transactionClicked}

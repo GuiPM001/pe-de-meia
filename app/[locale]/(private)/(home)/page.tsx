@@ -33,7 +33,7 @@ export default function Home() {
     const loadMonths = async () => {
       setLoading((prev) => ({ ...prev, sidebar: true }));
 
-      Promise.all([
+      await Promise.all([
         getMonths(yearSelected, profile._id),
         fetchProfile(profile.email),
       ]);

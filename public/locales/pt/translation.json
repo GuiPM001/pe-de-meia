@@ -8,6 +8,12 @@
     "daily": "Gasto diário",
     "investment": "Investimento"
   },
+  "monthStatus": {
+    "green": "Acima da meta",
+    "greenWithInvestment": "Acima da meta somando o total investido",
+    "yellow": "Abaixo da meta",
+    "red": "Saldo negativo"
+  },
   "modal": {
     "actions": {
       "save": "Salvar",

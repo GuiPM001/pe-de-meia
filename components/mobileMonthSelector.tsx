@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { TbCalendar, TbChevronRight } from "react-icons/tb";
 import MonthsModal from "./modals/monthsModal";
 import LoadingSpinner from "./ui/loadingSpinner";
+import { useTranslation } from "react-i18next";
 
 interface MobileMonthSelectorProps {
   month: Month;
@@ -22,39 +23,35 @@ export default function MobileMonthSelector({
   handleChangeYear,
   loading,
 }: MobileMonthSelectorProps) {
-  const [status, setStatus] = useState<string>("");
+  const [status, setStatus] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const { monthSelected } = useMonth();
+  const { t } = useTranslation();
 
   useEffect(() => {
-    if (!monthSelected.balance) {
-      if (loading) return;
-
-      setStatus("Sem dados");
+    if (loading || monthSelected.balance === null) {
+      setStatus(null);
       return;
     }
 
     if (monthSelected.balance >= savingTarget) {
-      setStatus("Acima da meta");
+      setStatus(t("monthStatus.green"));
       return;
     }
 
     if (monthSelected.balance + (monthSelected.invested ?? 0) >= savingTarget) {
-      setStatus("Acima da meta somando o total investido");
+      setStatus(t("monthStatus.greenWithInvestment"));
       return;
     }
 
-    if (
-      monthSelected.balance <= 0 ||
-      Number(monthSelected.balance.toFixed(2)) <= 0
-    ) {
-      setStatus("Saldo negativo");
+    if (Number(monthSelected.balance.toFixed(2)) <= 0) {
+      setStatus(t("monthStatus.red"));
       return;
     }
 
-    setStatus("Abaixo da meta");
-  }, [monthSelected.balance, savingTarget]);
+    setStatus(t("monthStatus.yellow"));
+  }, [monthSelected, savingTarget, loading, t]);
 
   return (
     <>
@@ -62,7 +59,7 @@ export default function MobileMonthSelector({
         onClick={() => setModalOpen(true)}
         disabled={loading}
         className={`lg:hidden flex flex-row items-center justify-between w-full rounded-lg px-4 py-2 mt-8 cursor-pointer 
-        ${loading ? "bg-gray-100 text-gray-500" : getColors(month.balance, month.invested ?? 0, savingTarget)} ring-1`}
+        ${loading || !status ? "bg-white text-gray-500" : getColors(month.balance, month.invested ?? 0, savingTarget)} ring-1`}
       >
         <div className="flex flex-row gap-2 items-center">
           <TbCalendar size={"22px"} />

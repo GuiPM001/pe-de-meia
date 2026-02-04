@@ -8,6 +8,12 @@
     "daily": "Daily spending",
     "investment": "Investment"
   },
+  "monthStatus": {
+    "green": "Above target",
+    "greenWithInvestment": "Above target considering the total amount invested",
+    "yellow": "Below target",
+    "red": "Negative balance"
+  },
   "modal": {
     "actions": {
       "save": "Save",

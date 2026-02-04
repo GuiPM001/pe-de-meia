@@ -55,7 +55,7 @@ export default function Login() {
         </div>
 
         <div className="space-y-6 flex flex-col justify-center items-center gap-6">
-          <h2 className="text-3xl font-nunito font-bold text-gray-800 mb-2">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2 text-center">
             {t("login.title")}
           </h2>
 
