@@ -87,7 +87,7 @@ export default function Welcome() {
         </div>
 
         <div className="space-y-6">
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-10 text-center">
+          <h2 className="text-3xl font-bold text-gray-800 text-center mb-10">
             {t("welcome.title")}
           </h2>
 

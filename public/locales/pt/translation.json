@@ -16,7 +16,7 @@
   },
   "monthSummary": {
     "dailyBalance": "Saldo do dia",
-    "dailyCost": "Planejado/dia",
+    "dailyCost": "Estimado/dia",
     "report": "Ver análise mensal"
   },
   "modal": {
@@ -67,7 +67,7 @@
     "savingTarget": "Meta de economia mensal",
     "dailyCost": "Gasto diário",
     "button": "Concluir cadastro",
-    "dailyCostHint": "Gasto calculado com base na \nmédia dos últimos três meses. \nPara começar, informe um \nvalor previsto"
+    "dailyCostHint": "Gasto calculado com base na \nmédia dos últimos três meses. \nPara começar, informe um \nvalor médio diário que você \ntem sem considerar os gastos fixos"
   },
   "navBar": {
     "monthlySummary": "Resumo mensal",

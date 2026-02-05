@@ -16,7 +16,7 @@
   },
   "monthSummary": {
     "dailyBalance": "Daily balance",
-    "dailyCost": "Planned/day",
+    "dailyCost": "Estimated/day",
     "report": "View monthly analysis"
   },
   "modal": {
@@ -67,7 +67,7 @@
     "savingTarget": "Monthly savings goal",
     "dailyCost:": "Daily cost",
     "button": "Complete registration",
-    "dailyCostHint": "Expense calculated based on the \naverage of the last three months. \nTo get started, enter \nan estimated value"
+    "dailyCostHint": "Expense calculated based on the \naverage of the last three months. \nTo get started, provide an average daily income \nthat does not include fixed expenses."
   },
   "navBar": {
     "monthlySummary": "Monthly summary",

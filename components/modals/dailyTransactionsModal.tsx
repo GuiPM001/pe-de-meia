@@ -111,7 +111,7 @@ export default function DailyTransactionModal({
 
           {dayBalance.hasEstimatedDailyExpense && (
             <div className="flex flex-row justify-between border-b border-gray-200 pb-3 mb-3">
-              <span>Gasto diário planejado</span>
+              <span>{t("monthSummary.dailyCost")}</span>
               <span>{currencyNumber(profile.dailyCost)}</span>
             </div>
           )}
