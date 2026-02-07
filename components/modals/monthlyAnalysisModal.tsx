@@ -48,13 +48,15 @@ export default function MonthlyAnalysisModal({
     return t("monthStatus.yellow");
   };
 
-  const sumValues = (
-    transactionType: TransactionType,
-    recurrent: boolean = false,
-  ) => {
-    const filteredTransactions = transactions?.filter(
-      (x) => x.type === transactionType && x.recurrent === recurrent,
+  const sumValues = (transactionType: TransactionType, recurrent?: boolean) => {
+    let filteredTransactions = transactions?.filter(
+      (x) => x.type === transactionType,
     );
+
+    if (recurrent !== undefined)
+      filteredTransactions = transactions?.filter(
+        (x) => x.type === transactionType && x.recurrent === recurrent,
+      );
 
     if (!filteredTransactions) return 0;
 
@@ -65,7 +67,7 @@ export default function MonthlyAnalysisModal({
     const totalDailyCost = sumValues(TransactionType.expense, false);
 
     const today = new Date().getDate();
-    return (totalDailyCost / today) - profile.savingTarget;
+    return profile.dailyCost - totalDailyCost / today;
   };
 
   const calculateTotalPlannedDailyCost = () => {
@@ -78,14 +80,14 @@ export default function MonthlyAnalysisModal({
   return (
     <ModalContainer open={open} onClose={onClose}>
       <ModalTitle title={t("modal.monthlyAnalysis.title")} onClose={onClose} />
-      <div className="text-gray-500 -mt-8 mb-8">
+      <div className="text-gray-500 -mt-6 mb-4">
         <span>
           {t("modal.monthlyAnalysis.subTitle")}{" "}
           {getMonthNameByDate(monthSelected.id)} {year}
         </span>
       </div>
       <div
-        className={`flex flex-row justify-between rounded-xl px-4 py-4
+        className={`flex flex-row justify-between rounded-xl px-4 py-4 my-2
           ${getColors(monthSelected.balance, monthSelected.invested ?? 0, profile.savingTarget, true, true)}`}
       >
         <div className="flex flex-row items-center gap-2">
@@ -97,8 +99,8 @@ export default function MonthlyAnalysisModal({
         <span className="font-semibold font-xl">{getStatus()}</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        <div className="rounded-xl flex flex-col gap-2 px-4 py-3 bg-green-default ring ring-green-text/30">
+      <div className="grid grid-cols-2 gap-2 lg:gap-4 mt-4">
+        <div className="rounded-xl flex flex-col gap-2 px-3 lg:px-4 py-3 bg-green-default ring ring-green-text/30">
           <div className="flex flex-row gap-2 items-center text-green-text">
             <TbArrowUpRight size="18px" />
             <span className="text-sm text-gray-500">
@@ -106,12 +108,12 @@ export default function MonthlyAnalysisModal({
             </span>
           </div>
 
-          <span className="font-semibold text-xl text-green-text">
+          <span className="font-semibold text-lg lg:text-xl text-green-text">
             {currencyNumber(sumValues(TransactionType.income))}
           </span>
         </div>
 
-        <div className="rounded-xl flex flex-col gap-2 px-4 py-3 bg-red-default ring ring-red-text/30">
+        <div className="rounded-xl flex flex-col gap-2 px-3 lg:px-4 py-3 bg-red-default ring ring-red-text/30">
           <div className="flex flex-row gap-2 items-center text-red-text">
             <TbArrowDownRight size="18px" />
             <span className="text-sm text-gray-500">
@@ -119,12 +121,12 @@ export default function MonthlyAnalysisModal({
             </span>
           </div>
 
-          <span className="font-semibold text-xl text-red-text">
+          <span className="font-semibold text-lg lg:text-xl text-red-text">
             {currencyNumber(sumValues(TransactionType.expense, true))}
           </span>
         </div>
 
-        <div className="rounded-xl flex flex-col gap-2 px-4 py-3 bg-yellow-default ring ring-yellow-text/30">
+        <div className="rounded-xl flex flex-col gap-2 px-3 lg:px-4 py-3 bg-yellow-default ring ring-yellow-text/30">
           <div className="flex flex-row gap-2 items-center text-yellow-text">
             <TbWallet size="18px" />
             <span className="text-sm text-gray-500">
@@ -132,12 +134,12 @@ export default function MonthlyAnalysisModal({
             </span>
           </div>
 
-          <span className="font-semibold text-xl text-yellow-text">
-            {currencyNumber(sumValues(TransactionType.expense))}
+          <span className="font-semibold text-lg lg:text-xl text-yellow-text">
+            {currencyNumber(sumValues(TransactionType.expense, false))}
           </span>
         </div>
 
-        <div className="rounded-xl flex flex-col gap-2 px-4 py-3 bg-gray-100 ring ring-gray-600/30">
+        <div className="rounded-xl flex flex-col gap-2 px-3 lg:px-4 py-3 bg-gray-100 ring ring-gray-600/30">
           <div className="flex flex-row gap-2 items-center text-gray-600">
             <TbTrendingUp size="18px" />
             <span className="text-sm text-gray-500">
@@ -145,7 +147,7 @@ export default function MonthlyAnalysisModal({
             </span>
           </div>
 
-          <span className="font-semibold text-xl text-gray-600">
+          <span className="font-semibold text-lg lg:text-xl text-gray-600">
             {currencyNumber(calculatePerformance())}
           </span>
         </div>
@@ -153,11 +155,11 @@ export default function MonthlyAnalysisModal({
 
       <div className="mt-4 text-gray-500 text-sm flex items-center flex-col">
         <div className="w-full h-[0.5px] bg-gray-300 mb-4" />
-        <span>
+        <span className="w-[90%] lg:w-full text-center">
           {t("modal.monthlyAnalysis.dailyProjected")}:{" "}
           {currencyNumber(calculateTotalPlannedDailyCost())} |{" "}
           {t("modal.monthlyAnalysis.realDailyExpense")}:{" "}
-          {currencyNumber(sumValues(TransactionType.expense))}
+          {currencyNumber(sumValues(TransactionType.expense, false))}
         </span>
       </div>
     </ModalContainer>
