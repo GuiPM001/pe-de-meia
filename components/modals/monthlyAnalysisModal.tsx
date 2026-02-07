@@ -67,7 +67,7 @@ export default function MonthlyAnalysisModal({
     const totalDailyCost = sumValues(TransactionType.expense, false);
 
     const today = new Date().getDate();
-    return profile.dailyCost - totalDailyCost / today;
+    return totalDailyCost / today;
   };
 
   const calculateTotalPlannedDailyCost = () => {

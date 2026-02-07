@@ -61,8 +61,8 @@
       "status": "Status do mês",
       "income": "Total entrada",
       "expense": "Total saída",
-      "daily": "Gasto diário",
-      "performance": "Performance",
+      "daily": "Total diário",
+      "performance": "Dário médio",
       "dailyProjected": "Gasto diário previsto",
       "realDailyExpense": "Real"
     }
@@ -76,7 +76,7 @@
     "name": "Nome",
     "email": "E-mail",
     "savingTarget": "Meta de economia mensal",
-    "dailyCost": "Gasto diário",
+    "dailyCost": "Gasto diário previsto",
     "button": "Concluir cadastro",
     "dailyCostHint": "Gasto calculado com base na \nmédia dos últimos três meses. \nPara começar, informe um \nvalor médio diário que você \ntem sem considerar os gastos fixos"
   },

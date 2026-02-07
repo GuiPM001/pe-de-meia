@@ -62,7 +62,7 @@
       "income": "Total income",
       "expense": "Total expense",
       "daily": "Total daily",
-      "performance": "Performance",
+      "performance": "Daily average",
       "dailyProjected": "Projected daily expenses",
       "realDailyExpense": "Real"
     }
@@ -76,7 +76,7 @@
     "name": "Name",
     "email": "E-mail",
     "savingTarget": "Monthly savings goal",
-    "dailyCost:": "Daily cost",
+    "dailyCost:": "Daily cost projected",
     "button": "Complete registration",
     "dailyCostHint": "Expense calculated based on the \naverage of the last three months. \nTo get started, provide an average daily income \nthat does not include fixed expenses."
   },
