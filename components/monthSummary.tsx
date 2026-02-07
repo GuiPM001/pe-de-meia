@@ -52,7 +52,7 @@ export default function MonthSummary({
       />
 
       <button
-        disabled={loading}
+        disabled={true}
         onClick={() => setModalOpen(true)}
         className="col-span-2 rounded-lg px-3 lg:px-4 py-3 flex flex-row justify-between items-center text-white/90 bg-primary border border-primary shadow-sm hover:bg-primary-dark hover:text-white transition-all duration-200 cursor-pointer disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-300"
       >
