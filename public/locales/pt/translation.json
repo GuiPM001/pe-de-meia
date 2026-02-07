@@ -17,7 +17,7 @@
   "monthSummary": {
     "dailyBalance": "Saldo do dia",
     "dailyCost": "Estimado/dia",
-    "report": "Ver análise mensal"
+    "analysis": "Ver análise mensal"
   },
   "modal": {
     "actions": {
@@ -54,6 +54,17 @@
       "p2": "Com valor total de ",
       "recurrent": "Excluir recorrência",
       "saveButton": "Confirmar"
+    },
+    "monthlyAnalysis": {
+      "title": "Análise do mês",
+      "subTitle": "Resumo financeiro de",
+      "status": "Status do mês",
+      "income": "Total de entradas",
+      "expense": "Total de saídas",
+      "daily": "Gasto diário",
+      "performance": "Performance",
+      "dailyProjected": "Gasto diário previsto",
+      "realDailyExpense": "Real"
     }
   },
   "login": {

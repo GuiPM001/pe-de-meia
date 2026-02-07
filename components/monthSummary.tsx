@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useProfile } from "@/app/context/ProfileContext";
 import { TbChartPie, TbTrendingDown, TbWallet } from "react-icons/tb";
 import { getAccentBackground, getColors } from "@/core/utils/getColors";
+import MonthlyAnalysisModal from "./modals/monthlyAnalysisModal";
 interface MonthSummaryProps {
   dayBalances: DayBalance[];
   loading: boolean;
@@ -20,6 +21,7 @@ export default function MonthSummary({
   const { profile } = useProfile();
 
   const [dailyBalance, setDailyBalance] = useState<number>(0);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const today = new Date().getDate();
@@ -51,13 +53,19 @@ export default function MonthSummary({
 
       <button
         disabled={loading}
-        className="col-span-2 rounded-lg px-3 lg:px-4 py-3 flex flex-row justify-between items-center text-white/90 bg-primary border border-gray-300 shadow-sm hover:bg-primary-dark hover:text-white transition-all duration-200 cursor-pointer disabled:bg-gray-50 disabled:text-gray-500"
+        onClick={() => setModalOpen(true)}
+        className="col-span-2 rounded-lg px-3 lg:px-4 py-3 flex flex-row justify-between items-center text-white/90 bg-primary border border-primary shadow-sm hover:bg-primary-dark hover:text-white transition-all duration-200 cursor-pointer disabled:bg-gray-50 disabled:text-gray-500 disabled:border-gray-300"
       >
         <span className="lg:text-lg font-semibold">
-          {t("monthSummary.report")}
+          {t("monthSummary.analysis")}
         </span>
         <TbChartPie className="h-6 w-10" />
       </button>
+
+      <MonthlyAnalysisModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </div>
   );
 }
