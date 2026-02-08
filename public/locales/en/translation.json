@@ -50,7 +50,7 @@
     },
     "deleteTransaction": {
       "title": "Delete transaction",
-      "p1": "Confirm deletion of the transaction(s): ",
+      "p1": "Confirm deletion of the transaction: ",
       "p2": "With a total value of ",
       "recurrent": "Delete recurrence",
       "saveButton": "Confirm"

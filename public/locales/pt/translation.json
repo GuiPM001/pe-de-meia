@@ -50,7 +50,7 @@
     },
     "deleteTransaction": {
       "title": "Excluir Transação",
-      "p1": "Confirmar exclusão da(s) transação(ções): ",
+      "p1": "Confirmar exclusão da transação: ",
       "p2": "Com valor total de ",
       "recurrent": "Excluir recorrência",
       "saveButton": "Confirmar"
@@ -62,7 +62,7 @@
       "income": "Total entrada",
       "expense": "Total saída",
       "daily": "Total diário",
-      "performance": "Dário médio",
+      "performance": "Diário médio",
       "dailyProjected": "Gasto diário previsto",
       "realDailyExpense": "Real"
     }
