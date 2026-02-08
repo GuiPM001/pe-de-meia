@@ -8,6 +8,7 @@ import { useMonth } from "@/app/context/MonthContext";
 import {
   TbArrowDownRight,
   TbArrowUpRight,
+  TbBusinessplan,
   TbTrendingUp,
   TbWallet,
 } from "react-icons/tb";
@@ -86,8 +87,9 @@ export default function MonthlyAnalysisModal({
           {getMonthNameByDate(monthSelected.id)} {year}
         </span>
       </div>
+      
       <div
-        className={`flex flex-row justify-between rounded-xl px-4 py-4 my-2
+        className={`flex flex-row justify-between rounded-xl px-4 py-4 
           ${getColors(monthSelected.balance, monthSelected.invested ?? 0, profile.savingTarget, true, true)}`}
       >
         <div className="flex flex-row items-center gap-2">
@@ -141,7 +143,7 @@ export default function MonthlyAnalysisModal({
 
         <div className="rounded-xl flex flex-col gap-2 px-3 lg:px-4 py-3 bg-gray-100 ring ring-gray-600/30">
           <div className="flex flex-row gap-2 items-center text-gray-600">
-            <TbTrendingUp size="18px" />
+            <TbBusinessplan size="18px" />
             <span className="text-sm text-gray-500">
               {t("modal.monthlyAnalysis.performance")}
             </span>
@@ -155,12 +157,15 @@ export default function MonthlyAnalysisModal({
 
       <div className="mt-4 text-gray-500 text-sm flex items-center flex-col">
         <div className="w-full h-[0.5px] bg-gray-300 mb-4" />
-        <span className="w-[90%] lg:w-full text-center">
-          {t("modal.monthlyAnalysis.dailyProjected")}:{" "}
-          {currencyNumber(calculateTotalPlannedDailyCost())} |{" "}
-          {t("modal.monthlyAnalysis.realDailyExpense")}:{" "}
-          {currencyNumber(sumValues(TransactionType.expense, false))}
-        </span>
+        <div className="flex flex-col lg:flex-row text-center lg:gap-2">
+          <span>
+            {t("modal.monthlyAnalysis.dailyProjected")}: {currencyNumber(calculateTotalPlannedDailyCost())}
+          </span>
+          <span className="hidden lg:block">|</span>
+          <span>
+            {t("modal.monthlyAnalysis.realDailyExpense")}: {currencyNumber(sumValues(TransactionType.expense, false))}
+          </span>
+        </div>
       </div>
     </ModalContainer>
   );

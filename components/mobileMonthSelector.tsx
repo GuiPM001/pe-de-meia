@@ -59,7 +59,7 @@ export default function MobileMonthSelector({
         onClick={() => setModalOpen(true)}
         disabled={loading}
         className={`lg:hidden flex flex-row items-center justify-between w-full rounded-lg px-4 py-2 mt-4 cursor-pointer shadow-sm 
-        ${loading || !status ? "bg-gray-50 ring-gray-300 text-gray-500" : getColors(month.balance, month.invested ?? 0, savingTarget)}`}
+        ${loading || !status ? "bg-gray-50 ring-gray-300 text-gray-500" : getColors(month.balance, month.invested ?? 0, savingTarget, true)}`}
       >
         <div className="flex flex-row gap-2 items-center">
           <TbCalendar size={"22px"} />
