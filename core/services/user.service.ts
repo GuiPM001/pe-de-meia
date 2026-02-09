@@ -95,7 +95,13 @@ const updateFutureMonths = async (user: ProfileDocument) => {
     const qtdDaysMonth = getDaysFromMonthId(futureMonth.id);
 
     const transactions: Transaction[] = await transactionService.getTransactionsByMonthId(futureMonth.id,  user._id, "en");
-    const totalTransaction = transactions.reduce((acc, v) => (v.value ?? 0) + acc, 0);
+    
+    const totalTransaction = transactions.reduce((acc, v) => {
+      if (v.type === TransactionType.income) 
+        return acc + v.value!;
+      
+      return acc - v.value!;
+    }, 0);
     
     const newBalance = (lastBalance + totalTransaction - (user.dailyCost * qtdDaysMonth));
     
