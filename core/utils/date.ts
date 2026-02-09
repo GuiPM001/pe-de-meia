@@ -44,3 +44,23 @@ export function getFirstCalendarDate(date: Date) {
   firstDayOfMonth.setDate(1 - firstDayOfMonth.getUTCDay());
   return firstDayOfMonth;
 }
+
+export const getDaysInMonth = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const indexMonth = today.getMonth();
+  
+  return new Date(year, indexMonth + 1, 0 + 1, 0).getDate();
+}
+
+export const getDaysFromMonthId = (monthId: string) => {
+  const [year, month] = monthId.split("-").map(Number);
+  return new Date(year, month, 0).getDate();
+};
+
+export const getPastMonths = (amount: number): string[] =>
+  Array.from({ length: amount }, (_, i) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - (i + 1));
+    return date.toISOString().slice(0, 7) + "-01";
+});

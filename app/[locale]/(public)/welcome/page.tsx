@@ -110,7 +110,7 @@ export default function Welcome() {
               />
 
               <div
-                className="group absolute top-0 left-24 text-gray-400"
+                className="group absolute top-0 left-40 text-gray-400"
                 tabIndex={0}
               >
                 <TbHelp size="20px" />

@@ -1,4 +1,7 @@
 import { Schema, models, model } from 'mongoose';
+import { Types } from "mongoose";
+import { Document } from "mongoose";
+import { Profile } from '../types/Profile';
 
 const UserSchema = new Schema({
   name: {
@@ -19,3 +22,5 @@ const UserSchema = new Schema({
 }, { timestamps: true });
 
 export const User = models.User || model('User', UserSchema);
+
+export type ProfileDocument = Profile & Document<Types.ObjectId>;

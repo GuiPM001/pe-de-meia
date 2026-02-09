@@ -72,21 +72,20 @@ const saveMonth = async (month: Month, locale: SupportedLocale) => {
 const saveMonthsNewUser = async (idUser: string, dailyCost: number) => {
   await connectMongo();
 
-  const now = new Date();
-  const actualYear = now.getFullYear();
-  const actualMonth = now.getUTCMonth();
+  const now = new Date().toISODateString();
+  const [year, month, day] = now.split('-').map(Number);
 
   let actualBalance = 0;
   
   for (let i = 0; i < 6; i++) {
-    let qtdDaysInMonth = new Date(actualYear, (actualMonth + 1 + i), 0).getDate();
+    let qtdDaysInMonth = new Date(year, month + i, 0).getUTCDate();
     
     if (i === 0)
-      qtdDaysInMonth -= now.getUTCDate() - 1;
+      qtdDaysInMonth -= day - 1;
 
     actualBalance -= (dailyCost * qtdDaysInMonth);
     
-    const id = new Date(actualYear, actualMonth + i, 1).toISODateString();
+    const id = new Date(year, month - 1 + i, 1).toISODateString();
     await Months.create({ idUser, id, balance: actualBalance, invested: 0 });
 
   }

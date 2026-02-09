@@ -34,9 +34,9 @@ export default function DaysGrid({
         <button
           key={index}
           onClick={() => setDailyModal(dayData)}
-          disabled={isLoading}
+          disabled={isLoading || dayData.total === null}
           className={`
-              relative flex flex-col items-center justify-start pt-2 pb-3 gap-1 rounded-xl min-h-[54px] cursor-pointer
+              relative flex flex-col items-center justify-start pt-2 pb-3 gap-1 rounded-xl min-h-[54px] cursor-pointer disabled:cursor-default
               ${getColors(
                 dayData.total,
                 dayData.totalInvested ?? 0,

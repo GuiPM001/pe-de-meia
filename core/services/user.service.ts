@@ -1,11 +1,13 @@
 import { Profile } from "../types/Profile";
 import { connectMongo } from "@/core/db/mongodb";
-import { User } from "@/core/models/user";
+import { ProfileDocument, User } from "@/core/models/user";
 import { transactionService } from "./transaction.service";
 import { TransactionType } from "../enums/transactionType";
 import { monthService } from "./month.service";
 import { RegisterRequest } from "../types/RegisterRequest";
 import { SupportedLocale, t } from "@/lib/errorHandler";
+import { Transaction } from "../types/Transaction";
+import { getDaysFromMonthId, getDaysInMonth, getPastMonths } from "../utils/date";
 import "@/core/utils/date.extensions";
 
 const create = async (request: RegisterRequest, locale: SupportedLocale) => {
@@ -58,56 +60,50 @@ const getByEmail = async (email: string): Promise<Profile | null> => {
 const updateDailyCost = async () => {
   await connectMongo();
 
-  const users = await User.find();
-
-  const today = new Date();
-  const qtdDays = new Date(
-    today.getFullYear(),
-    today.getMonth() + 1,
-    0
-  ).getDate();
-
-  const pastMonths = Array.from({ length: 3 }, (_, i) => {
-    const d = new Date();
-    d.setMonth(d.getMonth() - (i + 1));
-    return d.toISOString().slice(0, 7) + "-01";
-  });
+  const users: ProfileDocument[] = await User.find();
 
   for (const user of users) {
-    const idUser = (user as Profile)._id;
-
-    const transactions = await transactionService.getTransactions(
-      pastMonths,
-      idUser,
-      TransactionType.expense,
-      false
-    );
-
-    const totalDailyCost = transactions.reduce((acc, t) => acc + t.value!, 0);
-
-    if (totalDailyCost <= 0) continue;
-
-    const previousDailyCost = user.dailyCost;
-
-    user.dailyCost = Math.floor(totalDailyCost / pastMonths.length / qtdDays);
-    await user.save();
-
-    // TODO: não precisa listar os mesmes, só fazer o update idMonth > data
-    const futureMonths = await monthService.getFutureMonthsByIdUser(
-      idUser,
-      today.toISOString().slice(0, 7) + "-01"
-    );
-    for (const month of futureMonths) {
-      const newBalance =
-        (month.balance ?? 0) - (user.dailyCost - previousDailyCost) * qtdDays;
-      await monthService.updateMonthBalanceDailyCost(
-        month.id,
-        idUser,
-        newBalance
-      );
-    }
+    await calculateDailyCost(user);
+    await updateFutureMonths(user);
   }
 };
+
+const calculateDailyCost = async (user: ProfileDocument) => {
+  const qtdDays = getDaysInMonth();
+  const pastMonths = getPastMonths(3);
+
+  const transactions = await transactionService.getTransactions(pastMonths, user._id, TransactionType.expense, false);
+
+  const totalDailyCost = transactions.reduce((acc, t) => acc + t.value!, 0);
+
+  user.dailyCost = Math.floor(totalDailyCost / pastMonths.length / qtdDays);
+  await user.save();
+}
+
+const updateFutureMonths = async (user: ProfileDocument) => {
+  const today = new Date();
+  const idMonth = today.toISOString().slice(0, 7) + "-01";
+
+  const [futureMonths, lastMonth] = await Promise.all([
+    monthService.getFutureMonthsByIdUser(user.id, idMonth), 
+    monthService.getLastMonth(idMonth, user._id)
+  ]);
+
+  let lastBalance = lastMonth.balance ?? 0;
+
+  for (const futureMonth of futureMonths) {
+    const qtdDaysMonth = getDaysFromMonthId(futureMonth.id);
+
+    const transactions: Transaction[] = await transactionService.getTransactionsByMonthId(futureMonth.id,  user._id, "en");
+    const totalTransaction = transactions.reduce((acc, v) => (v.value ?? 0) + acc, 0);
+    
+    const newBalance = (lastBalance + totalTransaction - (user.dailyCost * qtdDaysMonth));
+    
+    await monthService.updateMonthBalanceDailyCost(futureMonth.id, user.id, newBalance);
+    
+    lastBalance = newBalance;
+  }
+}
 
 const getAll = async () => {
   await connectMongo();
