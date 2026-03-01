@@ -50,7 +50,7 @@ export const getDaysInMonth = () => {
   const year = today.getFullYear();
   const indexMonth = today.getMonth();
   
-  return new Date(year, indexMonth + 1, 0 + 1, 0).getDate();
+  return new Date(year, indexMonth + 1, 0).getDate();
 }
 
 export const getDaysFromMonthId = (monthId: string) => {
