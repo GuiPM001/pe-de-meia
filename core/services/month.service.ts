@@ -173,6 +173,18 @@ const getLastMonth = async (actualIdMonth: string, idUser: string) => {
   return months;
 };
 
+const updateBalance = async (updatedMonth: Omit<Month, "invested">) => {
+  await connectMongo();
+
+  const months = await getFutureMonthsByIdUser(updatedMonth.idUser, updatedMonth.id);
+  const balanceDiference = (updatedMonth.balance ?? 0) - (months[0].balance ?? 0);
+
+  for (const month of months) {
+    const newBalance = (month.balance ?? 0) + balanceDiference;
+    await monthService.updateActualMonthBalance(month.id, updatedMonth.idUser, newBalance);  
+  }
+};
+
 export const monthService = {
   saveMonth,
   saveMonthsNewUser,
@@ -183,5 +195,6 @@ export const monthService = {
   getMonthById,
   updateActualMonthBalance,
   removeDailyCost,
-  getLastMonth
+  getLastMonth,
+  updateBalance
 };
