@@ -105,7 +105,7 @@ const updateFutureMonths = async (user: ProfileDocument) => {
     
     const newBalance = (lastBalance + totalTransaction - (user.dailyCost * qtdDaysMonth));
     
-    await monthService.updateMonthBalanceDailyCost(futureMonth.id, user.id, newBalance);
+    await monthService.updateActualMonthBalance(futureMonth.id, user.id, newBalance);
     
     lastBalance = newBalance;
   }
