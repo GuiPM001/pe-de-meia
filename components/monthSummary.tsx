@@ -62,10 +62,12 @@ export default function MonthSummary({
         <TbChartPie className="h-6 w-10" />
       </button>
 
-      <MonthlyAnalysisModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-      />
+      {modalOpen && (
+        <MonthlyAnalysisModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

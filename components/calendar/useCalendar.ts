@@ -160,9 +160,11 @@ export const useCalendar = () => {
     }
   }
 
-  const isToday = (dayBalance: DayBalance) =>
-    dayBalance.day === today.getDate() &&
-    today.getUTCMonth() === monthDate.getUTCMonth();
+  const isToday = (dayBalance: DayBalance) => {
+    return dayBalance.day === today.getDate() &&
+    today.getUTCMonth() === monthDate.getUTCMonth() &&
+    dayBalance.total !== null;
+  }
 
   return { dayBalances, isCalculating, isToday };
 };

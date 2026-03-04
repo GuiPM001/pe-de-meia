@@ -67,8 +67,16 @@ export default function MonthlyAnalysisModal({
   const calculatePerformance = () => {
     const totalDailyCost = sumValues(TransactionType.expense, false);
 
-    const today = new Date().getDate();
-    return totalDailyCost / today;
+    const today = new Date();
+
+    if (today.toISOString().slice(0, 7) + "-01" !== monthSelected.id) {
+      const [year, month] = monthSelected.id.split('-').map(Number);
+      const qtdDaysInMonth = new Date(year, month, 0).getDate();
+
+      return totalDailyCost / qtdDaysInMonth;
+    }
+
+    return totalDailyCost / today.getDate();
   };
 
   const calculateTotalPlannedDailyCost = () => {
