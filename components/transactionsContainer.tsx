@@ -19,14 +19,14 @@ export default function TransactionsContainer({
       />
 
       <TransactionLabel
-        type={TransactionType.expense}
-        transactions={dayBalance.expenses}
-        idMonth={dayBalance.idMonth}
-      />
-      
-      <TransactionLabel
         type={TransactionType.fixedExpense}
         transactions={dayBalance.fixedExpenses}
+        idMonth={dayBalance.idMonth}
+      />
+
+      <TransactionLabel
+        type={TransactionType.expense}
+        transactions={dayBalance.expenses}
         idMonth={dayBalance.idMonth}
       />
 

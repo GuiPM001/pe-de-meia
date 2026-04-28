@@ -27,9 +27,9 @@ export default function SummaryTransactions({
 
   const total = transactions?.reduce((acc, t) => (t.value ?? 0) + acc, 0) ?? 0;
 
-  let textColor = "text-yellow-text";
+  let textColor = "text-purple-text";
   if (type === TransactionType.income) textColor = "text-green-text";
-  if (type === TransactionType.expense) textColor = "text-purple-text";
+  if (type === TransactionType.expense) textColor = "text-yellow-text";
   if (type === TransactionType.fixedExpense) textColor = "text-red-text";
   if (type === TransactionType.investment) textColor = "text-blue-text";
 
