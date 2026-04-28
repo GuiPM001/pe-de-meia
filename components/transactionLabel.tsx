@@ -16,9 +16,10 @@ export default function TransactionLabel({
 
   const bgColorMap: Record<TransactionType, string> = {
     [TransactionType.income]: "bg-green-text",
-    [TransactionType.expense]: "bg-red-text",
-    [TransactionType.daily]: "bg-yellow-text",
+    [TransactionType.expense]: "bg-yellow-text",
+    [TransactionType.daily]: "bg-purple-text",
     [TransactionType.investment]: "bg-blue-text",
+    [TransactionType.fixedExpense]: "bg-red-text",
   };
 
   return (

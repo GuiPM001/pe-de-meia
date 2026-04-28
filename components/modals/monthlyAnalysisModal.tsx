@@ -49,15 +49,10 @@ export default function MonthlyAnalysisModal({
     return t("monthStatus.yellow");
   };
 
-  const sumValues = (transactionType: TransactionType, recurrent?: boolean) => {
-    let filteredTransactions = transactions?.filter(
+  const sumValues = (transactionType: TransactionType) => {
+    const filteredTransactions = transactions?.filter(
       (x) => x.type === transactionType,
     );
-
-    if (recurrent !== undefined)
-      filteredTransactions = transactions?.filter(
-        (x) => x.type === transactionType && x.recurrent === recurrent,
-      );
 
     if (!filteredTransactions) return 0;
 
@@ -65,7 +60,7 @@ export default function MonthlyAnalysisModal({
   };
 
   const calculatePerformance = () => {
-    const totalDailyCost = sumValues(TransactionType.expense, false);
+    const totalDailyCost = sumValues(TransactionType.daily);
 
     const today = new Date();
 
@@ -132,20 +127,20 @@ export default function MonthlyAnalysisModal({
           </div>
 
           <span className="font-semibold text-lg lg:text-xl text-red-text">
-            {currencyNumber(sumValues(TransactionType.expense, true))}
+            {currencyNumber(sumValues(TransactionType.fixedExpense) + sumValues(TransactionType.expense))}
           </span>
         </div>
 
-        <div className="rounded-xl flex flex-col gap-2 px-3 lg:px-4 py-3 bg-yellow-default ring ring-yellow-text/30">
-          <div className="flex flex-row gap-2 items-center text-yellow-text">
+        <div className="rounded-xl flex flex-col gap-2 px-3 lg:px-4 py-3 text-purple-text bg-purple-default ring ring-purple-text/30">
+          <div className="flex flex-row gap-2 items-center">
             <TbWallet size="18px" />
             <span className="text-sm text-gray-500">
               {t("modal.monthlyAnalysis.daily")}
             </span>
           </div>
 
-          <span className="font-semibold text-lg lg:text-xl text-yellow-text">
-            {currencyNumber(sumValues(TransactionType.expense, false))}
+          <span className="font-semibold text-lg lg:text-xl">
+            {currencyNumber(sumValues(TransactionType.daily))}
           </span>
         </div>
 
@@ -171,7 +166,7 @@ export default function MonthlyAnalysisModal({
           </span>
           <span className="hidden lg:block">|</span>
           <span>
-            {t("modal.monthlyAnalysis.realDailyExpense")}: {currencyNumber(sumValues(TransactionType.expense, false))}
+            {t("modal.monthlyAnalysis.realDailyExpense")}: {currencyNumber(sumValues(TransactionType.daily))}
           </span>
         </div>
       </div>

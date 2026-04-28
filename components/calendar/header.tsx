@@ -7,6 +7,7 @@ import { useTransactionModal } from "@/app/context/TransactionModalContext";
 interface CalendarHeaderProps {
   month: string;
   year: number;
+  loading: boolean;
 }
 
 export default function Header(props: CalendarHeaderProps) {
@@ -22,6 +23,7 @@ export default function Header(props: CalendarHeaderProps) {
 
       <IconButton
         onClick={() => openModal(props.month)}
+        disabled={props.loading}
         className="h-8 w-8 absolute right-0 rounded-xl bg-gray-100 border border-gray-300 ml-2 text-gray-500 hover:bg-primary hover:text-white transition-all duration-200"
       >
         <TbPlus size="18px" />

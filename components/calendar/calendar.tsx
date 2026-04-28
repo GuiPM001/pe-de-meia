@@ -23,7 +23,7 @@ export default function Calendar(props: CalendarProps) {
       <MonthSummary dayBalances={dayBalances} loading={isLoading} />
       
       <div className="bg-white w-full rounded-2xl border border-gray-200 p-4 lg:p-6 shadow-sm">
-        <Header month={monthSelected.id} year={props.yearSelected} />
+        <Header month={monthSelected.id} year={props.yearSelected} loading={isLoading} />
 
         <WeekDaysHeader />
 

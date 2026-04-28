@@ -72,7 +72,7 @@ const calculateDailyCost = async (user: ProfileDocument) => {
   const qtdDays = getDaysInMonth();
   const pastMonths = getPastMonths(3);
 
-  const transactions = await transactionService.getTransactions(pastMonths, user._id, TransactionType.expense, false);
+  const transactions = await transactionService.getTransactions(pastMonths, user._id, TransactionType.daily, false);
 
   const totalDailyCost = transactions.reduce((acc, t) => acc + t.value!, 0);
 

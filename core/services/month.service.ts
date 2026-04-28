@@ -121,6 +121,7 @@ const getTotalBalance = (
   if (
     (transaction.type === TransactionType.income && isDelete) ||
     (transaction.type === TransactionType.expense && !isDelete) ||
+    (transaction.type === TransactionType.fixedExpense && !isDelete) ||
     (transaction.type === TransactionType.investment && !isDelete)
   )
     return month.balance! - transaction.value!;

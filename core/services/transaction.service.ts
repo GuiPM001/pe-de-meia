@@ -51,6 +51,7 @@ const handleRecurrentTransaction = async (
   const baseMonth = month - 1;
 
   transaction.recurrenceId = new ObjectId().toString();
+  transaction.type = transaction.type === TransactionType.expense ? TransactionType.fixedExpense : transaction.type;
 
   const transactionsToInsert = months.map((_, index) => {
     const indexMonth = baseMonth + index;

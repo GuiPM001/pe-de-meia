@@ -47,7 +47,7 @@ export default function TransactionModal({
       date: new Date(year, month - 1, initialDay).toISODateString(),
       description: "",
       recurrent: false,
-      type: TransactionType.expense,
+      type: TransactionType.daily,
       value: undefined,
       idUser: "",
       idMonth,
@@ -170,6 +170,7 @@ export default function TransactionModal({
           options={[
             { label: t('transactionType.income'), value: TransactionType.income },
             { label: t('transactionType.expense'), value: TransactionType.expense },
+            { label: t('transactionType.daily'), value: TransactionType.daily },
             { label: t('transactionType.investment'), value: TransactionType.investment },
           ]}
         />
@@ -179,7 +180,7 @@ export default function TransactionModal({
         <Checkbox
           label={t('modal.transaction.recurrent')}
           checked={form.recurrent}
-          disabled={!!transaction || form.type == TransactionType.investment}
+          disabled={!!transaction || form.type == TransactionType.investment || form.type == TransactionType.daily}
           onChange={(e) => handleForm(e.target.checked, "recurrent")}
         />
       </div>

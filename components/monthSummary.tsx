@@ -45,8 +45,8 @@ export default function MonthSummary({
       <MonthSummaryCard
         label={t("monthSummary.dailyCost")}
         value={profile.dailyCost}
-        className="text-yellow-text"
-        backgroundIcon="bg-yellow-text text-white"
+        className="text-purple-text"
+        backgroundIcon="bg-purple-text text-white"
         icon={TbTrendingDown}
         loading={loading}
       />

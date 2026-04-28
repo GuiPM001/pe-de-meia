@@ -29,7 +29,8 @@ export default function SummaryTransactions({
 
   let textColor = "text-yellow-text";
   if (type === TransactionType.income) textColor = "text-green-text";
-  if (type === TransactionType.expense) textColor = "text-red-text";
+  if (type === TransactionType.expense) textColor = "text-purple-text";
+  if (type === TransactionType.fixedExpense) textColor = "text-red-text";
   if (type === TransactionType.investment) textColor = "text-blue-text";
 
   return (

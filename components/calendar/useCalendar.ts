@@ -17,7 +17,7 @@ export const useCalendar = () => {
 
   const monthDate = useMemo(
     () => new Date(monthSelected.id),
-    [monthSelected.id]
+    [monthSelected.id],
   );
 
   const [dayBalances, setDayBalances] = useState(createSkeletonCalendar);
@@ -33,13 +33,18 @@ export const useCalendar = () => {
     createCalendar();
   }, [transactions]);
 
-  function addDay(date: Date, balances: DayBalance[], values?: Partial<DayBalance>) {
+  function addDay(
+    date: Date,
+    balances: DayBalance[],
+    values?: Partial<DayBalance>,
+  ) {
     balances.push({
       day: date.getDate(),
       idMonth: monthSelected.id,
       incomes: null,
       expenses: null,
       dailies: null,
+      fixedExpenses: null,
       investeds: null,
       total: null,
       totalInvested: null,
@@ -63,31 +68,19 @@ export const useCalendar = () => {
   }
 
   function groupTransactions(transactions: Transaction[]) {
-    const incomes: Transaction[] = [];
-    const expenses: Transaction[] = [];
-    const dailies: Transaction[] = [];
-    const investeds: Transaction[] = [];
+    const groups: Record<TransactionType, Transaction[]> = {
+      [TransactionType.income]: [],
+      [TransactionType.investment]: [],
+      [TransactionType.expense]: [],
+      [TransactionType.daily]: [],
+      [TransactionType.fixedExpense]: [],
+    };
 
     for (const transaction of transactions) {
-      if (transaction.type === TransactionType.income) {
-        incomes.push(transaction);
-        continue;
-      }
-
-      if (transaction.type === TransactionType.investment) {
-        investeds.push(transaction);
-        continue;
-      }
-
-      if (transaction.type === TransactionType.expense &&transaction.recurrent) {
-        expenses.push(transaction);
-        continue;
-      }
-
-      dailies.push(transaction);
+      (groups[transaction.type] ?? []).push(transaction);
     }
 
-    return { incomes, expenses, dailies, investeds };
+    return groups;
   }
 
   function createSkeletonCalendar(monthDate?: Date): DayBalance[] {
@@ -125,32 +118,38 @@ export const useCalendar = () => {
 
   async function addMonthlyDays(currentDate: Date, balances: DayBalance[]) {
     const indexMonth = monthDate.getUTCMonth();
-     
+
     const lastMonth = await getLastMonth(monthSelected.id, profile._id);
     let balance = lastMonth?.balance ?? 0;
 
     while (currentDate.getUTCMonth() === indexMonth) {
-      const dailyTransactions = transactions?.filter(
-        (x) => x.date === currentDate.toISODateString()
-      ) ?? [];
+      const dailyTransactions =
+        transactions?.filter((x) => x.date === currentDate.toISODateString()) ??
+        [];
 
-      const { incomes, expenses, dailies, investeds } = groupTransactions(dailyTransactions);
+      const groups = groupTransactions(dailyTransactions);
 
-      const totalInvested = sumValues(investeds);
-      const todayTotal = sumValues(incomes) - sumValues(expenses) - sumValues(dailies) - totalInvested;
+      const totalInvested = sumValues(groups[TransactionType.investment]);
+      const todayTotal =
+        sumValues(groups[TransactionType.income]) -
+        sumValues(groups[TransactionType.expense]) -
+        sumValues(groups[TransactionType.daily]) -
+        sumValues(groups[TransactionType.fixedExpense]) -
+        totalInvested;
 
       balance += todayTotal;
 
-      const hasEstimatedDailyExpense = currentDate.toISODateString() >= today.toISODateString();
+      const hasEstimatedDailyExpense =
+        currentDate.toISODateString() >= today.toISODateString();
 
-      if (hasEstimatedDailyExpense)
-        balance -= profile.dailyCost;
+      if (hasEstimatedDailyExpense) balance -= profile.dailyCost;
 
       addDay(currentDate, balances, {
-        incomes,
-        expenses,
-        dailies,
-        investeds,
+        incomes: groups[TransactionType.income],
+        expenses: groups[TransactionType.expense],
+        dailies: groups[TransactionType.daily],
+        investeds: groups[TransactionType.investment],
+        fixedExpenses: groups[TransactionType.fixedExpense],
         total: balance,
         totalInvested,
         hasEstimatedDailyExpense,
@@ -161,10 +160,12 @@ export const useCalendar = () => {
   }
 
   const isToday = (dayBalance: DayBalance) => {
-    return dayBalance.day === today.getDate() &&
-    today.getUTCMonth() === monthDate.getUTCMonth() &&
-    dayBalance.total !== null;
-  }
+    return (
+      dayBalance.day === today.getDate() &&
+      today.getUTCMonth() === monthDate.getUTCMonth() &&
+      dayBalance.total !== null
+    );
+  };
 
   return { dayBalances, isCalculating, isToday };
 };

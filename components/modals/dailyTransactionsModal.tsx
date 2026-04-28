@@ -73,9 +73,21 @@ export default function DailyTransactionModal({
             />
           )}
 
-          {dayBalance?.expenses && dayBalance?.expenses?.length > 0 && (
+          {dayBalance?.fixedExpenses && dayBalance?.fixedExpenses?.length > 0 && (
             <SummaryTransactions
               title={t("transactionType.fixedExpense")}
+              type={TransactionType.fixedExpense}
+              transactions={dayBalance.fixedExpenses}
+              transactionClicked={transactionClicked}
+              onClickTransaction={onClickTransaction}
+              onEdit={onEdit}
+              onDelete={onDelete}
+            />
+          )}
+
+          {dayBalance?.expenses && dayBalance?.expenses?.length > 0 && (
+            <SummaryTransactions
+              title={t("transactionType.expense")}
               type={TransactionType.expense}
               transactions={dayBalance.expenses}
               transactionClicked={transactionClicked}

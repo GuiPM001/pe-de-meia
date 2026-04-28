@@ -23,11 +23,15 @@
 
   --color-red-default: #fbded7;
   --color-red-hover: #ffcbc1;
-  --color-red-text: #b8000f;
+  --color-red-text: #C1121F;
+
+  --color-purple-text: #6A0DAD;
+  --color-purple-default: #F3E8FF;
+  --color-purple-hover: #E9D5FF;
 
   --color-yellow-default: #fef4d8;
   --color-yellow-hover: #ffedbc;
-  --color-yellow-text: #ff9900;
+  --color-yellow-text: #FF9900;
 
   --color-blue-default: #29a4d9;
   --color-blue-hover: #b5e9ff;
