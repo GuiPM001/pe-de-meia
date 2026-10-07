@@ -12,9 +12,9 @@ import { useProfile } from "@/app/context/ProfileContext";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
 import { useTransaction } from "@/app/context/TransactionContext";
-import "@/core/utils/date.extensions";
 import { useTranslation } from "react-i18next";
 import { useMonth } from "@/app/context/MonthContext";
+import "@/core/utils/date.extensions";
 
 export interface TransactionModalProps {
   onClose: () => void;
@@ -48,7 +48,7 @@ export default function TransactionModal({
       description: "",
       recurrent: false,
       type: TransactionType.daily,
-      value: undefined,
+      value: 0,
       idUser: "",
       idMonth,
       recurrenceId: null,
@@ -98,7 +98,7 @@ export default function TransactionModal({
       };
 
       const response: Transaction = await api.post("/transaction", newTransaction);
-      
+
       await getMonths(initialState.year, profile._id);
       setTransactions([...transactions ?? [], response]);
 
@@ -113,11 +113,11 @@ export default function TransactionModal({
 
   const onEdit = async () => {
     try {
-      setLoading(true); 
-      
+      setLoading(true);
+
       const response: Transaction = await api.put("/transaction", form);
       const newTransactions = transactions?.filter(t => t._id !== response._id) ?? [];
-      
+
       await getMonths(initialState.year, profile._id);
       setTransactions([...newTransactions, response]);
 
@@ -164,7 +164,7 @@ export default function TransactionModal({
         />
         <Select
           label={t('modal.transaction.type')}
-          value={form.type}
+          value={form.type == TransactionType.fixedExpense ? TransactionType.expense : form.type}
           onChange={(e) => handleForm(e.target.value, "type")}
           disabled={!!transaction}
           options={[

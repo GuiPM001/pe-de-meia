@@ -1,14 +1,26 @@
 import React from "react";
 import { INPUT_CLASSNAME } from "./constants";
 import { InputProps } from "./input";
-import { NumericFormat } from "react-number-format";
+import { NumberFormatBase } from "react-number-format";
 import Label from "./label";
 
 interface CurrencyInputProps extends InputProps {
   onValueChange: (floatValue: number) => void;
 }
 
+const formatCurrency = (numericString: string) => {
+  const digits = numericString.replace(/\D/g, "");
+  const cents = digits === "" ? 0 : parseInt(digits, 10);
+
+  return new Intl.NumberFormat("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(cents / 100);
+};
+
 export default function CurrencyInput(props: CurrencyInputProps) {
+  const valueInCents = Math.round(((props.value as number) ?? 0) * 100);
+
   return (
     <div className="w-full">
       <Label error={props.error} htmlFor={props.label}>
@@ -20,18 +32,22 @@ export default function CurrencyInput(props: CurrencyInputProps) {
           R$
         </span>
 
-        <NumericFormat
+        <NumberFormatBase
           id={props.label}
           className={`${INPUT_CLASSNAME} rounded-l-none`}
-          inputMode="decimal"
+          inputMode="numeric"
           type="text"
-          decimalScale={2}
-          fixedDecimalScale={true}
-          decimalSeparator=","
-          thousandSeparator="."
-          allowNegative={false}
-          value={props.value as number}
-          onValueChange={(values) => props.onValueChange(values.floatValue ?? 0)}
+          value={valueInCents}
+          valueIsNumericString={false}
+          format={formatCurrency}
+          removeFormatting={(formatted) => formatted.replace(/\D/g, "")}
+          getCaretBoundary={(formatted) =>
+            Array(formatted.length + 1).fill(false).fill(true, formatted.length)
+          }
+          onValueChange={(values) => {
+            const cents = parseInt(values.value || "0", 10);
+            props.onValueChange(cents / 100);
+          }}
           disabled={props.disabled}
         />
       </div>
