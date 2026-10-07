@@ -4,6 +4,7 @@ export const getColors = (
   target: number,
   border: boolean = false,
   bg: boolean = true,
+  isPastMonth: boolean = false,
 ) => {
   if (balance === null) 
     return `text-gray-500
@@ -17,7 +18,9 @@ export const getColors = (
             ${bg ? "bg-red-default hover:bg-red-hover" : ""} 
             ${border ? "ring ring-inset ring-red-text" : ""}`;
 
-  if (total >= target)
+  const isAboveTarget = isPastMonth ? invested >= target : total >= target;
+
+  if (isAboveTarget)
     return `text-green-text 
             ${bg ? "bg-green-default hover:bg-green-hover" : ""} 
             ${border ? "ring ring-inset ring-green-text" : ""}`;

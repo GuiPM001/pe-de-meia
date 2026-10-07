@@ -63,6 +63,7 @@
       "expense": "Total saída",
       "daily": "Total diário",
       "performance": "Diário médio",
+      "invested": "Total investido",
       "dailyProjected": "Gasto diário previsto",
       "realDailyExpense": "Real"
     }

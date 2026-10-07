@@ -25,6 +25,8 @@ export default function MonthButton({
   const now = new Date();
   const dateMonth = new Date(month.id);
 
+  const isPastMonth = month.id < (now.getFullYear() + "-" + String(now.getUTCMonth() + 1).padStart(2, "0") + "-01");
+
   return (
     <>
       {dateMonth > now && month.balance === null ? (
@@ -64,7 +66,9 @@ export default function MonthButton({
                         month.balance!,
                         month.invested!,
                         savingTarget,
-                        selected
+                        selected,
+                        true,
+                        isPastMonth
                       )}`}
         >
           <span>{getMonthNameByDate(month.id)}</span>

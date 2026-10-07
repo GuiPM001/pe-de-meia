@@ -35,12 +35,21 @@ export default function MobileMonthSelector({
       return;
     }
 
-    if (monthSelected.balance >= savingTarget) {
+    const now = new Date();
+    const currentMonthPrefix = now.getFullYear() + "-" + String(now.getUTCMonth() + 1).padStart(2, "0") + "-01";
+    const isPastMonth = monthSelected.id < currentMonthPrefix;
+
+    if (isPastMonth && (monthSelected.invested ?? 0) >= savingTarget) {
       setStatus(t("monthStatus.green"));
       return;
     }
 
-    if (monthSelected.balance + (monthSelected.invested ?? 0) >= savingTarget) {
+    if (!isPastMonth && monthSelected.balance >= savingTarget) {
+      setStatus(t("monthStatus.green"));
+      return;
+    }
+
+    if (!isPastMonth && monthSelected.balance + (monthSelected.invested ?? 0) >= savingTarget) {
       setStatus(t("monthStatus.greenWithInvestment"));
       return;
     }
@@ -59,7 +68,7 @@ export default function MobileMonthSelector({
         onClick={() => setModalOpen(true)}
         disabled={loading}
         className={`lg:hidden flex flex-row items-center justify-between w-full rounded-lg px-4 py-2 mt-4 cursor-pointer shadow-sm 
-        ${loading || !status ? "bg-gray-50 ring-gray-300 text-gray-500" : getColors(month.balance, month.invested ?? 0, savingTarget, true)}`}
+        ${loading || !status ? "bg-gray-50 ring-gray-300 text-gray-500" : getColors(month.balance, month.invested ?? 0, savingTarget, true, true, month.id < (new Date().getFullYear() + "-" + String(new Date().getUTCMonth() + 1).padStart(2, "0") + "-01"))}`}
       >
         <div className="flex flex-row gap-2 items-center">
           <TbCalendar size={"22px"} />

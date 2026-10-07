@@ -9,6 +9,7 @@ import {
   TbArrowDownRight,
   TbArrowUpRight,
   TbBusinessplan,
+  TbPigMoney,
   TbTrendingUp,
   TbWallet,
 } from "react-icons/tb";
@@ -35,12 +36,20 @@ export default function MonthlyAnalysisModal({
   const getStatus = () => {
     if (monthSelected.balance === null) return null;
 
+    const today = new Date();
+    const currentMonthPrefix = today.getFullYear() + "-" + String(today.getUTCMonth() + 1).padStart(2, "0") + "-01";
+    const isPastMonth = monthSelected.id < currentMonthPrefix;
+
+    if (isPastMonth && (monthSelected.invested ?? 0) >= profile.savingTarget) {
+      return t("monthStatus.green");
+    }
+
     const total = monthSelected.balance + (monthSelected.invested ?? 0);
 
-    if (monthSelected.balance >= profile.savingTarget)
+    if (!isPastMonth && monthSelected.balance >= profile.savingTarget)
       return t("monthStatus.green");
 
-    if (total >= profile.savingTarget)
+    if (!isPastMonth && total >= profile.savingTarget)
       return t("monthStatus.greenWithInvestment");
 
     if (Number(monthSelected.balance.toFixed(2)) <= 0)
@@ -90,10 +99,15 @@ export default function MonthlyAnalysisModal({
           {getMonthNameByDate(monthSelected.id)} {year}
         </span>
       </div>
-      
+
       <div
         className={`flex flex-row justify-between rounded-xl px-4 py-4 
-          ${getColors(monthSelected.balance, monthSelected.invested ?? 0, profile.savingTarget, true, true)}`}
+          ${(() => {
+            const today = new Date();
+            const currentMonthPrefix = today.getFullYear() + "-" + String(today.getUTCMonth() + 1).padStart(2, "0") + "-01";
+            const isPastMonth = monthSelected.id < currentMonthPrefix;
+            return getColors(monthSelected.balance, monthSelected.invested ?? 0, profile.savingTarget, true, true, isPastMonth);
+          })()}`}
       >
         <div className="flex flex-row items-center gap-2">
           <TbTrendingUp size="20px" />
@@ -154,6 +168,19 @@ export default function MonthlyAnalysisModal({
 
           <span className="font-semibold text-lg lg:text-xl text-gray-600">
             {currencyNumber(calculatePerformance())}
+          </span>
+        </div>
+
+        <div className="col-span-2 rounded-xl flex flex-col gap-2 px-3 lg:px-4 py-3 bg-blue-50 ring ring-blue-400/30">
+          <div className="flex flex-row gap-2 items-center text-blue-600">
+            <TbPigMoney size="18px" />
+            <span className="text-sm text-gray-500">
+              {t("modal.monthlyAnalysis.invested", "Investido")}
+            </span>
+          </div>
+
+          <span className="font-semibold text-lg lg:text-xl text-blue-600">
+            {currencyNumber(sumValues(TransactionType.investment))}
           </span>
         </div>
       </div>

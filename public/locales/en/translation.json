@@ -63,6 +63,7 @@
       "expense": "Total expense",
       "daily": "Total daily",
       "performance": "Daily average",
+      "invested": "Total invested",
       "dailyProjected": "Projected daily expenses",
       "realDailyExpense": "Real"
     }
