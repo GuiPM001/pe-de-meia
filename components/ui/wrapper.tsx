@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "../navbar/navbar";
+import TabBar from "@/components/tabBar";
 
 export default function Wrapper({
   children,
@@ -8,8 +8,8 @@ export default function Wrapper({
 }>) {
   return (
     <div className="w-screen h-screen flex flex-col overflow-x-hidden bg-gray-100">
-      <NavBar />
-      <div className="px-4 pb-8 lg:p-8 flex-1">{children}</div>
+      <TabBar />
+      <div className="px-4 pt-6 pb-28 max-w-md">{children}</div>
     </div>
   );
 }

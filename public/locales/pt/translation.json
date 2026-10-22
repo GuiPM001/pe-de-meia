@@ -9,15 +9,15 @@
     "investment": "Investimento"
   },
   "monthStatus": {
-    "green": "Acima da meta",
+    "green": "Acima da\nmeta",
     "greenWithInvestment": "Acima da meta somando o total investido",
-    "yellow": "Abaixo da meta",
-    "red": "Saldo negativo"
+    "yellow": "Abaixo da\nmeta",
+    "red": "Saldo\nnegativo"
   },
-  "monthSummary": {
-    "dailyBalance": "Saldo do dia",
-    "dailyCost": "Estimado/dia",
-    "analysis": "Ver análise mensal"
+  "daySummary": {
+    "balance": "Saldo do dia",
+    "expected": "Gasto diário previsto",
+    "expectedDescription": "Valor previsto que será gasto"
   },
   "modal": {
     "actions": {
@@ -113,5 +113,10 @@
     "transaction": {
       "fieldRequired": "É necessario preencher todos os campos para cadastrar uma transação"
     }
+  },
+  "tabbar": {
+    "finance": "Finanças",
+    "calendar": "Calendário",
+    "profile": "Perfil"
   }
 }

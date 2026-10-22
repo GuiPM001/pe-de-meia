@@ -7,7 +7,11 @@ import { api } from "@/core/services/api";
 interface TransactionContextProps {
   transactions: Transaction[] | null;
   setTransactions: (transactions: Transaction[]) => void;
-  getTransactions: (idMonth: string, idUser: string) => void;
+  getTransactions: (
+    idMonth: string,
+    idUser: string,
+    signal?: AbortSignal,
+  ) => void;
 }
 
 const TransactionContext = createContext<TransactionContextProps>({
@@ -19,7 +23,11 @@ const TransactionContext = createContext<TransactionContextProps>({
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
   const [transactions, setTransactions] = useState<Transaction[] | null>(null);
 
-  const getTransactions = async (idMonth: string, idUser: string) => {
+  const getTransactions = async (
+    idMonth: string,
+    idUser: string,
+    signal?: AbortSignal,
+  ) => {
     setTransactions(null);
     const response: Transaction[] = await api.get(
       `/transaction/get-by-id-month`,
@@ -28,14 +36,17 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
           idMonth: idMonth,
           idUser: idUser,
         },
-      }
+        signal,
+      },
     );
 
     setTransactions(response);
   };
 
   return (
-    <TransactionContext.Provider value={{ transactions, setTransactions, getTransactions }}>
+    <TransactionContext.Provider
+      value={{ transactions, setTransactions, getTransactions }}
+    >
       {children}
     </TransactionContext.Provider>
   );

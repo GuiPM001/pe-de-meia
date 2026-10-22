@@ -7,7 +7,7 @@ export default function WeekDaysHeader() {
       {getWeekDays("narrow").map((day, index) => (
         <div
           key={index}
-          className="text-center text-sm font-medium text-gray-500 py-2"
+          className="text-center text-sm font-medium text-muted-foreground py-2"
         >
           {day}
         </div>

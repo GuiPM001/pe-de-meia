@@ -5,7 +5,6 @@ import React, {
   useState,
   ReactNode,
   useContext,
-  useEffect,
 } from "react";
 import { useSession } from "next-auth/react";
 import { Profile } from "@/core/types/Profile";
@@ -18,11 +17,11 @@ interface ProfileContextProps {
 }
 
 const initialProfile: Profile = {
-  _id: "",
-  dailyCost: 0,
-  email: "",
-  name: "",
-  savingTarget: 0,
+  _id: "682d2a2d3c22be696af9e21a",
+  dailyCost: 53,
+  email: "gui91905@gmail.com",
+  name: "Guilherme",
+  savingTarget: 1500,
 };
 
 const ProfileContext = createContext<ProfileContextProps>({
@@ -35,21 +34,21 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (status === "loading") {
-      return;
-    }
+  // useEffect(() => {
+  //   if (status === "loading") {
+  //     return;
+  //   }
 
-    if (status === "authenticated" && session?.user) {
-      const userProfile = session.user;
+  //   if (status === "authenticated" && session?.user) {
+  //     const userProfile = session.user;
 
-      setProfile({
-        ...profile,
-        _id: userProfile.id ?? "",
-        email: userProfile.email ?? "",
-      });
-    }
-  }, [status, session]);
+  //     setProfile({
+  //       ...profile,
+  //       _id: userProfile.id ?? "",
+  //       email: userProfile.email ?? "",
+  //     });
+  //   }
+  // }, [status, session]);
 
   const fetchProfile = async (email: string) => {
     const response: Profile = await api.get(`/user?email=${email}`)

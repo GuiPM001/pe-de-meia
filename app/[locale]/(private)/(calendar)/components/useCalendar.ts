@@ -21,7 +21,7 @@ export const useCalendar = () => {
   );
 
   const [dayBalances, setDayBalances] = useState(createSkeletonCalendar);
-  const [isCalculating, setIsCalculating] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(true);
 
   useEffect(() => {
     setIsCalculating(true);
@@ -41,11 +41,7 @@ export const useCalendar = () => {
     balances.push({
       day: date.getDate(),
       idMonth: monthSelected.id,
-      incomes: null,
-      expenses: null,
-      dailies: null,
-      fixedExpenses: null,
-      investeds: null,
+      transactions: [],
       total: null,
       totalInvested: null,
       hasEstimatedDailyExpense: false,
@@ -140,16 +136,13 @@ export const useCalendar = () => {
       balance += todayTotal;
 
       const hasEstimatedDailyExpense =
-        currentDate.toISODateString() >= today.toISODateString();
+        currentDate.toISODateString() >= today.toISODateString() &&
+        groups[TransactionType.daily].length === 0;
 
       if (hasEstimatedDailyExpense) balance -= profile.dailyCost;
 
       addDay(currentDate, balances, {
-        incomes: groups[TransactionType.income],
-        expenses: groups[TransactionType.expense],
-        dailies: groups[TransactionType.daily],
-        investeds: groups[TransactionType.investment],
-        fixedExpenses: groups[TransactionType.fixedExpense],
+        transactions: dailyTransactions,
         total: balance,
         totalInvested,
         hasEstimatedDailyExpense,

@@ -6,20 +6,14 @@ import { TransactionType } from "../enums/transactionType";
 import { Transaction } from "../types/Transaction";
 import { transactionService } from "./transaction.service";
 import { SupportedLocale, t } from "@/lib/errorHandler";
-import "@/core/utils/date.extensions";
 import { Profile } from "../types/Profile";
 import { userService } from "./user.service";
+import "@/core/utils/date.extensions";
 
-const getMonthsByIdUser = async (idUser: string, year: number) => {
+const getMonthsByIdUser = async (idUser: string) => {
   await connectMongo();
 
-  const startOfYear = new Date(year, 0, 1).toISODateString();
-  const endOfYear = new Date(year + 1, 0, 1).toISODateString();
-
-  return await Months.find({
-    idUser,
-    id: { $gte: startOfYear, $lt: endOfYear },
-  });
+  return await Months.find({ idUser });
 };
 
 const getAllMonthsByIdUser = async (idUser: string): Promise<Month[]> => {
