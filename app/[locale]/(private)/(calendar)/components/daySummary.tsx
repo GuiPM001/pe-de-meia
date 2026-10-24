@@ -29,12 +29,28 @@ import { getDateName } from "@/core/utils/date";
 import { cn } from "@/lib/utils";
 
 interface DaySummaryProps {
-  dayBalance: DayBalance;
+  selectedDay: DayBalance | undefined;
 }
 
 type TransactionProps = { icon: LucideIcon; cls: string; label: string };
 
-export default function DaySummary({ dayBalance }: DaySummaryProps) {
+export default function DaySummary({ selectedDay }: DaySummaryProps) {
+  if (!selectedDay) {
+    return (
+      <section className="mt-4 space-y-2">
+        <div className="flex items-center justify-between">
+          <div className="skeleton h-7 w-40 rounded-lg" />
+          <div className="skeleton h-9 w-28 rounded-xl" />
+        </div>
+
+        <div className="skeleton h-[72px] w-full rounded-2xl" />
+
+        <div className="skeleton h-[200px] w-full rounded-2xl" />
+      </section>
+    );
+  }
+
+  const dayBalance = selectedDay;
   const { t } = useTranslation();
   const { profile } = useProfile();
 

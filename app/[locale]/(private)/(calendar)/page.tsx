@@ -47,7 +47,7 @@ export default function Home() {
           <Legend />
         </div>
 
-        {selectedDay && <DaySummary dayBalance={selectedDay} />}
+        <DaySummary selectedDay={selectedDay} />
       </div>
     </Wrapper>
   );
