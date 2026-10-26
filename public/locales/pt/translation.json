@@ -3,16 +3,36 @@
   "loading": "Carregando...",
   "transactionType": {
     "income": "Entrada",
-    "expense": "Saída",
+    "expense": "Outras despesas",
     "fixedExpense": "Despesa fixa",
     "daily": "Gasto diário",
     "investment": "Investimento"
   },
   "monthStatus": {
-    "green": "Acima da\nmeta",
+    "green": "Acima da meta",
     "greenWithInvestment": "Acima da meta somando o total investido",
-    "yellow": "Abaixo da\nmeta",
-    "red": "Saldo\nnegativo"
+    "yellow": "Abaixo da meta",
+    "red": "Saldo negativo"
+  },
+  "statuses": {
+    "above": {
+      "short": "Acima",
+      "label": "Acima da meta"
+    },
+    "below": {
+      "short": "Abaixo",
+      "label": "Abaixo da meta"
+    },
+    "negative": {
+      "short": "Negativo",
+      "label": "Saldo negativo"
+    },
+    "disabled": {
+      "short": "Não cadastrado"
+    },
+    "creatable": {
+      "short": "Criar mês"
+    }
   },
   "daySummary": {
     "balance": "Saldo do dia",
@@ -79,7 +99,7 @@
     "savingTarget": "Meta de economia mensal",
     "dailyCost": "Gasto diário previsto",
     "button": "Concluir cadastro",
-    "dailyCostHint": "Gasto calculado com base na \nmédia dos últimos três meses. \nPara começar, informe um \nvalor médio diário que você \ntem sem considerar os gastos fixos"
+    "dailyCostHint": "Gasto calculado com base na  média dos últimos três meses.  Para começar, informe um  valor médio diário que você  tem sem considerar os gastos fixos"
   },
   "navBar": {
     "monthlySummary": "Resumo mensal",

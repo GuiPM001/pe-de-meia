@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { DayBalance } from "@/core/types/DayBalance";
 import { useProfile } from "@/app/context/ProfileContext";
 import { getGoalStatusStyles, getGoalTextStyles } from "@/core/utils/goalStyle";
-import { useCalendar } from "./useCalendar";
+import { useCalendar } from "../hooks/useCalendar";
 import TransactionsDots from "./transactionsDots";
 
 interface DaysGridProps {

@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useState, ReactNode, useContext } from "react";
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useEffect,
+} from "react";
 import { Month } from "@/core/types/Month";
 import { api } from "@/core/services/api";
 import "@/core/utils/date.extensions";
@@ -9,7 +15,7 @@ interface MonthContextProps {
   months: Month[];
   monthLoading: string;
   setMonths: (Months: Month[]) => void;
-  getMonths: (idUser: string) => Promise<void>;
+  getMonths: () => Promise<Month[]>;
   monthSelected: Month;
   selectMonth: (idMonth: string) => void;
   createMonth: (
@@ -21,6 +27,8 @@ interface MonthContextProps {
     actualIdMonth: string,
     idUser: string,
   ) => Promise<Month | null>;
+  hasPreviousMonth: (year: number, month: number) => boolean;
+  hasNextMonth: (year: number, month: number) => boolean;
 }
 
 const initialState: Month = {
@@ -37,12 +45,14 @@ const initialState: Month = {
 const MonthContext = createContext<MonthContextProps>({
   months: [],
   monthLoading: "",
-  setMonths: () => {},
-  getMonths: () => Promise.resolve(),
+  setMonths: () => { },
+  getMonths: () => Promise.resolve([]),
   monthSelected: initialState,
-  selectMonth: () => {},
+  selectMonth: () => { },
   createMonth: () => Promise.resolve(),
   getLastMonth: () => Promise.resolve(null),
+  hasPreviousMonth: () => false,
+  hasNextMonth: () => false,
 });
 
 export const MonthProvider = ({ children }: { children: ReactNode }) => {
@@ -50,17 +60,24 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
   const [monthSelected, setMonthSelected] = useState<Month>(initialState);
   const [monthLoading, setMonthLoading] = useState<string>("");
 
-  const getMonths = async (idUser: string) => {
+  const getMonths = async () => {
     setMonths([]);
 
-    const userMonths: Month[] = await api.get(`/month/get-by-id-user`, {
-      params: {
-        idUser: idUser,
-      },
-    });
+    const userMonths: Month[] = await api.get(`/month`);
 
     setMonths(userMonths);
+    return userMonths;
   };
+
+  const fetchMonths = async () => {
+    const userMonths = await getMonths();
+    const month = userMonths.find(x => x.id === initialState.id);
+    if (month) setMonthSelected(month);
+  }
+
+  useEffect(() => {
+    fetchMonths();
+  }, []);
 
   const selectMonth = (idMonth: string) => {
     const month = months.find((x) => x.id === idMonth);
@@ -93,8 +110,23 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
 
     await api.post("/month", newMonth);
 
-    await getMonths(idUser);
+    await getMonths();
     setMonthLoading("");
+  };
+
+  const hasPreviousMonth = (year: number, month: number) => {
+    const nextDate = new Date(year, month - 1, 1);
+    return monthExist(nextDate);
+  };
+
+  const hasNextMonth = (year: number, month: number) => {
+    const nextDate = new Date(year, month, 1);
+    return monthExist(nextDate);
+  };
+
+  const monthExist = (date: Date) => {
+    const idMonth = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, "0")}-01`;
+    return months.some((m) => m.id === idMonth);
   };
 
   return (
@@ -108,6 +140,8 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
         selectMonth,
         createMonth,
         getLastMonth,
+        hasPreviousMonth,
+        hasNextMonth
       }}
     >
       {children}

@@ -14,6 +14,26 @@
     "yellow": "Below target",
     "red": "Negative balance"
   },
+  "statuses": {
+    "above": {
+      "short": "Above",
+      "label": "Above target"
+    },
+    "below": {
+      "short": "Below",
+      "label": "Below target"
+    },
+    "negative": {
+      "short": "Negative",
+      "label": "Negative balance"
+    },
+    "disabled": {
+      "short": "Not registered"
+    },
+    "creatable": {
+      "short": "Create month"
+    }
+  },
   "monthSummary": {
     "dailyBalance": "Daily balance",
     "dailyCost": "Estimated/day",

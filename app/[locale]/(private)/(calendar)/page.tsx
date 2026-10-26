@@ -1,34 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useMonth } from "@/app/context/MonthContext";
-import { useProfile } from "@/app/context/ProfileContext";
-import { useCalendar } from "./components/useCalendar";
+import { useState } from "react";
+import { useCalendar } from "./hooks/useCalendar";
 import { DayBalance } from "@/core/types/DayBalance";
 
 import Wrapper from "@/components/ui/wrapper";
+import Legend from "@/components/legend";
 import MonthSelector from "./components/monthSelector";
 import DaySummary from "./components/daySummary";
 import WeekDaysHeader from "./components/weekDaysHeader";
 import DaysGrid from "./components/daysGrid";
-import Legend from "./components/legend";
 
 import "@/core/utils/date.extensions";
 
 export default function Home() {
-  const { getMonths } = useMonth();
-  const { profile, fetchProfile } = useProfile();
   const { isCalculating } = useCalendar();
 
   const [selectedDay, setSelectedDay] = useState<DayBalance>();
-
-  useEffect(() => {
-    const loadData = async () => {
-      await Promise.all([getMonths(profile._id), fetchProfile(profile.email)]);
-    };
-
-    loadData();
-  }, [profile._id]);
 
   return (
     <Wrapper>

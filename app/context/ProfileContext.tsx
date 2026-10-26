@@ -5,6 +5,7 @@ import React, {
   useState,
   ReactNode,
   useContext,
+  useEffect,
 } from "react";
 import { useSession } from "next-auth/react";
 import { Profile } from "@/core/types/Profile";
@@ -34,21 +35,15 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile>(initialProfile);
   const { data: session, status } = useSession();
 
-  // useEffect(() => {
-  //   if (status === "loading") {
-  //     return;
-  //   }
+  useEffect(() => {
+    if (status === "loading") {
+      return;
+    }
 
-  //   if (status === "authenticated" && session?.user) {
-  //     const userProfile = session.user;
-
-  //     setProfile({
-  //       ...profile,
-  //       _id: userProfile.id ?? "",
-  //       email: userProfile.email ?? "",
-  //     });
-  //   }
-  // }, [status, session]);
+    if (status === "authenticated" && session?.user) {
+      fetchProfile(session.user.email ?? "");
+    }
+  }, [status, session]);
 
   const fetchProfile = async (email: string) => {
     const response: Profile = await api.get(`/user?email=${email}`)

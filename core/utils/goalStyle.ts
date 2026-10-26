@@ -1,9 +1,19 @@
-type GoalStatus = "above" | "below" | "negative";
+export type GoalStatus = "above" | "below" | "negative" | "creatable" | "disabled";
 
 const goalStyles: Record<
   GoalStatus,
   { base: string; today: string; text: string }
 > = {
+  creatable: {
+    base: "",
+    today: "",
+    text: "",
+  },
+  disabled: {
+    base: "",
+    today: "",
+    text: "",
+  },
   above: {
     base: "bg-success/20 hover:bg-success/30",
     today: "ring-2 ring-primary bg-success/25",
@@ -35,6 +45,16 @@ export const getGoalStatusStyles = (
   return isSelected
     ? goalStyles[goalStatus].today
     : goalStyles[goalStatus].base;
+};
+
+export const getMonthStatusStyles = (
+  goalStatus: GoalStatus,
+  isSelected: boolean,
+) => {
+  if (isSelected)
+    return `${goalStyles[goalStatus].today} ${goalStyles[goalStatus].text} font-bold border`;
+
+  return `${goalStyles[goalStatus].base} ${goalStyles[goalStatus].text} ring-[0.5px] border border-transparent`;
 };
 
 export const getGoalTextStyles = (

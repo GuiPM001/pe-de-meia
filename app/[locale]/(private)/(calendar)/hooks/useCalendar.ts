@@ -11,7 +11,7 @@ import { getFirstCalendarDate, getFirstDayOfMonth } from "@/core/utils/date";
 export const useCalendar = () => {
   const { profile } = useProfile();
   const { transactions } = useTransaction();
-  const { monthSelected, getLastMonth } = useMonth();
+  const { monthSelected, months } = useMonth();
 
   const today = new Date();
 
@@ -105,17 +105,18 @@ export const useCalendar = () => {
     const currentDate = getFirstCalendarDate(monthDate);
 
     addDaysBeforeMonth(currentDate, balances);
-    await addMonthlyDays(currentDate, balances);
+    addMonthlyDays(currentDate, balances);
     addDaysAfterMonth(currentDate, balances);
 
     setDayBalances(balances);
     setIsCalculating(false);
   }
 
-  async function addMonthlyDays(currentDate: Date, balances: DayBalance[]) {
+  function addMonthlyDays(currentDate: Date, balances: DayBalance[]) {
     const indexMonth = monthDate.getUTCMonth();
 
-    const lastMonth = await getLastMonth(monthSelected.id, profile._id);
+    const currentIdx = months.findIndex((m) => m.id === monthSelected.id);
+    const lastMonth = currentIdx > 0 ? months[currentIdx - 1] : null;
     let balance = lastMonth?.balance ?? 0;
 
     while (currentDate.getUTCMonth() === indexMonth) {

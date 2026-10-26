@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import {
   Plus,
-  ArrowDownLeft,
-  ArrowUpRight,
-  Coffee,
   Clock,
-  LucideIcon,
-  HandCoins,
   Pencil,
   Trash2,
 } from "lucide-react";
@@ -21,7 +16,7 @@ import { useProfile } from "@/app/context/ProfileContext";
 
 import { DayBalance } from "@/core/types/DayBalance";
 import { Transaction } from "@/core/types/Transaction";
-import { TransactionType } from "@/core/enums/transactionType";
+import { getTransactionProps } from "@/core/constants/transactionProps";
 
 import { currencyNumber } from "@/core/utils/numberFormat";
 import { getGoalTextStyles } from "@/core/utils/goalStyle";
@@ -32,9 +27,16 @@ interface DaySummaryProps {
   selectedDay: DayBalance | undefined;
 }
 
-type TransactionProps = { icon: LucideIcon; cls: string; label: string };
-
 export default function DaySummary({ selectedDay }: DaySummaryProps) {
+  const { t } = useTranslation();
+  const { profile } = useProfile();
+
+  const { openModal, openModalFilled } = useTransactionModal();
+  const [transactionToDelete, setTransactionToDelete] =
+    useState<Transaction | null>(null);
+
+  const transactionProps = getTransactionProps(t);
+
   if (!selectedDay) {
     return (
       <section className="mt-4 space-y-2">
@@ -50,49 +52,13 @@ export default function DaySummary({ selectedDay }: DaySummaryProps) {
     );
   }
 
-  const dayBalance = selectedDay;
-  const { t } = useTranslation();
-  const { profile } = useProfile();
-
-  const { openModal, openModalFilled } = useTransactionModal();
-  const [transactionToDelete, setTransactionToDelete] =
-    useState<Transaction | null>(null);
-
-  const transactionProps: Record<TransactionType, TransactionProps> = {
-    0: {
-      icon: ArrowUpRight,
-      cls: "bg-success/15 text-success",
-      label: t("transactionType.income"),
-    },
-    1: {
-      icon: ArrowDownLeft,
-      cls: "bg-warning/15 text-warning",
-      label: t("transactionType.expense"),
-    },
-    2: {
-      icon: Coffee,
-      cls: "bg-daily-expense/15 text-daily-expense",
-      label: t("transactionType.daily"),
-    },
-    3: {
-      icon: HandCoins,
-      cls: "bg-investment/15 text-investment",
-      label: t("transactionType.investment"),
-    },
-    4: {
-      icon: ArrowDownLeft,
-      cls: "bg-expense/15 text-expense",
-      label: t("transactionType.fixedExpense"),
-    },
-  };
-
   return (
     <section className="mt-4 space-y-2">
       <div className="flex items-center justify-between">
         <h3 className="font-display text-lg font-semibold text-foreground w-full">
-          {getDateName(dayBalance.day, dayBalance.idMonth)}
+          {getDateName(selectedDay.day, selectedDay.idMonth)}
         </h3>
-        <Button onClick={() => openModal(dayBalance.idMonth, dayBalance.day)}>
+        <Button onClick={() => openModal(selectedDay.idMonth, selectedDay.day)}>
           <Plus className="w-4 h-4" /> Transação
         </Button>
       </div>
@@ -104,15 +70,15 @@ export default function DaySummary({ selectedDay }: DaySummaryProps) {
         <p
           className={cn(
             "font-display text-2xl font-bold",
-            getGoalTextStyles(dayBalance.total!, profile.savingTarget, false),
+            getGoalTextStyles(selectedDay.total!, profile.savingTarget, false),
           )}
         >
-          {currencyNumber(dayBalance.total!)}
+          {currencyNumber(selectedDay.total!)}
         </p>
       </div>
 
       <ul className="bg-card border rounded-2xl divide-y">
-        {dayBalance.hasEstimatedDailyExpense && (
+        {selectedDay.hasEstimatedDailyExpense && (
           <li className="flex items-center gap-3 p-4 bg-muted/20">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center border border-dashed border-muted-foreground/40 text-muted-foreground/70">
               <Clock className="w-5 h-5" />
@@ -131,7 +97,7 @@ export default function DaySummary({ selectedDay }: DaySummaryProps) {
           </li>
         )}
 
-        {dayBalance.transactions.map((t) => {
+        {selectedDay.transactions.map((t) => {
           const { icon: Icon, cls } = transactionProps[t.type];
           return (
             <li key={t._id} className="group flex items-center gap-3 p-4">

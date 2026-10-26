@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import IconButton from "@/components/ui/iconButton";
 import { getMonthNameByDate } from "@/core/utils/date";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -7,44 +7,35 @@ import { useTransaction } from "@/app/context/TransactionContext";
 import { useProfile } from "@/app/context/ProfileContext";
 
 export default function MonthSelector() {
-  const { months, monthSelected, selectMonth } = useMonth();
-  const { getTransactions } = useTransaction();
+  const { months, monthSelected, selectMonth, hasNextMonth, hasPreviousMonth } = useMonth();
+  const { transactions, getTransactions } = useTransaction();
   const { profile } = useProfile();
-
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   const [year, month] = monthSelected.id.split("-").map(Number);
 
   useEffect(() => {
-    const controller = new AbortController();
-    abortControllerRef.current = controller;
+    if (!months.length || !monthSelected?.id || !profile?._id) return;
 
-    const loadTransactions = async (monthId: string) => {
-      try {
-        await getTransactions(monthId, profile._id, controller.signal);
-      } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") {
-          return;
-        }
+    if (transactions === null || transactions[0]?.idMonth !== monthSelected.id) {
+      getTransactions(monthSelected.id, profile._id);
+    }
+  }, [monthSelected, profile._id, months]);
 
-        throw error;
-      }
-    };
+  useEffect(() => {
+    const idMonth = new Date(
+      new Date().getFullYear(),
+      new Date().getUTCMonth(),
+      1,
+    ).toISODateString();
 
-    loadTransactions(monthSelected.id);
-
-    return () => {
-      controller.abort();
-    };
-  }, [monthSelected.id, profile._id]);
+    selectMonth(idMonth);
+  }, []);
 
   const generateIdMonth = (year: number, month: number) => {
     return `${year}-${month.toString().padStart(2, "0")}-01`;
   };
 
   const shiftMonth = (d: number) => {
-    abortControllerRef.current?.abort();
-
     const nextDate = new Date(year, month - 1 + d, 1);
     const idMonth = generateIdMonth(
       nextDate.getFullYear(),
@@ -52,24 +43,6 @@ export default function MonthSelector() {
     );
 
     selectMonth(idMonth);
-  };
-
-  const hasPreviousMonth = (year: number, month: number) => {
-    const nextDate = new Date(year, month - 1, 1);
-    const idMonth = generateIdMonth(
-      nextDate.getFullYear(),
-      nextDate.getMonth() + 1,
-    );
-    return months.some((m) => m.id === idMonth);
-  };
-
-  const hasNextMonth = (year: number, month: number) => {
-    const nextDate = new Date(year, month, 1);
-    const idMonth = generateIdMonth(
-      nextDate.getFullYear(),
-      nextDate.getMonth() + 1,
-    );
-    return months.some((m) => m.id === idMonth);
   };
 
   const showPrev = hasPreviousMonth(year, month);

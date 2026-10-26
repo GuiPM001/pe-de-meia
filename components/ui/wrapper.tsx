@@ -7,9 +7,9 @@ export default function Wrapper({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="w-screen h-screen flex flex-col overflow-x-hidden bg-gray-100">
+    <div className="w-screen h-screen flex flex-col items-center overflow-x-hidden bg-gray-100">
       <TabBar />
-      <div className="px-4 pt-6 pb-28 max-w-md">{children}</div>
+      <div className="px-4 pt-6 pb-28 w-full">{children}</div>
     </div>
   );
 }
