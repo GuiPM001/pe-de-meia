@@ -28,9 +28,9 @@ interface TransactionContextProps {
 const TransactionContext = createContext<TransactionContextProps>({
   transactions: null,
   isLoading: false,
-  setTransactions: () => {},
-  getTransactions: async () => {},
-  cancelTransactions: () => {},
+  setTransactions: () => { },
+  getTransactions: async () => { },
+  cancelTransactions: () => { },
 });
 
 export const TransactionProvider = ({ children }: { children: ReactNode }) => {
@@ -82,17 +82,13 @@ export const TransactionProvider = ({ children }: { children: ReactNode }) => {
           setTransactions(response);
           setIsLoading(false);
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         const isCanceled =
-          axios.isCancel(error) ||
           controller.signal.aborted ||
-          error?.name === "AbortError" ||
-          error?.name === "CanceledError" ||
-          error?.code === "ERR_CANCELED";
+          axios.isCancel(error) ||
+          (error instanceof Error && error.name === "AbortError");
 
-        if (isCanceled) {
-          return;
-        }
+        if (isCanceled) return;
 
         setIsLoading(false);
         console.error("Failed to load transactions", error);

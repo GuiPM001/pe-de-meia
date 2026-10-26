@@ -94,8 +94,7 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
 
   const createMonth = async (
     idMonth: string,
-    idUser: string,
-    yearSelected: number,
+    idUser: string
   ) => {
     setMonthLoading(idMonth);
 
