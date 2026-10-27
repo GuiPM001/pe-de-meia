@@ -1,32 +1,39 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter, usePathname, useParams } from "next/navigation";
 import { Wallet, CalendarDays, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { AppTab, useTabNav } from "@/app/context/TabNavContext";
 
 const TabBar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { locale } = useParams();
   const { t } = useTranslation();
+  const { tab, setTab } = useTabNav();
 
   const base = `/${locale}`;
 
-  const tabs = [
+  const tabs: { id: AppTab; label: string; icon: typeof Wallet; href: string }[] = [
     { id: "finance", label: t("tabbar.finance"), icon: Wallet, href: `${base}/finance` },
     { id: "calendar", label: t("tabbar.calendar"), icon: CalendarDays, href: base },
     { id: "profile", label: t("tabbar.profile"), icon: User, href: `${base}/profile` },
   ];
 
-  const getActiveTab = () => {
-    if (pathname === base || pathname === `${base}/`) return "calendar";
+  useEffect(() => {
+    router.prefetch(`${base}/finance`);
+    router.prefetch(base);
+  }, [base, router]);
+
+  const getActiveTab = (): AppTab => {
     if (pathname.startsWith(`${base}/finance`)) return "finance";
     if (pathname.startsWith(`${base}/profile`)) return "profile";
     return "calendar";
   };
 
-  const active = getActiveTab();
+  const active = tab || getActiveTab();
 
   return (
     <nav className="bg-background fixed bottom-0 inset-x-0 z-50 glass border-t pb-[env(safe-area-inset-bottom)]">
@@ -36,7 +43,10 @@ const TabBar = () => {
           return (
             <li key={id} className="flex-1">
               <button
-                onClick={() => router.push(href)}
+                onClick={() => {
+                  setTab(id);
+                  router.push(href);
+                }}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex w-full flex-col items-center gap-1 rounded-xl py-2 text-[11px] font-semibold transition-all duration-200",

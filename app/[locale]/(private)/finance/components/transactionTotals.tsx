@@ -15,8 +15,7 @@ export function TransactionTotals() {
 
   return (
     <SummarySection
-      title="Totais das transações"
-      ariaLabel="Totais das transações do mês"
+      title={t("monthSummary.transactionTotals")}
       className="space-y-2"
     >
       <div className="bg-card border rounded-2xl divide-y">

@@ -58,6 +58,13 @@ export const getDaysFromMonthId = (monthId: string) => {
   return new Date(year, month, 0).getDate();
 };
 
+export const getNextMonthId = (idMonth: string) => {
+  const [year, month] = idMonth.split("-").map(Number);
+  const next = new Date(year, month, 1);
+
+  return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}-01`;
+};
+
 export const getPastMonths = (amount: number): string[] =>
   Array.from({ length: amount }, (_, i) => {
     const date = new Date();

@@ -1,72 +1,71 @@
-export type GoalStatus = "above" | "below" | "negative" | "creatable" | "disabled";
+export type MonthAvailability = "registered" | "disabled" | "creatable";
+
+export type GoalStatus =
+  | "above"
+  | "below"
+  | "negative"
+  | "creatable"
+  | "disabled";
 
 const goalStyles: Record<
   GoalStatus,
   { base: string; today: string; text: string }
 > = {
   creatable: {
-    base: "",
+    base: "border border-dashed border-primary/40 bg-primary/5",
     today: "",
-    text: "",
+    text: "text-primary",
   },
   disabled: {
-    base: "",
+    base: "bg-muted border border-muted-foreground/25",
     today: "",
-    text: "",
+    text: "text-muted-foreground/70",
   },
   above: {
     base: "bg-success/20 hover:bg-success/30",
-    today: "ring-2 ring-primary bg-success/25",
+    today: "border-1 border-primary bg-success/25",
     text: "text-success font-semibold",
   },
   below: {
     base: "bg-warning/15 hover:bg-warning/25",
-    today: "ring-2 ring-warning bg-warning/30",
+    today: "border-1 border-warning bg-warning/20",
     text: "text-warning-text font-semibold",
   },
   negative: {
     base: "bg-expense/15 hover:bg-expense/25",
-    today: "ring-2 ring-expense bg-expense/20",
+    today: "border-1 border-expense bg-expense/20",
     text: "text-expense font-semibold",
   },
 };
 
-export const getGoalStatusStyles = (
-  balance: number | null,
+export const getGoalStatus = (
+  idMonth: string,
+  balance: number | null | undefined,
   savingTarget: number,
-  isSelected: boolean,
-) => {
-  if (balance == null) return "opacity-40";
+  invested: number = 0,
+  availability: MonthAvailability = "registered",
+  desconsiderLaterMonth: boolean = false,
+): GoalStatus => {
+  if (availability !== "registered")
+    return availability;
 
-  let goalStatus: GoalStatus = "below";
-  if (balance > savingTarget) goalStatus = "above";
-  if (balance < 0) goalStatus = "negative";
+  if (!balance || balance < 0)
+    return "negative";
 
-  return isSelected
-    ? goalStyles[goalStatus].today
-    : goalStyles[goalStatus].base;
+  if (desconsiderLaterMonth)
+    return balance > savingTarget ? "above" : "below";
+
+  const isLaterMonth = new Date(`${idMonth}T12:00:00`).getMonth() > new Date().getMonth();
+
+  if (isLaterMonth && balance > savingTarget)
+    return "above";
+
+  return invested < savingTarget ? "below" : "above";
 };
 
-export const getMonthStatusStyles = (
-  goalStatus: GoalStatus,
-  isSelected: boolean,
-) => {
+export const getStatusStyles = (goalStatus: GoalStatus, isSelected: boolean) => {
   if (isSelected)
-    return `${goalStyles[goalStatus].today} ${goalStyles[goalStatus].text} font-bold border`;
+    return `${goalStyles[goalStatus].today} ${goalStyles[goalStatus].text} font-bold`;
 
-  return `${goalStyles[goalStatus].base} ${goalStyles[goalStatus].text} ring-[0.5px] border border-transparent`;
-};
-
-export const getGoalTextStyles = (
-  balance: number | null,
-  savingTarget: number,
-  isSelected: boolean,
-) => {
-  if (balance == null) return "text-muted-foreground";
-
-  let goalStatus: GoalStatus = "below";
-  if (balance > savingTarget) goalStatus = "above";
-  if (balance < 0) goalStatus = "negative";
-
-  return `${isSelected ? "font-bold" : ""} ${goalStyles[goalStatus].text}`;
+  return `${goalStyles[goalStatus].base} ${goalStyles[goalStatus].text}`;
 };

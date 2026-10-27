@@ -19,9 +19,9 @@ import { Transaction } from "@/core/types/Transaction";
 import { getTransactionProps } from "@/core/constants/transactionProps";
 
 import { currencyNumber } from "@/core/utils/numberFormat";
-import { getGoalTextStyles } from "@/core/utils/goalStyle";
 import { getDateName } from "@/core/utils/date";
 import { cn } from "@/lib/utils";
+import { getGoalStatus, getStatusStyles } from "@/core/utils/goalStyle";
 
 interface DaySummaryProps {
   selectedDay: DayBalance | undefined;
@@ -52,6 +52,8 @@ export default function DaySummary({ selectedDay }: DaySummaryProps) {
     );
   }
 
+  const goalStatus = getGoalStatus(selectedDay.idMonth, selectedDay.total, profile.savingTarget, undefined, undefined, true);
+
   return (
     <section className="mt-4 space-y-2">
       <div className="flex items-center justify-between">
@@ -69,8 +71,8 @@ export default function DaySummary({ selectedDay }: DaySummaryProps) {
         </p>
         <p
           className={cn(
-            "font-display text-2xl font-bold",
-            getGoalTextStyles(selectedDay.total!, profile.savingTarget, false),
+            getStatusStyles(goalStatus, false),
+            "font-display text-2xl font-bold bg-transparent"
           )}
         >
           {currencyNumber(selectedDay.total!)}

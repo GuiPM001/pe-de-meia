@@ -22,7 +22,7 @@ export const getTransactionProps = (
     [
       TransactionType.income,
       {
-        icon: ArrowUpRight,
+        icon: ArrowDownLeft,
         cls: "bg-success/15 text-success",
         label: t("transactionType.income"),
       },
@@ -30,7 +30,7 @@ export const getTransactionProps = (
     [
       TransactionType.fixedExpense,
       {
-        icon: ArrowDownLeft,
+        icon: ArrowUpRight,
         cls: "bg-expense/15 text-expense",
         label: t("transactionType.fixedExpense"),
       },

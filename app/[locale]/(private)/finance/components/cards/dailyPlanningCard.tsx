@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Gauge } from "lucide-react";
 import { useMonth } from "@/app/context/MonthContext";
 import { useProfile } from "@/app/context/ProfileContext";
@@ -9,19 +10,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { SummarySection } from "../summarySection";
 import { useMonthSummary } from "../../hooks/useMonthSummary";
 
-function getElapsedLabel(days: number, isCurrentMonth: boolean) {
-  const unit = days === 1 ? "dia" : "dias";
-  if (!isCurrentMonth) return `${days} ${unit} do mês`;
-  return `${days} ${unit} ${days === 1 ? "decorrido" : "decorridos"}`;
-}
-
-function getDeltaLabel(delta: number) {
-  if (delta > 0) return `${currencyNumber(delta)} acima`;
-  if (delta < 0) return `${currencyNumber(-delta)} abaixo`;
-  return "igual";
-}
+const T = "monthSummary.dailyPlan";
 
 export function DailyPlanningCard() {
+  const { t } = useTranslation();
   const { monthSelected } = useMonth();
   const { profile } = useProfile();
   const { totalsByType, isLoading, getMonthDays } = useMonthSummary();
@@ -33,14 +25,22 @@ export function DailyPlanningCard() {
   const delta = dailyAverage - dailyCost;
   const deltaColor = delta > 0 ? "text-expense" : "text-success";
 
+  const elapsedLabel = t(`${T}.${isCurrentMonth ? "elapsedDays" : "monthDays"}`, {
+    count: realizedDays,
+  });
+
+  const direction = delta > 0 ? "above" : delta < 0 ? "below" : "equal";
+  const deltaAmount = delta !== 0 ? `${currencyNumber(Math.abs(delta))} ` : "";
+  const deltaLabel = `${deltaAmount}${t(`${T}.${direction}`)} ${t(`${T}.fromRegistered`)}`;
+
   return (
-    <SummarySection title="Planejamento diário">
+    <SummarySection title={t(`${T}.title`)}>
       <div className="bg-card border rounded-2xl p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Gauge className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
-              Diário médio gasto
+              {t(`${T}.averageSpent`)}
             </p>
             {isLoading ? (
               <Skeleton className="mt-1.5 h-8 w-28 rounded-lg" />
@@ -51,19 +51,13 @@ export function DailyPlanningCard() {
             )}
           </div>
           <span className="shrink-0 rounded-md border border-gray-500/25 bg-gray-500/15 px-2 py-1 text-[11px] font-semibold text-gray-500">
-            Cadastrado {currencyNumber(dailyCost)}
+            {t(`${T}.label`)} {currencyNumber(dailyCost)}
           </span>
         </div>
 
         <p className="mt-2 text-[11px] text-muted-foreground">
-          {getElapsedLabel(realizedDays, isCurrentMonth)} ·{" "}
-          {isLoading ? (
-            "calculando..."
-          ) : (
-            <span className={cn("font-semibold", deltaColor)}>
-              {getDeltaLabel(delta)} do valor cadastrado
-            </span>
-          )}
+          {elapsedLabel} ·{" "}
+          <span className={cn("font-semibold", deltaColor)}>{deltaLabel}</span>
         </p>
       </div>
     </SummarySection>

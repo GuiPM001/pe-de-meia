@@ -7,8 +7,13 @@ import { currencyNumber } from "@/core/utils/numberFormat";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SummarySection } from "../summarySection";
 import { useMonthSummary } from "../../hooks/useMonthSummary";
+import { useTranslation } from "next-i18next";
  
+const T = "monthSummary.costOfLiving";
+
 export function CostOfLivingCard() {
+  const { t } = useTranslation();
+
   const { monthSelected } = useMonth();
   const { profile } = useProfile();
   const { totalsByType, isLoading, getMonthDays } = useMonthSummary();
@@ -19,15 +24,15 @@ export function CostOfLivingCard() {
   const costOfLiving = fixed + daily + (profile.dailyCost ?? 0) * futureDays;
 
   return (
-    <SummarySection title="Custo de vida">
+    <SummarySection title={t(`${T}.title`)}>
       <div className="bg-card border rounded-2xl p-4 flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="flex items-center gap-2 text-sm font-medium">
             <House className="h-4 w-4 shrink-0 text-muted-foreground" />
-            Total do mês
+            {t(`${T}.label`)}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Fixas + diário realizado + previsto dos dias futuros
+          {t(`${T}.legend`)}
           </p>
         </div>
         {isLoading ? (

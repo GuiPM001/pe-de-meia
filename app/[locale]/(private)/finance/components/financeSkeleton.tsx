@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function FinanceSkeleton() {
   return (
     <div className="animate-fade-in space-y-6">
-      {/* Grade de Meses Skeleton */}
       <section className="my-6">
         <div className="grid grid-cols-3 gap-2">
           {Array.from({ length: 12 }).map((_, index) => (
@@ -18,7 +17,6 @@ export default function FinanceSkeleton() {
           ))}
         </div>
 
-        {/* Legenda Skeleton */}
         <div className="flex flex-row items-center justify-between mt-4 pt-3 border-t border-border/50">
           <div className="flex items-center gap-1.5">
             <Skeleton className="w-3 h-3 rounded" />
@@ -35,9 +33,7 @@ export default function FinanceSkeleton() {
         </div>
       </section>
 
-      {/* Resumo do Mês Skeleton */}
       <div className="space-y-6">
-        {/* Saldo do mês */}
         <section className="space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Skeleton className="h-6 w-28 rounded-lg" />
@@ -49,7 +45,6 @@ export default function FinanceSkeleton() {
           </div>
         </section>
 
-        {/* Custo de vida */}
         <section className="space-y-3 border-t pt-4">
           <Skeleton className="h-5 w-28 rounded-lg" />
           <div className="bg-card border rounded-2xl p-4 flex items-start justify-between gap-3">
@@ -61,7 +56,6 @@ export default function FinanceSkeleton() {
           </div>
         </section>
 
-        {/* Planejamento diário */}
         <section className="space-y-3 border-t pt-4">
           <Skeleton className="h-5 w-36 rounded-lg" />
           <div className="bg-card border rounded-2xl p-4 space-y-3">
@@ -76,7 +70,6 @@ export default function FinanceSkeleton() {
           </div>
         </section>
 
-        {/* Investimentos */}
         <section className="space-y-3 border-t pt-4">
           <Skeleton className="h-5 w-32 rounded-lg" />
           <div className="bg-card border rounded-2xl p-4 space-y-3">
@@ -92,7 +85,6 @@ export default function FinanceSkeleton() {
           </div>
         </section>
 
-        {/* Totais das transações */}
         <section className="space-y-2 border-t pt-4">
           <Skeleton className="h-5 w-40 rounded-lg" />
           <div className="bg-card border rounded-2xl divide-y">

@@ -1,36 +1,37 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useMonth } from "@/app/context/MonthContext";
 import { useProfile } from "@/app/context/ProfileContext";
-import { getMonthNameByMonth } from "@/core/utils/date";
+import { getMonthNameByMonth, getNextMonthId } from "@/core/utils/date";
 import { cn } from "@/lib/utils";
-import { getMonthStatusStyles, GoalStatus } from "@/core/utils/goalStyle";
+import {
+  getGoalStatus,
+  getStatusStyles,
+} from "@/core/utils/goalStyle";
 import { getStatuses, MonthAvailability, MonthlyStatistics } from "../finance.types";
 import Legend from "@/components/legend";
-import { Month } from "@/core/types/Month";
 
 interface MonthsGridProps {
   year: number;
-  getGoalStatus: (
-    month: Month | undefined,
-    availability: MonthAvailability,
-  ) => GoalStatus;
 }
 
-export default function MonthsGrid({ year, getGoalStatus }: MonthsGridProps) {
+export default function MonthsGrid({ year }: MonthsGridProps) {
   const { t } = useTranslation();
   const statuses = getStatuses(t);
-  const now = new Date();
 
   const { monthSelected, months, selectMonth, createMonth } = useMonth();
   const { profile } = useProfile();
 
-  const getMonthAvailability = (isMonthRegistered: boolean, month: number) => {
+  const nextCreatableId = useMemo(() => {
+    if (!months.length) return null;
+
+    const lastRegistered = [...months].sort((a, b) => a.id.localeCompare(b.id)).at(-1);
+    return lastRegistered ? getNextMonthId(lastRegistered.id) : null;
+  }, [months]);
+
+  const getMonthAvailability = (isMonthRegistered: boolean, idMonth: string): MonthAvailability => {
     if (isMonthRegistered) return "registered";
-
-    if (year * 12 + month > now.getFullYear() * 12 + now.getMonth())
-      return "creatable";
-
+    if (idMonth === nextCreatableId) return "creatable";
     return "disabled";
   };
 
@@ -40,25 +41,26 @@ export default function MonthsGrid({ year, getGoalStatus }: MonthsGridProps) {
     const recordedMonth = months.find((x) => x.id === idMonth);
     const availability = getMonthAvailability(
       recordedMonth !== undefined,
-      indexMonth,
+      idMonth,
     );
 
     return {
       availability,
       idMonth,
       balance: recordedMonth?.balance ?? 0,
-      status: getGoalStatus(recordedMonth, availability),
+      status: getGoalStatus(
+        idMonth,
+        recordedMonth?.balance,
+        profile.savingTarget,
+        recordedMonth?.invested ?? 0,
+        availability,
+      ),
     };
   };
 
   const getButtonClass = (stats: MonthlyStatistics, selected: boolean) => {
-    if (stats.availability === "creatable")
-      return "border border-dashed border-primary/40 bg-primary/5 text-primary";
-
-    if (stats.availability === "disabled")
-      return "bg-muted text-muted-foreground border-border disabled:opacity-100";
-
-    return getMonthStatusStyles(stats.status, selected);
+    
+    return getStatusStyles(stats.status, selected);
   };
 
   return (
@@ -75,13 +77,15 @@ export default function MonthsGrid({ year, getGoalStatus }: MonthsGridProps) {
               key={index}
               disabled={stats.availability === "disabled"}
               onClick={() => {
-                if (stats.availability === "creatable")
-                  createMonth(stats.idMonth, profile._id, year);
+                if (stats.availability === "creatable") {
+                  createMonth(stats.idMonth, profile._id);
+                  return;
+                }
 
                 selectMonth(stats.idMonth);
               }}
               className={cn(
-                "flex flex-col justify-center items-center gap-1.5 py-3 rounded-lg",
+                "flex flex-col justify-center items-center gap-1.5 py-3 rounded-lg border border-transparent",
                 getButtonClass(stats, selected),
               )}
             >

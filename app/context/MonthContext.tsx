@@ -20,8 +20,7 @@ interface MonthContextProps {
   selectMonth: (idMonth: string) => void;
   createMonth: (
     idMonth: string,
-    idUser: string,
-    yearSelected: number,
+    idUser: string
   ) => Promise<void>;
   getLastMonth: (
     actualIdMonth: string,
@@ -61,8 +60,6 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
   const [monthLoading, setMonthLoading] = useState<string>("");
 
   const getMonths = async () => {
-    setMonths([]);
-
     const userMonths: Month[] = await api.get(`/month`);
 
     setMonths(userMonths);
@@ -109,7 +106,9 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
 
     await api.post("/month", newMonth);
 
-    await getMonths();
+    const userMonths = await getMonths();
+    const created = userMonths.find((x) => x.id === idMonth);
+    if (created) setMonthSelected(created);
     setMonthLoading("");
   };
 

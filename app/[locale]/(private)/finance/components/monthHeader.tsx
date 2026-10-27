@@ -1,30 +1,34 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useMonth } from "@/app/context/MonthContext";
-import { Month } from "@/core/types/Month";
+import { useProfile } from "@/app/context/ProfileContext";
 import { cn } from "@/lib/utils";
 import { currencyNumber } from "@/core/utils/numberFormat";
 import { getMonthNameByDate } from "@/core/utils/date";
-import { getMonthStatusStyles, GoalStatus } from "@/core/utils/goalStyle";
-import { getStatuses, MonthAvailability } from "../finance.types";
+import {
+  getGoalStatus,
+  getStatusStyles,
+} from "@/core/utils/goalStyle";
+import { getStatuses } from "../finance.types";
 
-interface MonthHeaderProps {
-  getGoalStatus: (
-    month: Month | undefined,
-    availability: MonthAvailability,
-  ) => GoalStatus;
-}
-
-export function MonthHeader({ getGoalStatus }: MonthHeaderProps) {
+export function MonthHeader() {
   const { t } = useTranslation();
   const statuses = getStatuses(t);
   const { monthSelected } = useMonth();
+  const { profile } = useProfile();
 
-  const goalStatus = getGoalStatus(monthSelected, "registered");
+  const goalStatus = getGoalStatus(
+    monthSelected.id!,
+    monthSelected.balance,
+    profile.savingTarget,
+    monthSelected.invested ?? 0,
+  );
   const status = statuses[goalStatus];
-  const balance = monthSelected?.balance ?? 0;
-  const monthId = monthSelected?.id;
+  const balance = monthSelected.balance;
+  const monthId = monthSelected.id;
   const year = monthId?.split("-")[0];
+
+  const statusStyle = getStatusStyles(goalStatus, false);
 
   return (
     <section aria-label="Resumo do mês" className="mt-10">
@@ -35,22 +39,22 @@ export function MonthHeader({ getGoalStatus }: MonthHeaderProps) {
         {status && (
           <span
             className={cn(
-              "flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-semibold",
-              getMonthStatusStyles(goalStatus, false),
+              statusStyle,
+              "flex items-center gap-1 rounded-md px-3 py-1 text-[11px] font-semibold",
             )}
           >
             {status.label}
           </span>
         )}
       </div>
-      <p className="text-xs text-muted-foreground">Saldo do mês</p>
+      <p className="text-xs text-muted-foreground">{t("monthSummary.balance")}</p>
       <p
         className={cn(
-          "mt-1 mb-1 font-display text-3xl font-bold tabular-nums",
-          balance < 0 ? "text-expense" : "text-foreground",
+          statusStyle,
+          "mt-1 mb-1 font-display text-3xl font-bold tabular-nums bg-transparent",
         )}
       >
-        {currencyNumber(balance)}
+        {currencyNumber(balance ?? 0)}
       </p>
     </section>
   );

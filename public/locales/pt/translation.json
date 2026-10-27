@@ -39,6 +39,34 @@
     "expected": "Gasto diário previsto",
     "expectedDescription": "Valor previsto que será gasto"
   },
+  "monthSummary": {
+    "balance": "Saldo final do mês",
+    "transactionTotals": "Totais das transações",
+    "dailyPlan": {
+      "title": "Planejamento diário",
+      "label": "Cadastrado",
+      "averageSpent": "Diário médio gasto",
+      "fromRegistered": "do valor cadastrado",
+      "elapsedDays_one": "{{count}} dia decorrido",
+      "elapsedDays_other": "{{count}} dias decorridos",
+      "monthDays_one": "{{count}} dia do mês",
+      "monthDays_other": "{{count}} dias do mês",
+      "below": "abaixo",
+      "above": "acima",
+      "equal": "igual"
+    },
+    "costOfLiving": {
+      "title": "Custo de vida",
+      "label": "Total do mês",
+      "legend": "Fixas + diário realizado + previsto dos dias futuros"
+    },
+    "investments": {
+      "title": "Investimentos",
+      "total": "Total do mês",
+      "description": "Guardado em relação à meta mensal",
+      "progress": "{{progress}}% da meta mensal de {{target}}"
+    }
+  },
   "modal": {
     "actions": {
       "save": "Salvar",

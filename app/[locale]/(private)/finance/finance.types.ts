@@ -1,6 +1,6 @@
-import { GoalStatus } from "@/core/utils/goalStyle";
+import { GoalStatus, MonthAvailability } from "@/core/utils/goalStyle";
 
-export type MonthAvailability = "registered" | "disabled" | "creatable";
+export type { MonthAvailability };
 
 export type MonthlyStatistics = {
   idMonth: string;
