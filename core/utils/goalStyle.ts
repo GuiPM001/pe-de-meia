@@ -55,7 +55,7 @@ export const getGoalStatus = (
   if (desconsiderLaterMonth)
     return balance > savingTarget ? "above" : "below";
 
-  const isLaterMonth = new Date(`${idMonth}T12:00:00`).getMonth() > new Date().getMonth();
+  const isLaterMonth = new Date(`${idMonth}T03:00:00`) > new Date();
 
   if (isLaterMonth && balance > savingTarget)
     return "above";

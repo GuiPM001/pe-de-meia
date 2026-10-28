@@ -121,9 +121,9 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
     const nextDate = new Date(year, month, 1);
     return monthExist(nextDate);
   };
-
+  
   const monthExist = (date: Date) => {
-    const idMonth = `${date.getFullYear()}-${date.getMonth().toString().padStart(2, "0")}-01`;
+    const idMonth = date.toISODateString();
     return months.some((m) => m.id === idMonth);
   };
 

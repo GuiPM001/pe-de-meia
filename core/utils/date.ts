@@ -1,4 +1,5 @@
 import { getLocale } from "./locale";
+import "@/core/utils/date.extensions";
 
 export const getMonthNameByMonth = (year: number, month: number) => {
   return new Date(year, month, 1).toLocaleString(getLocale(), {
@@ -62,7 +63,7 @@ export const getNextMonthId = (idMonth: string) => {
   const [year, month] = idMonth.split("-").map(Number);
   const next = new Date(year, month, 1);
 
-  return `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}-01`;
+  return next.toISODateString();
 };
 
 export const getPastMonths = (amount: number): string[] =>

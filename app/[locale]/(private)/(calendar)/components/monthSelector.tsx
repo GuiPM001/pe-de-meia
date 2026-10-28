@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMonth } from "@/app/context/MonthContext";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { useProfile } from "@/app/context/ProfileContext";
+import "@/core/utils/date.extensions";
 
 export default function MonthSelector() {
   const { months, monthSelected, selectMonth, hasNextMonth, hasPreviousMonth } = useMonth();
@@ -31,16 +32,9 @@ export default function MonthSelector() {
     selectMonth(idMonth);
   }, []);
 
-  const generateIdMonth = (year: number, month: number) => {
-    return `${year}-${month.toString().padStart(2, "0")}-01`;
-  };
-
   const shiftMonth = (d: number) => {
     const nextDate = new Date(year, month - 1 + d, 1);
-    const idMonth = generateIdMonth(
-      nextDate.getFullYear(),
-      nextDate.getMonth() + 1,
-    );
+    const idMonth = nextDate.toISODateString();
 
     selectMonth(idMonth);
   };

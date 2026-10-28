@@ -10,6 +10,7 @@ import {
 } from "@/core/utils/goalStyle";
 import { getStatuses, MonthAvailability, MonthlyStatistics } from "../finance.types";
 import Legend from "@/components/legend";
+import "@/core/utils/date.extensions";
 
 interface MonthsGridProps {
   year: number;
@@ -36,7 +37,7 @@ export default function MonthsGrid({ year }: MonthsGridProps) {
   };
 
   const getMonthlyStatistics = (indexMonth: number): MonthlyStatistics => {
-    const idMonth = `${year}-${(indexMonth + 1).toString().padStart(2, "0")}-01`;
+    const idMonth = new Date(year, indexMonth, 1).toISODateString();
 
     const recordedMonth = months.find((x) => x.id === idMonth);
     const availability = getMonthAvailability(
