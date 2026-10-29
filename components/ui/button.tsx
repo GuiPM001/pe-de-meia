@@ -22,7 +22,7 @@ export default function Button(props: ButtonProps) {
   return (
     <button
       {...props}
-      className={`flex flex-row justify-center items-center gap-1 rounded-full py-1.5 px-3 text-center font-semibold transition hover:text-white cursor-pointer ${getColors()} ${getVariant()} disabled:bg-none disabled:bg-gray-200 disabled:cursor-default disabled:text-gray-400`}
+      className={`w-full flex flex-row justify-center items-center gap-1 rounded-md py-1.5 px-3 text-center font-semibold transition hover:text-white cursor-pointer ${getColors()} ${getVariant()} disabled:bg-none disabled:bg-gray-200 disabled:cursor-default disabled:text-gray-400`}
     >
       {props.children}
     </button>

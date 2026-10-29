@@ -56,8 +56,8 @@ export default function DaySummary({ selectedDay }: DaySummaryProps) {
 
   return (
     <section className="mt-4 space-y-2">
-      <div className="flex items-center justify-between">
-        <h3 className="font-display text-lg font-semibold text-foreground w-full">
+      <div className="flex items-center justify-between w-full">
+        <h3 className="font-display text-lg font-semibold text-foreground min-w-3/5">
           {getDateName(selectedDay.day, selectedDay.idMonth)}
         </h3>
         <Button onClick={() => openModal(selectedDay.idMonth, selectedDay.day)}>
