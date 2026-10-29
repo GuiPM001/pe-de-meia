@@ -22,10 +22,6 @@ interface MonthContextProps {
     idMonth: string,
     idUser: string
   ) => Promise<void>;
-  getLastMonth: (
-    actualIdMonth: string,
-    idUser: string,
-  ) => Promise<Month | null>;
   hasPreviousMonth: (year: number, month: number) => boolean;
   hasNextMonth: (year: number, month: number) => boolean;
 }
@@ -49,7 +45,6 @@ const MonthContext = createContext<MonthContextProps>({
   monthSelected: initialState,
   selectMonth: () => { },
   createMonth: () => Promise.resolve(),
-  getLastMonth: () => Promise.resolve(null),
   hasPreviousMonth: () => false,
   hasNextMonth: () => false,
 });
@@ -82,34 +77,35 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
     if (month) setMonthSelected(month);
   };
 
-  const getLastMonth = async (actualIdMonth: string, idUser: string) => {
-    const month: Month = await api.get(
-      `/month/get-last-month?actualIdMonth=${actualIdMonth}&idUser=${idUser}`,
-    );
-    return month;
-  };
-
   const createMonth = async (
     idMonth: string,
     idUser: string
   ) => {
+    if (monthLoading) return;
+
     setMonthLoading(idMonth);
 
-    const lastMonth = await getLastMonth(idMonth, idUser);
+    try {
+      const userMonths = await getMonths();
+      const lastMonth = userMonths
+        .filter((month) => month.id < idMonth)
+        .sort((a, b) => b.id.localeCompare(a.id))[0];
 
-    const newMonth: Month = {
-      id: idMonth,
-      idUser: idUser,
-      balance: lastMonth.balance,
-      invested: 0,
-    };
+      const newMonth: Month = {
+        id: idMonth,
+        idUser: idUser,
+        balance: lastMonth?.balance ?? 0,
+        invested: 0,
+      };
 
-    await api.post("/month", newMonth);
+      await api.post("/month", newMonth);
 
-    const userMonths = await getMonths();
-    const created = userMonths.find((x) => x.id === idMonth);
-    if (created) setMonthSelected(created);
-    setMonthLoading("");
+      const refreshedMonths = await getMonths();
+      const created = refreshedMonths.find((x) => x.id === idMonth);
+      if (created) setMonthSelected(created);
+    } finally {
+      setMonthLoading("");
+    }
   };
 
   const hasPreviousMonth = (year: number, month: number) => {
@@ -137,7 +133,6 @@ export const MonthProvider = ({ children }: { children: ReactNode }) => {
         monthSelected,
         selectMonth,
         createMonth,
-        getLastMonth,
         hasPreviousMonth,
         hasNextMonth
       }}

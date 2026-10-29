@@ -3,7 +3,8 @@
   "loading": "Carregando...",
   "transactionType": {
     "income": "Entrada",
-    "expense": "Outras despesas",
+    "expense": "Saída",
+    "others": "Outras despesas",
     "fixedExpense": "Despesa fixa",
     "daily": "Gasto diário",
     "investment": "Investimento"

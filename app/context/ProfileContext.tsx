@@ -18,11 +18,11 @@ interface ProfileContextProps {
 }
 
 const initialProfile: Profile = {
-  _id: "682d2a2d3c22be696af9e21a",
-  dailyCost: 53,
-  email: "gui91905@gmail.com",
-  name: "Guilherme",
-  savingTarget: 1500,
+  _id: "",
+  dailyCost: 0,
+  email: "",
+  name: "",
+  savingTarget: 0,
 };
 
 const ProfileContext = createContext<ProfileContextProps>({
@@ -46,7 +46,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
   }, [status, session]);
 
   const fetchProfile = async (email: string) => {
-    const response: Profile = await api.get(`/user?email=${email}`)
+    const response: Profile = await api.get(`/user?email=${email}`);
     setProfile(response);
   }
 

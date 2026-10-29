@@ -27,7 +27,7 @@ export default function DaysGrid({
   return (
     <div className="grid grid-cols-7 gap-1">
       {dayBalances.map((dayData, index) => {
-        const availability = dayData.total ? "registered" : "disabled";
+        const availability = dayData.total !== null ? "registered" : "disabled";
         const goalStatus = getGoalStatus(dayData.idMonth, dayData.total, profile.savingTarget, undefined, availability, true);
         const isSelected = selectedDay === dayData
 

@@ -11,6 +11,7 @@ import {
 import { getStatuses, MonthAvailability, MonthlyStatistics } from "../finance.types";
 import Legend from "@/components/legend";
 import "@/core/utils/date.extensions";
+import LoadingSpinner from "@/components/ui/loadingSpinner";
 
 interface MonthsGridProps {
   year: number;
@@ -20,7 +21,7 @@ export default function MonthsGrid({ year }: MonthsGridProps) {
   const { t } = useTranslation();
   const statuses = getStatuses(t);
 
-  const { monthSelected, months, selectMonth, createMonth } = useMonth();
+  const { monthSelected, months, monthLoading, selectMonth, createMonth } = useMonth();
   const { profile } = useProfile();
 
   const nextCreatableId = useMemo(() => {
@@ -72,11 +73,12 @@ export default function MonthsGrid({ year }: MonthsGridProps) {
           const selected = stats.idMonth === monthSelected.id;
           const item = statuses[stats.status];
           const Icon = item.icon;
+          const isLoading = monthLoading === stats.idMonth;
 
           return (
             <button
               key={index}
-              disabled={stats.availability === "disabled"}
+              disabled={stats.availability === "disabled" || Boolean(monthLoading)}
               onClick={() => {
                 if (stats.availability === "creatable") {
                   createMonth(stats.idMonth, profile._id);
@@ -94,8 +96,14 @@ export default function MonthsGrid({ year }: MonthsGridProps) {
                 {getMonthNameByMonth(year, index)}
               </span>
               <span className="flex items-center justify-self-center gap-1 text-[10px] font-medium">
-                <Icon className="!h-3 !w-3" />
-                {statuses[stats.availability]?.short || item.short}
+                {isLoading ? (
+                  <LoadingSpinner />
+                ) : (
+                  <>
+                    <Icon className="!h-3 !w-3" />
+                    {statuses[stats.availability]?.short || item.short}
+                  </>
+                )}
               </span>
             </button>
           );

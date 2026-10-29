@@ -8,7 +8,6 @@ import { Transaction } from "@/core/types/Transaction";
 import ModalContainer from "./modalContainer";
 import ModalActions from "./modalActions";
 import ModalTitle from "./modalTitle";
-import { useProfile } from "@/app/context/ProfileContext";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
 import { api } from "@/core/services/api";
 import { useTransaction } from "@/app/context/TransactionContext";
@@ -31,7 +30,6 @@ export default function TransactionModal({
   day,
   transaction,
 }: TransactionModalProps) {
-  const { profile } = useProfile();
   const { transactions, setTransactions } = useTransaction();
   const { getMonths } = useMonth();
   const { t } = useTranslation();
@@ -93,7 +91,6 @@ export default function TransactionModal({
 
       const newTransaction = {
         ...form,
-        idUser: profile._id,
         type: parseInt(form.type.toString()),
       };
 

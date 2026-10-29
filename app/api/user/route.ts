@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { userService } from "@/core/services/user.service";
 import { getRequestLocale } from "@/core/utils/locale";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 export async function GET(request: NextRequest) {
   try {
@@ -18,7 +20,15 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    const idUser = session?.user?.id;
+
+    if (!idUser) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     const updateRequest = await request.json();
+    updateRequest._id = idUser;
 
     await userService.update(updateRequest);
 

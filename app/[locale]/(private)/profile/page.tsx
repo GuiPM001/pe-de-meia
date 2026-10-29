@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useTranslation } from "react-i18next";
 import { ErrorResponse } from "@/core/types/ErrorResponse";
@@ -19,6 +19,10 @@ export default function ProfilePage() {
   const [form, setForm] = useState<Profile>(profile);
   const [loading, setLoading] = useState<boolean>();
   const [error, setError] = useState<ErrorResponse | null>(null);
+
+  useEffect(() => {
+    setForm(profile);
+  }, [profile])
 
   const handleForm = (value: string | number, name: string) => {
     setForm({

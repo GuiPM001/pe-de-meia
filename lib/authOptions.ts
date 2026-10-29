@@ -37,6 +37,9 @@ export const authOptions: AuthOptions = {
           token.email = dbUser.email;
           token.exists = true;
         } else {
+          token.userId = user.id;
+          token.name = user.name;
+          token.email = user.email;
           token.exists = false;
         }
       }

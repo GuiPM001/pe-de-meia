@@ -48,7 +48,7 @@ export const getTransactionProps = (
       {
         icon: Receipt,
         cls: "bg-warning/15 text-warning",
-        label: t("transactionType.expense"),
+        label: t("transactionType.others"),
       },
     ],
     [

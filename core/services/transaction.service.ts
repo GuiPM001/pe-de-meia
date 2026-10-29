@@ -33,10 +33,9 @@ const handleRecurrentTransaction = async (
   transaction: Transaction,
   isDelete: boolean
 ): Promise<Transaction | undefined> => {
-  const months: Month[] = await monthService.getFutureMonthsByIdUser(
-    transaction.idUser,
-    transaction.idMonth
-  );
+  const months: Month[] = (await monthService.getMonthsByIdUser(transaction.idUser))
+    .filter((month) => month.id >= transaction.idMonth)
+    .sort((a, b) => a.id.localeCompare(b.id));
 
   if (isDelete) {
     await Transactions.deleteMany({
@@ -93,10 +92,9 @@ const updateBalanceValue = async (
   transaction: Pick<Transaction, "type" | "value" | "idUser" | "idMonth">,
   isDelete: boolean
 ) => {
-  const months: Month[] = await monthService.getFutureMonthsByIdUser(
-    transaction.idUser,
-    transaction.idMonth
-  );
+  const months: Month[] = (await monthService.getMonthsByIdUser(transaction.idUser))
+    .filter((month) => month.id >= transaction.idMonth)
+    .sort((a, b) => a.id.localeCompare(b.id));
 
   const promises = months.map((month) =>
     monthService.updateMonthBalance(month, transaction, isDelete)

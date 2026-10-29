@@ -24,7 +24,15 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    const idUser = session?.user?.id;
+
+    if (!idUser) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
     const monthRequest = await request.json();
+    monthRequest.idUser = idUser;
 
     const month = await monthService.saveMonth(
       monthRequest,

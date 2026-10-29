@@ -81,15 +81,26 @@ const calculateDailyCost = async (user: ProfileDocument) => {
 }
 
 const updateFutureMonths = async (user: ProfileDocument) => {
-  const today = new Date();
-  const idMonth = today.toISOString().slice(0, 7) + "-01";
+  const idMonth = new Date().toISODateString();
 
-  const [futureMonths, lastMonth] = await Promise.all([
-    monthService.getFutureMonthsByIdUser(user.id, idMonth), 
-    monthService.getLastMonth(idMonth, user._id)
-  ]);
+  const userMonths = await monthService.getMonthsByIdUser(user._id);
+  
+  const futureMonths = userMonths
+    .filter((month) => month.id >= idMonth)
+    .sort((a, b) => a.id.localeCompare(b.id));
+  
+  const lastMonth = userMonths
+    .filter((month) => month.id < idMonth)
+    .sort((a, b) => b.id.localeCompare(a.id))[0];
 
-  let lastBalance = lastMonth.balance ?? 0;
+  let lastBalance = lastMonth?.balance ?? 0;
+
+  if (!futureMonths.length) {
+    const newMonth = { id: idMonth, idUser: user._id, balance: lastBalance, invested: 0};
+    await monthService.saveMonth(newMonth, "en");
+    
+    futureMonths.push(newMonth);
+  }
 
   for (const futureMonth of futureMonths) {
     const qtdDaysMonth = getDaysFromMonthId(futureMonth.id);

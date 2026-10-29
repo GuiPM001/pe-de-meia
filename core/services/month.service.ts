@@ -8,6 +8,7 @@ import { transactionService } from "./transaction.service";
 import { SupportedLocale, t } from "@/lib/errorHandler";
 import { Profile } from "../types/Profile";
 import { userService } from "./user.service";
+import { getDaysFromMonthId } from "../utils/date";
 import "@/core/utils/date.extensions";
 
 const getMonthsByIdUser = async (idUser: string) => {
@@ -20,18 +21,6 @@ const getAllMonthsByIdUser = async (idUser: string): Promise<Month[]> => {
   await connectMongo();
 
   return await Months.find({ idUser });
-};
-
-const getFutureMonthsByIdUser = async (
-  idUser: string,
-  idMonth: string
-): Promise<Month[]> => {
-  await connectMongo();
-
-  return await Months.find({
-    idUser,
-    id: { $gte: idMonth },
-  });
 };
 
 const saveMonth = async (month: Month, locale: SupportedLocale) => {
@@ -54,8 +43,7 @@ const saveMonth = async (month: Month, locale: SupportedLocale) => {
 
   const updatedMonth = await transactionService.registerRecurrentTransactionsNewMonth(month);
 
-  const [year, actualMonth] = month.id.split("-").map(Number);
-  const qtdDaysInMonth = new Date(year, actualMonth, 0).getDate();
+  const qtdDaysInMonth = getDaysFromMonthId(month.id);
 
   updatedMonth.balance! -= user.dailyCost * qtdDaysInMonth;
 
@@ -161,18 +149,15 @@ const removeDailyCost = async () => {
   }
 };
 
-const getLastMonth = async (actualIdMonth: string, idUser: string) => {
-  await connectMongo();
-
-  const months = await Months.findOne({ id: { $lt: actualIdMonth }, idUser }, {}, { sort: { id: -1 } });
-
-  return months;
-};
-
 const updateBalance = async (updatedMonth: Omit<Month, "invested">) => {
   await connectMongo();
 
-  const months = await getFutureMonthsByIdUser(updatedMonth.idUser, updatedMonth.id);
+  const months = (await getMonthsByIdUser(updatedMonth.idUser))
+    .filter((month) => month.id >= updatedMonth.id)
+    .sort((a, b) => a.id.localeCompare(b.id));
+
+  if (!months.length) return;
+
   const balanceDiference = (updatedMonth.balance ?? 0) - (months[0].balance ?? 0);
 
   for (const month of months) {
@@ -186,11 +171,9 @@ export const monthService = {
   saveMonthsNewUser,
   getMonthsByIdUser,
   getAllMonthsByIdUser,
-  getFutureMonthsByIdUser,
   updateMonthBalance,
   getMonthById,
   updateActualMonthBalance,
   removeDailyCost,
-  getLastMonth,
   updateBalance
 };
