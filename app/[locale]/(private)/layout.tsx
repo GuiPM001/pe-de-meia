@@ -5,6 +5,7 @@ import Wrapper from "@/components/ui/wrapper";
 import { TabNavProvider, useTabNav } from "@/app/context/TabNavContext";
 import HomePage from "./(calendar)/page";
 import FinancePage from "./finance/page";
+import ProfilePage from "./profile/page";
 
 function PrivatePages() {
   const { tab } = useTabNav();
@@ -16,6 +17,9 @@ function PrivatePages() {
       </div>
       <div className={tab === "finance" ? "contents" : "hidden"}>
         <FinancePage />
+      </div>
+      <div className={tab === "profile" ? "contents" : "hidden"}>
+        <ProfilePage />
       </div>
     </Wrapper>
   );

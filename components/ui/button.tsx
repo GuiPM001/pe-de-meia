@@ -14,7 +14,7 @@ export default function Button(props: ButtonProps) {
   };
 
   const getVariant = () => {
-    if (props.variant === "ghost") return "bg-transparent";
+    if (props.variant === "ghost") return "bg-transparent bg-none !text-muted-foreground";
 
     return "text-white";
   };

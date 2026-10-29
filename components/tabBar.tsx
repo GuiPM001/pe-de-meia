@@ -24,6 +24,7 @@ const TabBar = () => {
 
   useEffect(() => {
     router.prefetch(`${base}/finance`);
+    router.prefetch(`${base}/profile`);
     router.prefetch(base);
   }, [base, router]);
 

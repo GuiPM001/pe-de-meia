@@ -8,6 +8,18 @@
     "daily": "Gasto diário",
     "investment": "Investimento"
   },
+  "financePage": {
+    "title": "Finanças"
+  },
+  "profilePage": {
+    "title": "Configurações do Perfil",
+    "name": "Nome",
+    "email": "E-mail",
+    "savingTarget": "Meta de economia mensal",
+    "dailyCost": "Gasto diário previsto",
+    "save": "Salvar alterações",
+    "logOut": "Sair da conta"
+  },
   "monthStatus": {
     "green": "Acima da meta",
     "greenWithInvestment": "Acima da meta somando o total investido",
@@ -44,9 +56,9 @@
     "transactionTotals": "Totais das transações",
     "dailyPlan": {
       "title": "Planejamento diário",
-      "label": "Cadastrado",
+      "label": "Previsto",
       "averageSpent": "Diário médio gasto",
-      "fromRegistered": "do valor cadastrado",
+      "fromRegistered": "do valor previsto",
       "elapsedDays_one": "{{count}} dia decorrido",
       "elapsedDays_other": "{{count}} dias decorridos",
       "monthDays_one": "{{count}} dia do mês",

@@ -6,9 +6,11 @@ import MonthsGrid from "./components/monthsGrid";
 import MonthSummary from "./components/monthSummary";
 import FinanceSkeleton from "./components/financeSkeleton";
 import { useMonth } from "@/app/context/MonthContext";
+import { useTranslation } from "react-i18next";
 
 export default function FinancePage() {
   const { months } = useMonth();
+  const { t } = useTranslation();
 
   const [year, setYear] = useState<number>(new Date().getFullYear());
 
@@ -17,7 +19,7 @@ export default function FinancePage() {
   return (
     <>
       <header className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold w-[125%]">Finanças</h1>
+        <h1 className="font-display text-2xl font-bold w-[125%]">{t("financePage.title")}</h1>
         <Select
           label=""
           value={year}
