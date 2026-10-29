@@ -10,12 +10,14 @@ import {
   getStatusStyles,
 } from "@/core/utils/goalStyle";
 import { getStatuses } from "../finance.types";
+import { useMonthSummary } from "../hooks/useMonthSummary";
 
 export function MonthHeader() {
   const { t } = useTranslation();
   const statuses = getStatuses(t);
   const { monthSelected } = useMonth();
   const { profile } = useProfile();
+  const { hasDailyTransactionToday } = useMonthSummary();
 
   const goalStatus = getGoalStatus(
     monthSelected.id!,
@@ -24,10 +26,13 @@ export function MonthHeader() {
     monthSelected.invested ?? 0,
   );
   const status = statuses[goalStatus];
-  const balance = monthSelected.balance;
   const monthId = monthSelected.id;
   const year = monthId?.split("-")[0];
 
+  const balance = hasDailyTransactionToday 
+    ? monthSelected.balance! + profile.dailyCost 
+    : monthSelected.balance!;
+  
   const statusStyle = getStatusStyles(goalStatus, false);
 
   return (
@@ -54,7 +59,7 @@ export function MonthHeader() {
           "mt-1 mb-1 font-display text-3xl font-bold tabular-nums bg-transparent",
         )}
       >
-        {currencyNumber(balance ?? 0)}
+        {currencyNumber(balance)}
       </p>
     </section>
   );

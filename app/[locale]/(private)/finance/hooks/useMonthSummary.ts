@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { useTransaction } from "@/app/context/TransactionContext";
 import { getDaysFromMonthId } from "@/core/utils/date";
+import { TransactionType } from "@/core/enums/transactionType";
 
 export function useMonthSummary() {
   const { transactions, isLoading } = useTransaction();
@@ -13,6 +14,11 @@ export function useMonthSummary() {
       totals[tx.type] = (totals[tx.type] ?? 0) + (tx.value ?? 0);
     });
     return totals;
+  }, [transactions]);
+
+  const hasDailyTransactionToday = useMemo(() => {
+    const today = new Date().toISODateString();
+    return transactions?.some(t => t.date ===  today && t.type === TransactionType.daily);
   }, [transactions]);
 
   const getRealizedDays = (daysInMonth: number, selectedIndex: number, currentIndex: number) => {
@@ -54,5 +60,5 @@ export function useMonthSummary() {
     };
   };
 
-  return { totalsByType, isLoading, getMonthDays };
+  return { totalsByType, isLoading, hasDailyTransactionToday, getMonthDays };
 }
