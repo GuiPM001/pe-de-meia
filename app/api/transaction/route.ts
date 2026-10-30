@@ -3,11 +3,11 @@ import { getRequestLocale } from "@/core/utils/locale";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { getAuthenticatedUserId } from "@/core/utils/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    const idUser = session?.user?.id;
+    const idUser = await getAuthenticatedUserId(request);
     if (!idUser) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
